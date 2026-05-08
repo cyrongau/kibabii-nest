@@ -1,0 +1,18 @@
+[build]
+  base = "frontend-web"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Redirects for Single Page Application behavior if needed
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+  conditions = {role = ["admin"]} # Example, generally Next.js handles this
