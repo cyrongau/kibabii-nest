@@ -111,17 +111,15 @@ export class StudentIdentityService {
           Analyze the provided image of an Identification Document (Kenyan National ID, Passport, or University Student ID).
           
           CRITICAL INSTRUCTIONS for Kibabii University Student IDs:
-          1. "fullName": Look for the label "NAME:" or "Names:". Extract ALL names following it (e.g., "Sarah Juma Wafula"). 
-             (On National IDs, look for "SURNAME" and "OTHER NAMES" and concatenate them).
-          2. "idNumber": Look for "ID NO:" or "ID/Passport No:". Extract the number (usually 8 digits).
-          3. "dateOfBirth": Look for "D.O.B:" or "DATE OF BIRTH". Format strictly as YYYY-MM-DD.
-          4. "universityRegNo": Look for "REG NO:", "Reg No:", or "ADMISSION NO".
+          1. "fullName": Look for "NAME:", "Name:", or "Names:". On Kibabii IDs, the name is often in ALL CAPS (e.g., "CYRUS CLEMENT ODUOR").
+          2. "universityRegNo": Look for "REG NO:" or "ADMISSION NO:". Extract the registration number (e.g., "SC/CSC/2021/1045").
+          3. "idNumber": Look for "ID NO:", "ID NO.", or "ID Number:". 
+          4. "dateOfBirth": Look for "D.O.B:" or "Date of Birth:".
           
           General extraction rules:
-          - USE FUZZY MATCHING: Labels might be slightly obscured or missing colons. If you see "NAME" followed by text, treat it as the name.
-          - Handle labels with varied capitalization (e.g., "NAME:", "Name:", "names:").
-          - If multiple names are found, concatenate them logically.
-          - Return ONLY a valid JSON object. If a field is not found, use null.
+          - Extract details exactly as they appear.
+          - If it's a University ID, set documentType to "STUDENT_ID".
+          - Return ONLY a valid JSON object.
           
           JSON Structure:
           {
@@ -130,8 +128,7 @@ export class StudentIdentityService {
             "dateOfBirth": "...",
             "universityRegNo": "...",
             "documentType": "NATIONAL_ID" | "PASSPORT" | "STUDENT_ID",
-            "confidence": 0.0 to 1.0,
-            "flags": []
+            "confidence": 0.0 to 1.0
           }`
         },
         {
@@ -143,7 +140,7 @@ export class StudentIdentityService {
       const response = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
         {
-          model: 'google/gemini-2.0-flash-exp:free',
+          model: 'google/gemini-2.0-flash-exp',
           messages: [{ role: 'user', content }],
           temperature: 0.1,
           response_format: { type: 'json_object' }

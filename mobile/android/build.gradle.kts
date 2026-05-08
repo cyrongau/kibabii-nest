@@ -9,7 +9,7 @@ buildscript {
             }
             credentials {
                 username = "mapbox"
-                password = "YOUR_MAPBOX_SECRET_TOKEN"
+                password = project.findProperty("MAPBOX_DOWNLOADS_TOKEN") as? String ?: "YOUR_MAPBOX_SECRET_TOKEN"
             }
         }
     }
@@ -27,7 +27,7 @@ allprojects {
                 }
                 credentials {
                     username = "mapbox"
-                    password = "YOUR_MAPBOX_SECRET_TOKEN"
+                    password = project.findProperty("MAPBOX_DOWNLOADS_TOKEN") as? String ?: "YOUR_MAPBOX_SECRET_TOKEN"
                 }
             }
         }

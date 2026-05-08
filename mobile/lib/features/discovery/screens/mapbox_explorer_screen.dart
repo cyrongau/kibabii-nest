@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
@@ -35,6 +36,13 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
   bool _isLoading = true;
   String? _errorMessage;
   dynamic _selectedProperty;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -336,11 +344,37 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
             const SizedBox(width: 12),
             Expanded(
               child: TextField(
+                controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search Kibabii...',
                   hintStyle: GoogleFonts.outfit(fontSize: 14, color: Colors.grey),
                   border: InputBorder.none,
+                  suffixIcon: ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: _searchController,
+                    builder: (context, value, child) {
+                      return value.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, size: 18),
+                              onPressed: () => _searchController.clear(),
+                            )
+                          : const SizedBox.shrink();
+                    },
+                  ),
                 ),
+                onSubmitted: (value) {
+                  if (value.trim().isEmpty) return;
+                  final match = _properties.firstWhere(
+                    (p) => p['name'].toString().toLowerCase().contains(value.toLowerCase()),
+                    orElse: () => null,
+                  );
+                  if (match != null) {
+                    _selectProperty(match);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("No property found matching '$value'")),
+                    );
+                  }
+                },
               ),
             ),
             Icon(LucideIcons.sliders, size: 18, color: theme.colorScheme.primary),
@@ -451,24 +485,49 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
     final lat = double.tryParse(_selectedProperty['lat']?.toString() ?? '');
     final lng = double.tryParse(_selectedProperty['lng']?.toString() ?? '');
     
-    if (lat == null || lng == null) return;
+    if (lat == null || lng == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error: Property location is missing")),
+      );
+      return;
+    }
 
-    final wayPoint = WayPoint(
-      name: _selectedProperty['name'],
-      latitude: lat,
-      longitude: lng,
-    );
+    try {
+      debugPrint("MapboxExplorerScreen: Getting current position...");
+      final Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high
+      );
 
-    List<WayPoint> wayPoints = [wayPoint];
+      debugPrint("MapboxExplorerScreen: Starting navigation from ${position.latitude}, ${position.longitude} to $lat, $lng");
+      
+      final origin = WayPoint(
+        name: "My Location",
+        latitude: position.latitude,
+        longitude: position.longitude,
+      );
 
-    await MapBoxNavigation.instance.startNavigation(
-      wayPoints: wayPoints,
-      options: MapBoxOptions(
-        mode: MapBoxNavigationMode.walking,
-        simulateRoute: true,
-        language: "en",
-        units: VoiceUnits.metric,
-      ),
-    );
+      final destination = WayPoint(
+        name: _selectedProperty['name'],
+        latitude: lat,
+        longitude: lng,
+      );
+
+      List<WayPoint> wayPoints = [origin, destination];
+
+      await MapBoxNavigation.instance.startNavigation(
+        wayPoints: wayPoints,
+        options: MapBoxOptions(
+          mode: MapBoxNavigationMode.walking,
+          simulateRoute: false,
+          language: "en",
+          units: VoiceUnits.metric,
+        ),
+      );
+    } catch (e) {
+      debugPrint("MapboxExplorerScreen: Navigation Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Navigation failed: $e")),
+      );
+    }
   }
 }
