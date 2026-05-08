@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Landlord Dashboard | Kibabii Nest</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "tertiary-container": "#996100",
+                        "secondary-container": "#6cf8bb",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#00714d",
+                        "tertiary": "#784b00",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-high": "#dce9ff",
+                        "surface-tint": "#0053db",
+                        "surface-container-low": "#eff4ff",
+                        "on-surface": "#0b1c30",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-variant": "#d3e4fe",
+                        "surface": "#f8f9ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "inverse-surface": "#213145",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#b4c5ff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-dim": "#cbdbf5",
+                        "tertiary-fixed": "#ffddb8",
+                        "background": "#f8f9ff",
+                        "on-surface-variant": "#434655",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-container": "#e5eeff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#ffeedd",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#4edea3",
+                        "primary": "#004ac6",
+                        "secondary": "#006c49",
+                        "primary-container": "#2563eb",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "outline": "#737686",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dbe1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "container-margin": "20px",
+                        "stack-sm": "12px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8f9ff;
+        }
+    </style>
+</head>
+<body class="text-on-background">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 bg-surface flex flex-col border-r border-outline-variant">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 bg-primary-container rounded-xl flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">nest_multi_room</span>
+</div>
+<div>
+<h1 class="text-on-surface font-headline-md text-body-lg leading-tight">Kibabii Nest</h1>
+<p class="text-on-surface-variant text-caption">Landlord Portal</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-6 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary rounded-xl font-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-xl font-label-md" href="#">
+<span class="material-symbols-outlined">apartment</span>
+                    Properties
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-xl font-label-md" href="#">
+<span class="material-symbols-outlined">event_available</span>
+                    Bookings
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-xl font-label-md" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+                    Financials
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-xl font-label-md" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+                    Maintenance
+                </a>
+</nav>
+<div class="p-4 border-t border-outline-variant">
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low">
+<div class="size-10 rounded-full bg-cover bg-center" data-alt="A professional headshot of a friendly middle-aged man with a warm smile, wearing a business casual shirt. He is set against a softly blurred, modern architectural background that suggests a clean and trustworthy business environment. The lighting is bright and natural, reinforcing the light-mode UI aesthetic of Kibabii Nest." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgXtNp98932-aqKaPxaZ8BQ-H_h4R4zwvpEpMNg_j1Xk2imPB3YpRG4_Q3OhX_MjG8tPli2Q3Vvo7m7kYu6sXMouKkV9UC_h4hXLYp0JOCZG41_cN_Z4aSXaYtcCilqBocFNcs8n5WBQej3XxTzX64H0B5LNa2Y9o2M5UwkaZg8o5U0VN1IU0SwWa3ed2X6e2Dwu-xXeOFcuM6GE5L_y1ki26y1EVxqsBVxWX2Z_jyhr-mlHWt_CXBkJL53ai9cdDE4-Ltk3LJZ4s')"></div>
+<div class="flex-1 min-w-0">
+<p class="text-on-surface text-label-md truncate">Samuel Omondi</p>
+<p class="text-on-surface-variant text-caption truncate">Primary Owner</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">settings</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Top Header -->
+<header class="h-16 border-b border-outline-variant bg-surface-container-lowest px-8 flex items-center justify-between sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-on-surface">Overview</h2>
+<div class="flex items-center bg-surface-container rounded-full px-3 py-1 gap-2">
+<span class="material-symbols-outlined text-sm text-primary">calendar_month</span>
+<span class="text-caption text-on-surface-variant font-medium">Jan 2024 - Jun 2024</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="size-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl flex items-center gap-2 font-label-md">
+<span class="material-symbols-outlined text-lg">add</span>
+                        New Listing
+                    </button>
+</div>
+</header>
+<div class="p-8 space-y-gutter">
+<!-- KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Earnings Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary-container/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="text-secondary font-label-md flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+                                +15.3%
+                            </span>
+</div>
+<p class="text-on-surface-variant text-label-md">Total Earnings</p>
+<h3 class="text-headline-lg text-on-surface">$12,450.00</h3>
+<p class="text-caption text-outline mt-2 italic">vs $10,800 last period</p>
+</div>
+<!-- Occupancy Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-container/10 rounded-lg text-secondary">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="text-error font-label-md flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">trending_down</span>
+                                -2.1%
+                            </span>
+</div>
+<p class="text-on-surface-variant text-label-md">Occupancy Rate</p>
+<h3 class="text-headline-lg text-on-surface">94.2%</h3>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-4">
+<div class="bg-secondary h-full rounded-full w-[94.2%]"></div>
+</div>
+</div>
+<!-- Requests Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-tertiary-fixed-dim/20 rounded-lg text-tertiary">
+<span class="material-symbols-outlined">engineering</span>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded text-caption font-bold">4 Urgent</span>
+</div>
+<p class="text-on-surface-variant text-label-md">Maintenance Requests</p>
+<h3 class="text-headline-lg text-on-surface">12</h3>
+<p class="text-caption text-outline mt-2 italic">8 resolved this week</p>
+</div>
+</div>
+<!-- Main Chart & Recent Table Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Revenue Growth Chart -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-headline-md text-on-surface">Revenue Growth</h3>
+<p class="text-body-md text-on-surface-variant">Performance analysis over the last 6 months</p>
+</div>
+<select class="form-select bg-surface-container border-none rounded-lg text-label-md focus:ring-primary">
+<option>Last 6 Months</option>
+<option>Last Year</option>
+</select>
+</div>
+<div class="relative h-[300px] w-full">
+<svg class="w-full h-full" fill="none" preserveaspectratio="none" viewbox="0 0 478 150">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#chart-gradient)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#004ac6" stroke-linecap="round" stroke-width="3"></path>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="chart-gradient" x1="236" x2="236" y1="0" y2="150">
+<stop stop-color="#2563eb" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#2563eb" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="flex justify-between mt-4">
+<span class="text-caption text-outline font-bold">JAN</span>
+<span class="text-caption text-outline font-bold">FEB</span>
+<span class="text-caption text-outline font-bold">MAR</span>
+<span class="text-caption text-outline font-bold">APR</span>
+<span class="text-caption text-outline font-bold">MAY</span>
+<span class="text-caption text-outline font-bold">JUN</span>
+</div>
+</div>
+</div>
+<!-- Property Quick Stats -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant flex flex-col">
+<h3 class="text-headline-md text-on-surface mb-6">Top Properties</h3>
+<div class="space-y-4 flex-1">
+<div class="flex items-center gap-4 p-3 hover:bg-surface-container-low rounded-xl transition-colors">
+<div class="size-12 rounded-lg bg-cover bg-center" data-alt="A modern, high-end student hostel exterior featuring clean architectural lines, large windows, and a landscaped front garden. The scene is bathed in warm, golden-hour sunlight that creates a welcoming and safe atmosphere for residents. The visual style is crisp and professional, aligned with the modern minimalist brand of Kibabii Nest." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQpwFP0qzEI7FafQvjwJ4lX8TGxaKaPT7YbBwbAneIWZYgQaGfG-ivTAzMA6WHQ9yFgPXE-D7oITAGSZSaH3ZtpaLlKVgORpmQLk4Q4Qeil9Wyf78wfODvMT32I__A7ff3aPl9BsvfgOa-FBhAl8Ih5GDbb-o-tjt7EEGYFSGj_dg2HEswuMAs6OlLXb6OtJNKIO6a0Xkw6-MzpuMsFS-bf3cG9-feH_ooES4sTjU8bK8kTcsdwEm8fIqgtOepQ5xKe-qK0DW-Nl4')"></div>
+<div class="flex-1 min-w-0">
+<p class="text-on-surface font-label-md truncate">Blueberry Heights</p>
+<p class="text-caption text-on-surface-variant">42 Units • 100% Full</p>
+</div>
+<div class="text-right">
+<p class="text-on-surface font-bold">$4,200</p>
+<p class="text-secondary text-caption font-bold">Monthly</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 hover:bg-surface-container-low rounded-xl transition-colors">
+<div class="size-12 rounded-lg bg-cover bg-center" data-alt="The interior common area of a luxury student hostel, showing bright, spacious lounging zones with colorful beanbags and modern study tables. Natural light pours in from large floor-to-ceiling windows, highlighting the vibrant primary blue and green accents within the room. The mood is social, organized, and energetic, appealing to young professionals and students." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCjCtPR8q00GlfLcgLF6bosdl2C6qukInOt246NC_6Ltu5QLQ-raqF7N46y8hbzIxFgTd9d4CIBLJKELNqTBcOtgr0ifRQEXzU4eF1ZyCwE4x9_7Z1X9uFTjPPoYOXs3eV9dTnfFuHO7p1665q6qs-66VoppTJ24IoKReEu2_CTHSWUU4FnhtFwsBC7L2kzdRZTZcVa9cy9dGzNqL6ED48ZM7VIh39iS2hsIOugBK4F-nBuclbGzglPr1GbY2fZVS8dKESCelpa34E')"></div>
+<div class="flex-1 min-w-0">
+<p class="text-on-surface font-label-md truncate">Lakeside Residency</p>
+<p class="text-caption text-on-surface-variant">28 Units • 89% Full</p>
+</div>
+<div class="text-right">
+<p class="text-on-surface font-bold">$3,150</p>
+<p class="text-secondary text-caption font-bold">Monthly</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 hover:bg-surface-container-low rounded-xl transition-colors">
+<div class="size-12 rounded-lg bg-cover bg-center" data-alt="A sleek, minimalist apartment kitchen designed for student living, featuring stainless steel appliances and white cabinetry with bold azure accents. The space is immaculately clean and well-lit, suggesting a high standard of maintenance and care. This image reinforces the trust and quality associated with properties listed on the Kibabii Nest platform." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBszx5c_sihYTPi9d5o3oUhXCvVR9DBFj6qVcRsVq3sZSMo9Atcqs26uklMFt36EJflq6VU60w1mioTp1OKg0GdxB36gjZQas5C92lvcIt7etAbrDrZ0jn28mEhCWBkEJrf00Ko2bd5QB0SgdzLL1kDoUtaU5xxOA3-8Yson8N86GMvwJkBWW9WWDS7GW1mEPnt7N7UFwR5OY8I4PrNEd5-54pxce85L5ZbIMcZJ4XlWzBrG0XlFsLfklGhKcvqI-ehoyGEy9lYjQ8')"></div>
+<div class="flex-1 min-w-0">
+<p class="text-on-surface font-label-md truncate">Savannah Lofts</p>
+<p class="text-caption text-on-surface-variant">15 Units • 95% Full</p>
+</div>
+<div class="text-right">
+<p class="text-on-surface font-bold">$2,800</p>
+<p class="text-secondary text-caption font-bold">Monthly</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 border-2 border-primary-container text-primary font-bold rounded-xl hover:bg-primary-container hover:text-on-primary-container transition-colors">
+                            View All Properties
+                        </button>
+</div>
+</div>
+<!-- Recent Activity Table -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center">
+<h3 class="text-headline-md text-on-surface">Recent Activity</h3>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-surface-container rounded-full text-caption font-bold cursor-pointer hover:bg-primary-container/10">Bookings</span>
+<span class="px-3 py-1 text-caption text-outline font-bold cursor-pointer">Payments</span>
+<span class="px-3 py-1 text-caption text-outline font-bold cursor-pointer">Maintenance</span>
+</div>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-3 text-caption text-outline uppercase tracking-wider">Tenant</th>
+<th class="px-6 py-3 text-caption text-outline uppercase tracking-wider">Property</th>
+<th class="px-6 py-3 text-caption text-outline uppercase tracking-wider">Date</th>
+<th class="px-6 py-3 text-caption text-outline uppercase tracking-wider">Status</th>
+<th class="px-6 py-3 text-caption text-outline uppercase tracking-wider">Amount</th>
+<th class="px-6 py-3 text-caption text-outline uppercase tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold">JW</div>
+<div class="text-on-surface font-medium">Jane Wambui</div>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant text-body-md">Blueberry Heights, RM 402</td>
+<td class="px-6 py-4 text-on-surface-variant text-body-md">Jun 12, 2024</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-black uppercase">Confirmed</span>
+</td>
+<td class="px-6 py-4 font-bold text-on-surface">$450.00</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:underline font-label-md">View</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold">BK</div>
+<div class="text-on-surface font-medium">Brian Koech</div>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant text-body-md">Lakeside Residency, RM 12</td>
+<td class="px-6 py-4 text-on-surface-variant text-body-md">Jun 11, 2024</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-primary-container/20 text-primary rounded-full text-[10px] font-black uppercase">Pending</span>
+</td>
+<td class="px-6 py-4 font-bold text-on-surface">$320.00</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:underline font-label-md">View</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold">MM</div>
+<div class="text-on-surface font-medium">Mercy Musyoka</div>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant text-body-md">Savannah Lofts, RM 08</td>
+<td class="px-6 py-4 text-on-surface-variant text-body-md">Jun 10, 2024</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-black uppercase">Confirmed</span>
+</td>
+<td class="px-6 py-4 font-bold text-on-surface">$550.00</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:underline font-label-md">View</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold">SO</div>
+<div class="text-on-surface font-medium">Steve Otieno</div>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant text-body-md">Blueberry Heights, RM 105</td>
+<td class="px-6 py-4 text-on-surface-variant text-body-md">Jun 09, 2024</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error-container text-on-error-container rounded-full text-[10px] font-black uppercase">Cancelled</span>
+</td>
+<td class="px-6 py-4 font-bold text-on-surface">$450.00</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:underline font-label-md">View</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 bg-surface-container-low/30 border-t border-outline-variant text-center">
+<button class="text-primary font-bold text-label-md hover:text-on-primary-fixed-variant">See all activity history</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

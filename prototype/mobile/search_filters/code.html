@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary": "#004ac6",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary-container": "#ffeedd",
+                    "surface-container": "#e5eeff",
+                    "surface-dim": "#cbdbf5",
+                    "on-surface-variant": "#434655",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-secondary-fixed": "#002113",
+                    "tertiary-fixed": "#ffddb8",
+                    "background": "#f8f9ff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#737686",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-background": "#0b1c30",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#006c49",
+                    "primary-container": "#2563eb",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-bright": "#f8f9ff",
+                    "surface-container-high": "#dce9ff",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#0053db",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#6cf8bb",
+                    "tertiary-container": "#996100",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary": "#784b00",
+                    "on-primary-fixed": "#00174b",
+                    "on-secondary-container": "#00714d",
+                    "on-primary-container": "#eeefff",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#005236",
+                    "inverse-primary": "#b4c5ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "inverse-surface": "#213145",
+                    "surface-variant": "#d3e4fe",
+                    "surface": "#f8f9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-margin": "20px",
+                    "base": "8px",
+                    "stack-sm": "12px",
+                    "gutter": "16px",
+                    "stack-md": "24px",
+                    "stack-lg": "48px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d3e4fe;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface custom-scrollbar overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 sticky z-40 bg-[#F8FAFC]">
+<div class="flex justify-between items-center w-full px-5 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white overflow-hidden shadow-sm">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A high-quality professional portrait of a smiling young student with a friendly and approachable demeanor. The background is a soft-focus library setting with warm, natural sunlight filtering through windows. The overall aesthetic is clean, bright, and optimistic, matching the brand's empowering roommate personality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgAQ4lfglhyGTVxAtZejQ29wX8SL-Fl3FmeJ0P87U6orj-q6_ZeW_V3K2GsJBPrZhsqMc2xCXwlnbcPvivg6MIe_mc7_dLfq3XOS9RuZ_RvtgzU0bQa2m8YG8jc7ffCe2SKswLRsOeA2JYSVcFsLHmfgVoFSrDP5QIWzD2XgnwVqEJogeflCZRgE9va7M4fqJ1TZeYGhIHha3YpyY34Ug37RZezRWAY3WDbI3O7PWGLLp1dG5_xYY2HG1K_GF3gk-Mt1Hgzp6T8DU"/>
+</div>
+<h1 class="font-headline-md text-headline-md text-blue-600 font-black tracking-tighter text-2xl">Kibabii Nest</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-600 hover:opacity-80 active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-600 hover:opacity-80 active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-screen-xl mx-auto px-container-margin pb-32">
+<!-- Title Section -->
+<section class="mt-base mb-stack-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Search Filters</h2>
+<p class="font-body-md text-on-surface-variant">Find the perfect space for your new beginning.</p>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Filter Controls - Left/Main Column -->
+<div class="lg:col-span-8 space-y-stack-lg">
+<!-- Accommodation Type Section -->
+<div class="bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(37,99,235,0.04)] border border-surface-container-high">
+<h3 class="font-label-md text-label-md text-primary mb-gutter flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="home_work">home_work</span>
+                        Accommodation Type
+                    </h3>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-stack-sm">
+<label class="relative flex flex-col items-center justify-center p-4 border-2 border-surface-container-high rounded-xl cursor-pointer hover:bg-surface-container-low transition-all group">
+<input checked="" class="sr-only peer" name="acc_type" type="radio"/>
+<div class="peer-checked:border-primary peer-checked:bg-primary-container/5 absolute inset-0 rounded-xl border-2 border-transparent transition-all"></div>
+<span class="material-symbols-outlined text-3xl mb-2 text-on-surface-variant group-hover:text-primary transition-colors" data-icon="person">person</span>
+<span class="font-label-md text-on-surface">Single room</span>
+</label>
+<label class="relative flex flex-col items-center justify-center p-4 border-2 border-surface-container-high rounded-xl cursor-pointer hover:bg-surface-container-low transition-all group">
+<input class="sr-only peer" name="acc_type" type="radio"/>
+<div class="peer-checked:border-primary peer-checked:bg-primary-container/5 absolute inset-0 rounded-xl border-2 border-transparent transition-all"></div>
+<span class="material-symbols-outlined text-3xl mb-2 text-on-surface-variant group-hover:text-primary transition-colors" data-icon="group">group</span>
+<span class="font-label-md text-on-surface">Shared dorm</span>
+</label>
+<label class="relative flex flex-col items-center justify-center p-4 border-2 border-surface-container-high rounded-xl cursor-pointer hover:bg-surface-container-low transition-all group">
+<input class="sr-only peer" name="acc_type" type="radio"/>
+<div class="peer-checked:border-primary peer-checked:bg-primary-container/5 absolute inset-0 rounded-xl border-2 border-transparent transition-all"></div>
+<span class="material-symbols-outlined text-3xl mb-2 text-on-surface-variant group-hover:text-primary transition-colors" data-icon="apartment">apartment</span>
+<span class="font-label-md text-on-surface">Studio</span>
+</label>
+</div>
+</div>
+<!-- Price Range Slider Section -->
+<div class="bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(37,99,235,0.04)] border border-surface-container-high">
+<div class="flex justify-between items-center mb-gutter">
+<h3 class="font-label-md text-label-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                            Price Range (Monthly)
+                        </h3>
+<span class="font-label-md bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-full">$400 - $1,200</span>
+</div>
+<div class="relative pt-6 pb-2">
+<input class="w-full h-2 bg-surface-container-highest rounded-full appearance-none cursor-pointer accent-primary" max="2500" min="200" type="range" value="800"/>
+<div class="flex justify-between mt-4 text-caption text-outline font-caption">
+<span>$200</span>
+<span>$2,500</span>
+</div>
+</div>
+</div>
+<!-- Amenities Section -->
+<div class="bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(37,99,235,0.04)] border border-surface-container-high">
+<h3 class="font-label-md text-label-md text-primary mb-gutter flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="checklist">checklist</span>
+                        Essential Amenities
+                    </h3>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-stack-md">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-6 h-6 border-2 border-outline-variant rounded-lg group-hover:border-primary transition-colors">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="absolute inset-0 bg-primary scale-0 peer-checked:scale-100 rounded-md transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check">check</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="wifi">wifi</span>
+<span class="font-body-md">WiFi</span>
+</div>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-6 h-6 border-2 border-outline-variant rounded-lg group-hover:border-primary transition-colors">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="absolute inset-0 bg-primary scale-0 peer-checked:scale-100 rounded-md transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check">check</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="ac_unit">ac_unit</span>
+<span class="font-body-md">AC</span>
+</div>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-6 h-6 border-2 border-outline-variant rounded-lg group-hover:border-primary transition-colors">
+<input class="sr-only peer" type="checkbox"/>
+<div class="absolute inset-0 bg-primary scale-0 peer-checked:scale-100 rounded-md transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check">check</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="shower">shower</span>
+<span class="font-body-md">Private Bath</span>
+</div>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-6 h-6 border-2 border-outline-variant rounded-lg group-hover:border-primary transition-colors">
+<input class="sr-only peer" type="checkbox"/>
+<div class="absolute inset-0 bg-primary scale-0 peer-checked:scale-100 rounded-md transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check">check</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="fitness_center">fitness_center</span>
+<span class="font-body-md">Gym</span>
+</div>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-6 h-6 border-2 border-outline-variant rounded-lg group-hover:border-primary transition-colors">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="absolute inset-0 bg-primary scale-0 peer-checked:scale-100 rounded-md transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check">check</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="local_laundry_service">local_laundry_service</span>
+<span class="font-body-md">Laundry</span>
+</div>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-6 h-6 border-2 border-outline-variant rounded-lg group-hover:border-primary transition-colors">
+<input class="sr-only peer" type="checkbox"/>
+<div class="absolute inset-0 bg-primary scale-0 peer-checked:scale-100 rounded-md transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check">check</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="security">security</span>
+<span class="font-body-md">24/7 Security</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Distance Section -->
+<div class="bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(37,99,235,0.04)] border border-surface-container-high">
+<div class="flex justify-between items-center mb-gutter">
+<h3 class="font-label-md text-label-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="distance">distance</span>
+                            Distance to Campus
+                        </h3>
+<span class="font-label-md text-primary bg-primary-fixed px-3 py-1 rounded-full">Within 2.5 km</span>
+</div>
+<div class="relative pt-6 pb-2">
+<input class="w-full h-2 bg-surface-container-highest rounded-full appearance-none cursor-pointer accent-primary" max="15" min="0.5" step="0.5" type="range" value="2.5"/>
+<div class="flex justify-between mt-4 text-caption text-outline font-caption">
+<span>0.5 km</span>
+<span>15 km</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Preview Card - Right Column (Desktop Only) -->
+<div class="hidden lg:block lg:col-span-4 sticky top-28 h-fit">
+<div class="bg-white rounded-2xl overflow-hidden shadow-xl border border-surface-container-high transition-transform hover:scale-[1.02]">
+<div class="relative h-48">
+<img alt="Hostel Preview" class="w-full h-full object-cover" data-alt="A bright, airy student living space featuring contemporary furniture and a large window overlooking a lush university campus garden. The room is decorated with minimalist white shelves, a sleek wooden desk with a modern lamp, and vibrant green potted plants. The lighting is soft and golden, suggesting a peaceful late afternoon study environment in a premium student residence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjcnB_1vzeibs849tLxAheWADil4G3eU0oJh5p_kdatXYD90305B77agwqvYHTTYnfTIW6FMjAP_h4oNH3VNcCqcXGuVx3pAgjsysq1g011Ekt1il0CN0GxoybQE1TcV1mHxxopMDv4Xj8dRtwObJ970Kr-xUCMt1T96iQ8_1sjOp3E5Zp1eVx6igru3mu7UwEGgcAVa6knk21Z5v8ihcW-oHR1Ap49JrmvocsNhYWUQphF4aMMKcx4pViPUaj2yrb8goVzXh9DEI"/>
+<div class="absolute top-4 right-4 bg-secondary-fixed text-on-secondary-fixed font-bold px-3 py-1 rounded-lg text-sm shadow-md">
+                            $750/mo
+                        </div>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-primary font-bold px-3 py-1 rounded-lg text-sm flex items-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-[16px] fill-current" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+                            Verified
+                        </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-lg text-on-surface">The Hive Residencies</h4>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-[18px] fill-current" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">4.8</span>
+</div>
+</div>
+<p class="text-caption text-on-surface-variant mb-4">0.8 km from Main University Entrance</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-2 py-1 bg-surface-container text-primary rounded-md text-[10px] font-bold uppercase tracking-wider">Fast WiFi</span>
+<span class="px-2 py-1 bg-surface-container text-primary rounded-md text-[10px] font-bold uppercase tracking-wider">Air Conditioned</span>
+<span class="px-2 py-1 bg-surface-container text-primary rounded-md text-[10px] font-bold uppercase tracking-wider">Gym Access</span>
+</div>
+<button class="w-full py-3 bg-primary-container text-white font-label-md rounded-xl active:scale-95 transition-transform duration-200 shadow-lg shadow-primary-container/20">
+                            View Matching Results
+                        </button>
+</div>
+</div>
+<div class="mt-gutter p-4 rounded-xl bg-surface-container-low border border-dashed border-primary/30 text-center">
+<p class="text-caption text-on-surface-variant italic">Showing 42 options matching your current filters</p>
+</div>
+</div>
+</div>
+<!-- Sticky Mobile Action Button -->
+<div class="fixed bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-xl border-t border-surface-container-high lg:hidden z-50">
+<div class="max-w-screen-xl mx-auto flex items-center gap-4">
+<button class="p-3 border-2 border-surface-container-high rounded-xl text-on-surface-variant active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="restart_alt">restart_alt</span>
+</button>
+<button class="flex-1 py-4 bg-primary-container text-white font-headline-md text-sm rounded-2xl shadow-lg shadow-primary-container/20 active:scale-[0.98] transition-transform">
+                    Apply Filters
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 bg-white/80 backdrop-blur-xl z-50 border-t border-slate-200">
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-1.5 hover:bg-slate-50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-1.5 hover:bg-slate-50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-50 text-blue-700 rounded-2xl px-5 py-1.5 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-1.5 hover:bg-slate-50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Profile</span>
+</a>
+</nav>
+</body></html>

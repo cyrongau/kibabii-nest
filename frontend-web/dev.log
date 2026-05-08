@@ -1,0 +1,19 @@
+
+> frontend-web@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 22328, using available port 3003 instead.
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3003
+- Network:       http://172.21.160.1:3003
+- Environments: .env.local
+✓ Ready in 821ms
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3002
+- PID:          27696
+- Dir:          C:\dev\kibabii-nest\frontend-web
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 27696 /F to stop it.
+[?25h

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary": "#004ac6",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary-container": "#ffeedd",
+                    "surface-container": "#e5eeff",
+                    "surface-dim": "#cbdbf5",
+                    "on-surface-variant": "#434655",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-secondary-fixed": "#002113",
+                    "tertiary-fixed": "#ffddb8",
+                    "background": "#f8f9ff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#737686",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-background": "#0b1c30",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#006c49",
+                    "primary-container": "#2563eb",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-bright": "#f8f9ff",
+                    "surface-container-high": "#dce9ff",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#0053db",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#6cf8bb",
+                    "tertiary-container": "#996100",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary": "#784b00",
+                    "on-primary-fixed": "#00174b",
+                    "on-secondary-container": "#00714d",
+                    "on-primary-container": "#eeefff",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#005236",
+                    "inverse-primary": "#b4c5ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "inverse-surface": "#213145",
+                    "surface-variant": "#d3e4fe",
+                    "surface": "#f8f9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-margin": "20px",
+                    "base": "8px",
+                    "stack-sm": "12px",
+                    "gutter": "16px",
+                    "stack-md": "24px",
+                    "stack-lg": "48px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+<!-- Top AppBar Component -->
+<header class="docked full-width top-0 sticky z-40 bg-[#F8FAFC]">
+<div class="flex justify-between items-center w-full px-5 py-4 max-w-screen-xl mx-auto">
+<button class="active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined text-on-surface" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-blue-600 font-black tracking-tighter text-2xl font-plus-jakarta-sans">Kibabii Nest</h1>
+<button class="active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined text-on-surface" data-icon="share">share</span>
+</button>
+</div>
+</header>
+<main class="max-w-screen-xl mx-auto">
+<!-- Image Gallery -->
+<section class="px-container-margin mt-base">
+<div class="grid grid-cols-4 grid-rows-2 gap-3 h-[400px]">
+<div class="col-span-3 row-span-2 relative rounded-3xl overflow-hidden group">
+<img class="w-full h-full object-cover" data-alt="A premium student hostel room with high ceilings, large windows letting in abundant natural light, and modern minimalist furniture. The interior uses a clean color palette of whites and soft blues, creating an optimistic and focused living environment. High-end architectural photography style with a bright, airy feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsH9EFixNrjFzV9jNOgKRZzdZx7OFmWfYIE3EgEER1y4recB06nem9_ONFAz0jpwHgNwGXC9dF9vd0lKN2pBgdQTz81f81no3nR0d9j0NmrKDMnVuLeXiaHIAconR0TSRkdjblTqSUC4f5frvdfKDEYvNWvX7LjySzhFRaJSE58GAowRLRUKK5Ij2_ZM1eywaS2BA4FqysMlBe45Mt32ehTvkgHs3Rkl3aotDSZNc0w7-PZeL-aIufKFIPVNgqs0nGT1BVQ2UQZfM"/>
+<div class="absolute top-4 left-4 bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-full font-label-md text-caption flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        Verified Listing
+                    </div>
+</div>
+<div class="col-span-1 row-span-1 rounded-3xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A modern and clean shared kitchen area in a luxury student residence. Features stainless steel appliances, pristine white cabinetry, and bright azure blue accents. The atmosphere is social yet tidy, perfectly capturing the youthful energy and organized lifestyle of a student community." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz0el8dKvMJ_GZ1TUlYlc_MT7veFv2TtYf16Ewg2dZg35Pi7rI2xNvR3gEvTIesIAi7ZKHkRYmPQeVIPyRDKJG5IdBEi9BqQ2gnBkfRLATOCRKeAczDJas0LdKoyir-oeBdVFoLlxLqFDsZYsLdKvIPLRloyhN29oGBfAmiPtXp2h66rHPwNybRtZMPSLuM1ljirbryy_UpoZgy3nMZMnTaoUZ8vYifp6bF-Bjk93lXxy7xXn8YUSP0YszQ7OEUWe10pJrveanN-I"/>
+</div>
+<div class="col-span-1 row-span-1 rounded-3xl overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Detailed view of a student study nook with a high-speed Wi-Fi router visible, a ergonomic chair, and a minimalist desk. The scene is illuminated by soft, cool-toned daylight. It emphasizes the 'Empowering Roommate' brand persona—helpful, organized, and optimized for productivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTYUA788xfpSfbtT0p5RxE9rzA2Cp8Da4_gHTbftlx09O_LSWqIN_uCQrs9G3CrYKQ6oOBP8QG0-wztjlOgSOgih8g6CavzFYa_rX3r3afvHK_WVl-6Zw5GnoSZN-f8H2RHtnj2tx9-ZN5DnLPZWY-Yf_9uWO-Cxzkt7m9i12o0NpfCjUmPsE1QVbHHRY4sSg1DnWlfCoMzrcOYvw94Oth9qxhimgibgtGYkG0qH_Ch9uAoXj9xfr1A-OIAY_XbN_z9Roozhb-UEo"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+<span class="text-white font-label-md">+12 photos</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Header & Primary Stats -->
+<section class="px-container-margin mt-stack-lg">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">The Azure Commons</h2>
+<div class="flex items-center gap-2 mt-2 text-outline">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+<span class="font-body-md">University District, Metro City</span>
+</div>
+</div>
+<div class="text-right">
+<div class="text-primary font-headline-md text-headline-md">$450<span class="text-body-md font-normal text-outline">/mo</span></div>
+<div class="flex items-center justify-end gap-1 mt-1 text-tertiary">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">4.9 (124 reviews)</span>
+</div>
+</div>
+</div>
+<!-- Bento Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-stack-md">
+<div class="bg-surface-container-low p-4 rounded-3xl border border-surface-variant flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="square_foot">square_foot</span>
+<div>
+<div class="text-outline text-caption">Size</div>
+<div class="font-label-md text-on-surface">15 sqm</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-3xl border border-surface-variant flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="directions_walk">directions_walk</span>
+<div>
+<div class="text-outline text-caption">Campus</div>
+<div class="font-label-md text-on-surface">500m away</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-3xl border border-surface-variant flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="person_pin_circle">person_pin_circle</span>
+<div>
+<div class="text-outline text-caption">Type</div>
+<div class="font-label-md text-on-surface">Single Room</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-3xl border border-surface-variant flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="event_available">event_available</span>
+<div>
+<div class="text-outline text-caption">Availability</div>
+<div class="font-label-md text-on-surface">Immediate</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Amenities -->
+<section class="px-container-margin mt-stack-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-md">Amenities</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="flex items-center gap-3 p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(37,99,235,0.04)]">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="wifi">wifi</span>
+</div>
+<span class="font-label-md">High-speed WiFi</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(37,99,235,0.04)]">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="local_laundry_service">local_laundry_service</span>
+</div>
+<span class="font-label-md">Laundry Room</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(37,99,235,0.04)]">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="fitness_center">fitness_center</span>
+</div>
+<span class="font-label-md">24/7 Gym</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(37,99,235,0.04)]">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="countertops">countertops</span>
+</div>
+<span class="font-label-md">Shared Kitchen</span>
+</div>
+</div>
+</section>
+<!-- Nearby Facilities Map Layout -->
+<section class="px-container-margin mt-stack-lg">
+<div class="grid md:grid-cols-2 gap-gutter">
+<div class="flex flex-col justify-center">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-gutter">Location &amp; Neighborhood</h3>
+<p class="text-on-surface-variant font-body-md mb-stack-md leading-relaxed">
+                        Situated in the heart of the University District, The Azure Commons offers unparalleled access to urban essentials. Experience a vibrant community with everything you need within a 10-minute walk.
+                    </p>
+<div class="space-y-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="subway">subway</span>
+<div>
+<div class="font-label-md">Central Subway Station</div>
+<div class="text-caption text-outline">3 min walk • Direct line to Downtown</div>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="local_grocery_store">local_grocery_store</span>
+<div>
+<div class="font-label-md">Fresh Mart Grocery</div>
+<div class="text-caption text-outline">5 min walk • Open 24/7</div>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="coffee">coffee</span>
+<div>
+<div class="font-label-md">The Study Bean Cafe</div>
+<div class="text-caption text-outline">2 min walk • Student discounts</div>
+</div>
+</div>
+</div>
+</div>
+<div class="h-[300px] rounded-3xl overflow-hidden relative border border-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A stylized, modern map view of a vibrant urban neighborhood. The map features minimalist clean lines in shades of light gray and blue, with key landmarks highlighted with bright azure icons. It has an artistic, high-contrast UI feel that matches the overall design system's aesthetic of clarity and optimistic energy." data-location="Metro City University District" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb9X8q3emshFggt4xdaeRhKh2Dwo7bhe_1v4xY_AxdgxM9UfnqMDnlg_rFBeaAwk-aE-Po1c7UNzgj851LipLJC-nFEQ791eHNNtdsZCxnvWX9_JZl3czXG-lIlqG1lx9-n22HX1sp6myKbv8ishbyB3D3nbmupFWOaJmOWJjXoMX4-P9RGoIX_vbpCgrox7ZleqDPOIJrdq8aJmcHqUji73Uu7qZOyc0FcUPmn-f4-uMiTrqufvTmH5U28GB4iGT8ln6Q8gV-vQU"/>
+<div class="absolute inset-0 bg-primary/10 pointer-events-none"></div>
+<button class="absolute bottom-4 right-4 bg-white text-on-surface px-4 py-2 rounded-full font-label-md shadow-lg flex items-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="map">map</span>
+                        Open in Maps
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl border-t border-slate-100 z-50">
+<div class="max-w-screen-xl mx-auto px-container-margin py-5 flex items-center justify-between gap-gutter">
+<div class="hidden md:block">
+<div class="text-caption text-outline">Total Monthly</div>
+<div class="text-headline-md text-primary">$450.00</div>
+</div>
+<div class="flex flex-1 gap-3">
+<button class="flex-1 md:flex-none md:w-48 py-4 px-6 rounded-2xl border-2 border-primary text-primary font-label-md hover:bg-primary-container/10 active:scale-95 transition-all">
+                    Inquire
+                </button>
+<button class="flex-[2] md:flex-none md:w-64 py-4 px-6 rounded-2xl bg-primary text-on-primary font-headline-md text-body-lg shadow-[0_8px_30px_rgb(0,74,198,0.2)] hover:opacity-90 active:scale-[0.98] transition-all">
+                    Book Now
+                </button>
+</div>
+</div>
+</div>
+</body></html>

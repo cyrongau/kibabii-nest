@@ -1,0 +1,532 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id         String     @id @default(cuid())
+  name       String     @unique
+  createdAt  DateTime   @default(now())
+  properties Property[]
+}
+
+model PropertyType {
+  id            String         @id @default(cuid())
+  name          String         @unique
+  createdAt     DateTime       @default(now())
+  propertyUnits PropertyUnit[]
+}
+
+model User {
+  id                          String            @id @default(uuid())
+  email                       String            @unique
+  password                    String
+  name                        String
+  role                        Role              @default(STUDENT)
+  phone                       String?
+  avatar                      String?
+  createdAt                   DateTime          @default(now())
+  updatedAt                   DateTime          @updatedAt
+  googleId                    String?           @unique
+  twoFactorEnabled            Boolean           @default(false)
+  twoFactorSecret             String?
+  isVerifiedLandlord          Boolean           @default(false)
+  isSuspended                 Boolean           @default(false)
+  accountName                 String?
+  accountNumber               String?
+  balance                     Float             @default(0)
+  bankName                    String?
+  hasAcceptedMarketplaceTerms Boolean           @default(false)
+  bookings                    Booking[]
+  favorites                   Favorite[]
+  kyc                         LandlordKyc?
+  marketplaceItems            MarketplaceItem[]
+  receivedMessages            Message[]         @relation("ReceivedMessages")
+  sentMessages                Message[]         @relation("SentMessages")
+  notifications               Notification[]
+  properties                  Property[]
+  reviews                     Review[]
+  serviceRequests             ServiceRequest[]
+  studentIdentity             StudentIdentity?
+  studyBuddyPosts             StudyBuddyPost[]
+  studyBuddyReplies           StudyBuddyReply[]
+  supportTickets              SupportTicket[]
+  tenancies                   Tenancy[]         @relation("TenantTenancies")
+  testimonials                Testimonial[]
+  withdrawals                 Withdrawal[]
+  conversations               Conversation[]    @relation("UserConversations")
+  walletTransactions          WalletTransaction[]
+}
+
+model LandlordKyc {
+  id                String    @id @default(uuid())
+  userId            String    @unique
+  idDocumentUrl     String
+  ownershipProofUrl String
+  certificateUrl    String?
+  status            KycStatus @default(PENDING)
+  aiAnalysis        Json?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  user              User      @relation(fields: [userId], references: [id])
+}
+
+model StudentIdentity {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  documentUrl     String
+  documentType    String   @default("NATIONAL_ID")
+  fullName        String?
+  idNumber        String?
+  dateOfBirth     String?
+  universityRegNo String?
+  aiAnalysis      Json?
+  aiConfidence    Float?
+  verified        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  bio             String?
+  faculty         String?
+  hobbies         String?
+  yearOfStudy     Int?
+  user            User     @relation(fields: [userId], references: [id])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  senderId       String
+  receiverId     String
+  createdAt      DateTime     @default(now())
+  text           String?
+  conversationId String
+  isRead         Boolean      @default(false)
+  mediaUrl       String?
+  type           MessageType  @default(TEXT)
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  receiver       User         @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+}
+
+model Conversation {
+  id                String               @id @default(cuid())
+  ticketId          String?              @unique
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  category          ConversationCategory @default(GENERAL)
+  marketplaceItemId String?
+  marketplaceItem   MarketplaceItem?     @relation(fields: [marketplaceItemId], references: [id])
+  ticket            SupportTicket?       @relation(fields: [ticketId], references: [id])
+  messages          Message[]
+  participants      User[]               @relation("UserConversations")
+}
+
+model SupportTicket {
+  id           String        @id @default(uuid())
+  userId       String
+  subject      String
+  description  String
+  status       TicketStatus  @default(OPEN)
+  category     String        @default("GENERAL")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  conversation Conversation?
+  user         User          @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  link      String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SystemConfig {
+  id                  String  @id @default("default")
+  smsProvider         String  @default("FIREBASE")
+  twilioSid           String?
+  twilioAuthToken     String?
+  twilioPhoneNumber   String?
+  firebaseConfig      Json?
+  brandLogoUrl        String?
+  brandName           String  @default("Kibabii Nest")
+  brandPrimaryColor   String?
+  smtpFromEmail       String?
+  smtpFromName        String?
+  smtpHost            String?
+  smtpPass            String?
+  smtpPort            Int?
+  smtpSecure          Boolean @default(false)
+  smtpUser            String?
+  socialFacebook      String?
+  socialInstagram     String?
+  socialTiktok        String?
+  socialTwitter       String?
+  socialYoutube       String?
+  mpesaCallbackUrl    String?
+  mpesaConsumerKey    String?
+  mpesaConsumerSecret String?
+  mpesaEnvironment    String  @default("sandbox")
+  mpesaPasskey        String?
+  mpesaShortcode      String?
+}
+
+model Property {
+  id                   String           @id @default(uuid())
+  name                 String
+  description          String
+  address              String
+  city                 String           @default("Bungoma")
+  distanceToCampus     Float?
+  amenities            String[]
+  images               String[]
+  verified             Boolean          @default(false)
+  landlordId           String
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  lat                  Float?
+  lng                  Float?
+  rules                String[]
+  services             String[]
+  videoUrl             String?
+  categoryId           String?
+  agreementTemplateUrl String?
+  utilityConfig        Json?
+  extraCharges         Json?
+  useSystemAgreement   Boolean          @default(false)
+  favorites            Favorite[]
+  category             Category?        @relation(fields: [categoryId], references: [id])
+  landlord             User             @relation(fields: [landlordId], references: [id])
+  notices              PropertyNotice[]
+  units                PropertyUnit[]
+  reviews              Review[]
+  serviceRequests      ServiceRequest[]
+}
+
+model Favorite {
+  id         String   @id @default(cuid())
+  userId     String
+  propertyId String
+  createdAt  DateTime @default(now())
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+}
+
+model PropertyUnit {
+  id                 String        @id @default(uuid())
+  propertyId         String
+  typeId             String?
+  price              Float
+  capacity           Int           @default(1)
+  totalUnits         Int           @default(1)
+  unitNames          String[]
+  upfrontDiscountPct Float         @default(0)
+  bookings           Booking[]
+  property           Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  type               PropertyType? @relation(fields: [typeId], references: [id])
+  tenancies          Tenancy[]
+}
+
+model Booking {
+  id             String        @id @default(uuid())
+  studentId      String
+  status         BookingStatus @default(PENDING)
+  amount         Float
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  propertyUnitId String
+  months         Int           @default(1)
+  propertyUnit   PropertyUnit  @relation(fields: [propertyUnitId], references: [id])
+  student        User          @relation(fields: [studentId], references: [id])
+  payment        Payment?
+}
+
+model Tenancy {
+  id                 String          @id @default(uuid())
+  tenantId           String
+  propertyUnitId     String
+  unitName           String?
+  status             TenancyStatus   @default(ACTIVE)
+  monthlyRent        Float
+  depositAmount      Float           @default(0)
+  moveInDate         DateTime        @default(now())
+  moveOutDate        DateTime?
+  paymentDeadlineDay Int             @default(5)
+  latePenaltyPerDay  Float           @default(0)
+  upfrontDiscountPct Float           @default(0)
+  breakPeriodEnabled Boolean         @default(false)
+  breakPeriodRentPct Float           @default(50)
+  breakPeriodStart   Int             @default(4)
+  breakPeriodEnd     Int             @default(9)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  agreementUrl       String?
+  signedAt           DateTime?
+  payments           Payment[]
+  propertyUnit       PropertyUnit    @relation(fields: [propertyUnitId], references: [id])
+  tenant             User            @relation("TenantTenancies", fields: [tenantId], references: [id])
+  vacationNotice     VacationNotice?
+}
+
+model VacationNotice {
+  id           String   @id @default(uuid())
+  tenancyId    String   @unique
+  noticeDate   DateTime @default(now())
+  vacationDate DateTime
+  processed    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  tenancy      Tenancy  @relation(fields: [tenancyId], references: [id])
+}
+
+model Payment {
+  id                   String              @id @default(uuid())
+  tenancyId            String?
+  bookingId            String?             @unique
+  month                Int?
+  year                 Int?
+  amountDue            Float
+  amountPaid           Float               @default(0)
+  penaltyAmount        Float               @default(0)
+  discountAmount       Float               @default(0)
+  dueDate              DateTime?
+  paidDate             DateTime?
+  status               PaymentRecordStatus @default(PENDING)
+  mpesaReceiptNumber   String?
+  mpesaTransactionDate DateTime?
+  mpesaPhoneNumber     String?
+  mpesaCheckoutRequestId String?           @unique
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  tenancy              Tenancy?            @relation(fields: [tenancyId], references: [id])
+  booking              Booking?            @relation(fields: [bookingId], references: [id])
+  receipt              PaymentReceipt?
+}
+
+model PaymentReceipt {
+  id              String    @id @default(uuid())
+  paymentId       String    @unique
+  fileUrl         String
+  rawText         String?
+  aiTransactionId String?
+  aiAmount        Float?
+  aiDate          String?
+  aiSenderName    String?
+  aiSenderPhone   String?
+  aiConfidence    Float?
+  aiRawResponse   String?
+  verified        Boolean   @default(false)
+  verifiedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  payment         Payment   @relation(fields: [paymentId], references: [id])
+}
+
+model ServiceRequest {
+  id          String               @id @default(uuid())
+  tenantId    String
+  propertyId  String
+  title       String
+  description String
+  priority    String               @default("MEDIUM")
+  status      ServiceRequestStatus @default(OPEN)
+  photos      String[]
+  resolvedAt  DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  property    Property             @relation(fields: [propertyId], references: [id])
+  tenant      User                 @relation(fields: [tenantId], references: [id])
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String
+  studentId  String
+  propertyId String
+  createdAt  DateTime @default(now())
+  property   Property @relation(fields: [propertyId], references: [id])
+  student    User     @relation(fields: [studentId], references: [id])
+}
+
+model PropertyNotice {
+  id         String    @id @default(uuid())
+  propertyId String?
+  title      String
+  content    String
+  type       String    @default("GENERAL")
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  property   Property? @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model Withdrawal {
+  id          String    @id @default(uuid())
+  landlordId  String
+  amount      Float
+  status      String    @default("PENDING")
+  method      String    @default("BANK")
+  processedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  landlord    User      @relation(fields: [landlordId], references: [id])
+}
+
+model Testimonial {
+  id         String   @id @default(uuid())
+  userId     String
+  content    String
+  rating     Int      @default(5)
+  isFeatured Boolean  @default(false)
+  status     String   @default("PENDING")
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model MarketplaceItem {
+  id              String                @id @default(uuid())
+  sellerId        String
+  title           String
+  description     String
+  price           Float
+  images          String[]
+  category        String                @default("GENERAL")
+  phone           String?
+  isSold          Boolean               @default(false)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  rejectionReason String?
+  status          MarketplaceItemStatus @default(PENDING)
+  conversations   Conversation[]
+  seller          User                  @relation(fields: [sellerId], references: [id])
+}
+
+model StudyBuddyPost {
+  id        String            @id @default(uuid())
+  authorId  String
+  title     String
+  content   String
+  faculty   String?
+  tags      String[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  author    User              @relation(fields: [authorId], references: [id])
+  replies   StudyBuddyReply[]
+}
+
+model StudyBuddyReply {
+  id        String         @id @default(uuid())
+  postId    String
+  authorId  String
+  content   String
+  createdAt DateTime       @default(now())
+  author    User           @relation(fields: [authorId], references: [id])
+  post      StudyBuddyPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+enum ConversationCategory {
+  GENERAL
+  LANDLORD
+  MARKETPLACE
+  SUPPORT
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum MarketplaceItemStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Role {
+  STUDENT
+  LANDLORD
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum PaymentRecordStatus {
+  PENDING
+  SUBMITTED
+  VERIFIED
+  OVERDUE
+  PAID
+  REJECTED
+}
+
+enum TenancyStatus {
+  ACTIVE
+  NOTICE_GIVEN
+  VACATED
+  BREAK_HOLD
+}
+
+enum ServiceRequestStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum TransactionType {
+  DEPOSIT
+  TRANSFER
+  WITHDRAWAL
+  REFUND
+  COMMISSION
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model WalletTransaction {
+  id              String            @id @default(uuid())
+  userId          String
+  amount          Float
+  type            TransactionType
+  status          TransactionStatus @default(PENDING)
+  reference       String?           @unique // M-Pesa Receipt, internal ref, etc.
+  description     String?
+  metadata        Json?             // Flexible data like bank details or STK Push response
+  mpesaCheckoutRequestId String?   @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  user            User              @relation(fields: [userId], references: [id])
+}

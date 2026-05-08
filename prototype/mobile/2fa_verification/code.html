@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verify Identity - Kibabii Nest</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-on-surface": "#eaf1ff",
+                    "inverse-surface": "#213145",
+                    "surface-variant": "#d3e4fe",
+                    "surface": "#f8f9ff",
+                    "on-primary-container": "#eeefff",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#005236",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-high": "#dce9ff",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#0053db",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary-container": "#996100",
+                    "secondary-container": "#6cf8bb",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#784b00",
+                    "on-primary-fixed": "#00174b",
+                    "on-secondary-container": "#00714d",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-bright": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#006c49",
+                    "primary-container": "#2563eb",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#737686",
+                    "surface-container": "#e5eeff",
+                    "surface-dim": "#cbdbf5",
+                    "on-surface-variant": "#434655",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "tertiary-fixed": "#ffddb8",
+                    "background": "#f8f9ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary": "#004ac6",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary-container": "#ffeedd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "24px",
+                    "stack-lg": "48px",
+                    "gutter": "16px",
+                    "container-margin": "20px",
+                    "stack-sm": "12px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #F8FAFC;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed">
+<header class="fixed top-0 left-0 w-full flex items-center justify-between px-5 h-16 bg-[#F8FAFC] z-50 border-b border-slate-200 shadow-[0_4px_20px_-4px_rgba(37,99,235,0.04)]">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-100 transition-colors active:scale-[0.98] transition-transform duration-200 text-[#2563EB]">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="font-['Plus_Jakarta_Sans'] font-semibold text-lg font-extrabold tracking-tight text-[#2563EB]">Kibabii Nest</span>
+</div>
+</header>
+<main class="min-h-screen flex flex-col items-center justify-center px-container-margin pt-24 pb-12">
+<div class="w-full max-w-md bg-white p-8 rounded-3xl shadow-[0_4px_24px_rgba(37,99,235,0.06)] border border-blue-50/50">
+<div class="flex flex-col items-center text-center mb-stack-lg">
+<div class="w-20 h-20 bg-surface-container-low rounded-2xl flex items-center justify-center mb-stack-md text-primary-container shadow-sm border border-blue-100">
+<span class="material-symbols-outlined !text-4xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Verify Your Identity</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px]">Enter the 6-digit code sent to your email</p>
+</div>
+<form class="space-y-stack-lg">
+<div class="flex justify-between gap-2 sm:gap-3" id="otp-inputs">
+<input autofocus="" class="w-12 h-14 sm:w-14 sm:h-16 text-center text-headline-md font-headline-md border-2 border-outline-variant bg-surface-container-lowest rounded-xl focus:border-primary-container focus:ring-4 focus:ring-primary-fixed/20 transition-all outline-none" maxlength="1" type="text"/>
+<input class="w-12 h-14 sm:w-14 sm:h-16 text-center text-headline-md font-headline-md border-2 border-outline-variant bg-surface-container-lowest rounded-xl focus:border-primary-container focus:ring-4 focus:ring-primary-fixed/20 transition-all outline-none" maxlength="1" type="text"/>
+<input class="w-12 h-14 sm:w-14 sm:h-16 text-center text-headline-md font-headline-md border-2 border-outline-variant bg-surface-container-lowest rounded-xl focus:border-primary-container focus:ring-4 focus:ring-primary-fixed/20 transition-all outline-none" maxlength="1" type="text"/>
+<input class="w-12 h-14 sm:w-14 sm:h-16 text-center text-headline-md font-headline-md border-2 border-outline-variant bg-surface-container-lowest rounded-xl focus:border-primary-container focus:ring-4 focus:ring-primary-fixed/20 transition-all outline-none" maxlength="1" type="text"/>
+<input class="w-12 h-14 sm:w-14 sm:h-16 text-center text-headline-md font-headline-md border-2 border-outline-variant bg-surface-container-lowest rounded-xl focus:border-primary-container focus:ring-4 focus:ring-primary-fixed/20 transition-all outline-none" maxlength="1" type="text"/>
+<input class="w-12 h-14 sm:w-14 sm:h-16 text-center text-headline-md font-headline-md border-2 border-outline-variant bg-surface-container-lowest rounded-xl focus:border-primary-container focus:ring-4 focus:ring-primary-fixed/20 transition-all outline-none" maxlength="1" type="text"/>
+</div>
+<div class="space-y-stack-md">
+<button class="w-full h-14 bg-primary-container text-on-primary-container font-label-md text-label-md rounded-2xl shadow-lg shadow-primary-container/20 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+<span>Verify</span>
+</button>
+<div class="text-center">
+<p class="font-body-md text-on-surface-variant mb-2">Didn't receive the code?</p>
+<div class="flex items-center justify-center gap-2">
+<button class="text-primary-container font-label-md text-label-md hover:underline decoration-2 underline-offset-4 disabled:text-outline disabled:no-underline transition-colors" disabled="" type="button">
+                                Resend Code
+                            </button>
+<span class="text-outline text-caption font-caption bg-surface-container px-2 py-1 rounded-full">00:59</span>
+</div>
+</div>
+</div>
+</form>
+<div class="mt-stack-lg pt-stack-md border-t border-slate-100 flex items-center justify-center gap-3">
+<span class="material-symbols-outlined text-outline text-sm">lock</span>
+<span class="text-caption font-caption text-outline">Secure encrypted verification</span>
+</div>
+</div>
+<div class="mt-stack-lg grid grid-cols-1 md:grid-cols-2 gap-stack-md max-w-4xl w-full">
+<div class="relative h-48 rounded-3xl overflow-hidden group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A brightly lit, modern student lounge area with minimalist aesthetic furniture and floor-to-ceiling windows. The scene is bathed in soft, natural morning light, creating a clean and productive atmosphere. The interior features a soft white and pale blue color palette that matches a professional light-mode UI, evoking feelings of safety and clarity for young residents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhjNZScHW82vqEfiCd4OG1ZsrbZP4zOxza-BYjJAS8hONCBpH7t2s7IYKFSL7zip9aYPbDD5lXU-W00-s9Rlkbm99h-PJS54HEACxu2iQMElmLcGyTti47ARyJpVseKRLf3dBBERLtkcu7eZScoyaLM0Nblg3Uy0oMotdOAYs3UIdcW9tdIYeas_ugaJESOqjGsRANGfm75FNdh2M_bwQ0mg-ZzkgzmFVrRq8tSAa2B4gIcHJOfKGPM326ZjbjVRGbGnH9A3fhtBI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent flex items-end p-6">
+<span class="text-white font-label-md text-label-md">Student Safety First</span>
+</div>
+</div>
+<div class="relative h-48 rounded-3xl overflow-hidden group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A group of diverse university students collaborating in a high-tech study space with vibrant blue accents. The lighting is crisp and modern, emphasizing a secure and optimistic environment. The visual style is contemporary minimalism, with high-key lighting that perfectly complements a premium web interface designed for student housing and institutional trust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2_8-bHm3dkV1vA8oAJCbgLHuPY38lfeczN0MU_7jPtCuWNrEv6WROYz_YV48JEwXQ4MX56er5voLmtATeYx-p-bU0a3KZuQaUDLmjiU0eGMeIvwH8XeZ0RWBEkq5k3t9aIAA1Wz7gNfrjlymso8jqgVpuAWOUpTCzTTYVjd_43ruo63K5NUaz_6E8gt3VIRSQ7e46AxwmuwIZhBEsGOkbSLTQkirnf_cunldVAyDtT7xd2OUaiTh5FZuGt_Gr57UeE7TaidjOj1g"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent flex items-end p-6">
+<span class="text-white font-label-md text-label-md">Verified Community</span>
+</div>
+</div>
+</div>
+</main>
+<footer class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-20 bg-white/80 backdrop-blur-xl border-t border-slate-100 shadow-[0_-4px_16px_rgba(0,0,0,0.02)]">
+<a class="flex flex-col items-center justify-center text-[#2563EB] bg-blue-50 rounded-xl px-3 py-1 font-['Plus_Jakarta_Sans'] text-[11px] font-medium active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span>Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 font-['Plus_Jakarta_Sans'] text-[11px] font-medium active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">search</span>
+<span>Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 font-['Plus_Jakarta_Sans'] text-[11px] font-medium active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span>Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 font-['Plus_Jakarta_Sans'] text-[11px] font-medium active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>Profile</span>
+</a>
+</footer>
+</body></html>

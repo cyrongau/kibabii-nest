@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-surface": "#0b1c30",
+                    "on-surface-variant": "#434655",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#dce9ff",
+                    "error": "#ba1a1a",
+                    "background": "#f8f9ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-background": "#0b1c30",
+                    "tertiary-container": "#996100",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-dim": "#cbdbf5",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "surface-container-low": "#eff4ff",
+                    "primary-fixed": "#dbe1ff",
+                    "surface-tint": "#0053db",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#005236",
+                    "tertiary": "#784b00",
+                    "surface-bright": "#f8f9ff",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "outline": "#737686",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#2563eb",
+                    "on-primary-fixed": "#00174b",
+                    "primary": "#004ac6",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "secondary": "#006c49",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#213145",
+                    "surface-container": "#e5eeff",
+                    "on-primary-container": "#eeefff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-primary": "#b4c5ff",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-tertiary-container": "#ffeedd",
+                    "surface-variant": "#d3e4fe",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface": "#f8f9ff",
+                    "secondary-container": "#6cf8bb",
+                    "on-secondary-container": "#00714d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "48px",
+                    "gutter": "16px",
+                    "stack-sm": "12px",
+                    "stack-md": "24px",
+                    "container-margin": "20px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active {
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface">
+<header class="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm shadow-blue-500/5 fixed top-0 w-full z-50">
+<div class="flex justify-between items-center px-5 h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a friendly, confident male property manager in his late 30s. He is wearing a modern blue linen shirt and smiling warmly against a blurred architectural background. The image has soft, natural daylighting and a high-key, clean aesthetic that conveys trust and hospitality, matching a premium modern UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgbgGc69WOF6dHXXsW0II9rK4d5XuxLbJCwWztvN8vkK_ja2Eq0NBbaRwTEAbQ23l3GKQJO5pyXa67o8KcKt5zj8UPe0gZm_hA72VcrcjuyHT4K8YqB6TR6a5bkyLAYaoziUeSde4wy4K-AiekHu875XeQGOiH8j1M7avTYjTn0QTs75sAtUi4fD3KCKKx3d7dVMdmQPeGMJGZGv8vP3S3gl8N8uhT1kDOyiFK1puARuTHU_sV8UO8C9F-b9otPRmRWGpbLUcDq1A"/>
+</div>
+<span class="font-plus-jakarta-sans font-bold text-lg text-on-surface">Property Manager</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-blue-600 dark:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 p-2 rounded-full transition-transform active:scale-95" data-icon="notifications">notifications</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-container-margin max-w-4xl mx-auto">
+<section class="mb-stack-lg">
+<div class="flex flex-col gap-base">
+<h1 class="font-headline-lg text-headline-lg text-primary">List Your Property</h1>
+<p class="font-body-md text-on-surface-variant">Step 1 of 4: Share the basics of your space.</p>
+</div>
+<div class="mt-stack-md flex items-center justify-between relative">
+<div class="absolute top-1/2 left-0 w-full h-1 bg-surface-container-high -translate-y-1/2 z-0"></div>
+<div class="absolute top-1/2 left-0 w-1/4 h-1 bg-primary -translate-y-1/2 z-0"></div>
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold step-active">1</div>
+<span class="font-caption text-caption text-primary">Basics</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">2</div>
+<span class="font-caption text-caption text-on-surface-variant">Photos</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">3</div>
+<span class="font-caption text-caption text-on-surface-variant">Amenities</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">4</div>
+<span class="font-caption text-caption text-on-surface-variant">Pricing</span>
+</div>
+</div>
+</section>
+<form class="space-y-stack-md">
+<div class="bg-surface-container-lowest p-stack-md rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.04)] border border-outline-variant/20">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="space-y-2 col-span-full">
+<label class="font-label-md text-label-md text-on-surface">Property Name</label>
+<input class="w-full h-14 px-4 bg-surface border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="e.g. Blue Horizon Student Living" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Category</label>
+<select class="w-full h-14 px-4 bg-surface border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none appearance-none">
+<option>Hostel</option>
+<option>Apartment</option>
+<option>Studio</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Distance to Campus (km)</label>
+<div class="relative">
+<input class="w-full h-14 px-4 bg-surface border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="0.5" step="0.1" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-md">km</span>
+</div>
+</div>
+<div class="space-y-2 col-span-full">
+<label class="font-label-md text-label-md text-on-surface">Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="location_on">location_on</span>
+<input class="w-full h-14 pl-12 pr-4 bg-surface border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="Street name, City, Postcode" type="text"/>
+</div>
+</div>
+<div class="col-span-full h-64 rounded-xl overflow-hidden border border-outline-variant relative">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist map interface showing a city grid with soft blue and grey tones. A prominent blue location pin marks a specific spot, while a dotted line connects it to a stylized university campus icon. The map aesthetic is modern and high-contrast, designed to fit within a premium property management application dashboard with vibrant azure accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATzhIqaLVYxDsYNWFPXibdPq1MHoJjQy0B_PZGG-GSpPQGHIEtEdXa8bg5MDNuUxxaimNSX1alu_triFexBPVEaVXoWz9Efqs2IhaXUL9Y6gXRwKQ5ZYRLzUWui4gIBUTiFp_DErAoIbOOMkOl_CGTHwQnz9QFG5aXwHUFMFYkHfidV3rswBvwV4nZGxqIqHIlOZcNBJw4ILtPbV9kdsicvGElCdd5MfxiitMUOUuxpble409-oBjB4aTWKR1ra9iAabh_NQ5LKwM"/>
+<div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-white/50 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="my_location">my_location</span>
+<span class="text-caption font-label-md text-on-surface">Set on map</span>
+</div>
+</div>
+<div class="space-y-2 col-span-full">
+<label class="font-label-md text-label-md text-on-surface">Property Description</label>
+<textarea class="w-full p-4 bg-surface border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none resize-none" placeholder="Tell students what makes your place special..." rows="4"></textarea>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-stack-md">
+<button class="px-8 h-14 rounded-full font-label-md text-primary hover:bg-primary/5 transition-all" type="button">Save Draft</button>
+<button class="px-10 h-14 bg-primary text-on-primary rounded-full font-label-md shadow-lg shadow-primary/20 flex items-center gap-2 hover:translate-y-[-2px] active:scale-95 transition-all" type="button">
+                    Next Step
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</form>
+</main>
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_12px_rgba(37,99,235,0.04)] z-50">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-xl px-3 py-1 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="apartment" style="font-variation-settings: 'FILL' 1;">apartment</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Properties</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Profile</span>
+</a>
+</nav>
+</body></html>

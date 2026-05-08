@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kibabii Nest Admin - Property Approvals</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#0b1c30",
+                        "on-surface-variant": "#434655",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "secondary": "#006c49",
+                        "on-tertiary-container": "#ffeedd",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline": "#737686",
+                        "surface-dim": "#cbdbf5",
+                        "primary-container": "#2563eb",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary-container": "#eeefff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary": "#784b00",
+                        "primary": "#004ac6",
+                        "tertiary-container": "#996100",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-container": "#00714d",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-low": "#eff4ff",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary-fixed-dim": "#ffb95f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "gutter": "16px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background-color: #f8f9ff;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<div class="flex min-h-screen">
+<!-- Shared SideNavBar Sidebar -->
+<aside class="w-80 border-r border-outline-variant bg-surface-container-lowest flex flex-col shrink-0">
+<div class="p-6 flex flex-col h-full">
+<div class="flex gap-3 mb-8">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="A professional circular logo for Kibabii Nest student housing portal, featuring a minimalist nest icon in primary blue. The background is a clean white, and the overall design is modern, institutional, and trustworthy. Soft studio lighting highlights the sleek curves of the graphic." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAk7EdiYI3LAUoT_kuMWt9qnHVa6yivJAJRKRx2Ghp2s0wPdPlUMFmyTN1jLST2BSTl5AxyBjrCSCVdKloiBChkXHGo5gVf9ecDhHSKJ3rH8oKvSa5g_5XjxMD8BPfor_0rbETfLmSapErOXMU5CmHguT38E3QttdQpKCVGG5nmOInRHb51-RThG9_VB74DV7agllWKYalUPQ5jcuFr2POsASqWxvkUIpgIgRXrLRK_HpECaxnw-ACtmaiQh33YfORW1fgNZfybEuM");'></div>
+<div class="flex flex-col">
+<h1 class="text-on-surface text-base font-bold leading-normal">Kibabii Nest</h1>
+<p class="text-on-surface-variant text-sm font-normal leading-normal">Admin Portal</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-surface-container rounded-lg">
+<div class="text-on-surface" data-icon="Gauge" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">scale</span>
+</div>
+<p class="text-on-surface text-sm font-medium">Dashboard</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-highest text-primary">
+<div class="text-primary" data-icon="CalendarCheck" data-size="24px" data-weight="fill">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_check</span>
+</div>
+<p class="text-sm font-bold">Property Approvals</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-surface-container rounded-lg">
+<div class="text-on-surface" data-icon="User" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-on-surface text-sm font-medium">Landlords</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-surface-container rounded-lg">
+<div class="text-on-surface" data-icon="Users" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">group</span>
+</div>
+<p class="text-on-surface text-sm font-medium">Students</p>
+</div>
+</nav>
+<div class="mt-auto">
+<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-surface-container rounded-lg">
+<div class="text-on-surface" data-icon="Gear" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">settings</span>
+</div>
+<p class="text-on-surface text-sm font-medium">Settings</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-outline-variant px-10 py-4 bg-surface-container-lowest">
+<div class="flex items-center gap-4 text-on-surface">
+<div class="size-6 text-primary">
+<span class="material-symbols-outlined">real_estate_agent</span>
+</div>
+<h2 class="text-headline-md leading-tight">Property Management</h2>
+</div>
+<div class="flex flex-1 justify-end gap-gutter items-center">
+<label class="flex flex-col min-w-40 h-11 max-w-sm">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full border border-outline-variant bg-surface overflow-hidden">
+<div class="text-on-surface-variant flex items-center justify-center pl-4" data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input w-full border-none bg-transparent focus:ring-0 px-4 text-body-md placeholder:text-on-surface-variant" placeholder="Search property or landlord..."/>
+</div>
+</label>
+<div class="flex gap-stack-sm">
+<button class="size-11 flex items-center justify-center rounded-xl bg-surface-container border border-outline-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+</button>
+<button class="size-11 flex items-center justify-center rounded-xl bg-surface-container border border-outline-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-10 flex gap-stack-lg">
+<!-- Left Column: Grid List -->
+<div class="flex-1 flex flex-col gap-stack-md">
+<div class="flex flex-col gap-2">
+<h1 class="text-headline-xl text-on-background">Property Approvals Queue</h1>
+<p class="text-body-lg text-on-surface-variant">Review and manage pending property listings for Kibabii University area.</p>
+</div>
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant gap-8">
+<button class="border-b-4 border-primary text-primary px-4 pb-4 font-bold text-sm tracking-wide">
+                            Pending (12)
+                        </button>
+<button class="text-on-surface-variant px-4 pb-4 font-bold text-sm hover:text-on-surface transition-colors">
+                            Approved
+                        </button>
+<button class="text-on-surface-variant px-4 pb-4 font-bold text-sm hover:text-on-surface transition-colors">
+                            Rejected
+                        </button>
+</div>
+<!-- Grid -->
+<div class="grid grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Active Card -->
+<div class="flex flex-col bg-surface-container-lowest rounded-xl p-3 shadow-sm border-2 border-primary ring-4 ring-primary/5 cursor-pointer">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg mb-3 relative" data-alt="A bright and airy modern hostel room with a large window, featuring two clean beds with azure blue linens and minimalist wooden study desks. The room is designed for students, with high-key natural lighting and a view of green campus trees. The aesthetic is energetic and optimistic, using a palette of whites and soft blues." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCdaOhKCtoo6S6IzlMiAFWWgKHbvN1kv8rQoTulmcbVINYfTPXPhQacl1Rz0VR5BXNthaDx0-MN0_LW5mtZHYYBaQCnoaiWHCfwds1ToHepyifa82j-IrJ1UQWx4GKrNxgBfKjt2Ru-l2uwKr0C7BorFvO4CuTtPpNBRRlyEs4fZcqgBGSxnKEko-0ZWuEhhg6AC9MttCHcrviaOQEMPQXi8WF5-DjkBVeLJ0zFn2ZcYM44dlQ7RFPbe_FwPoKzqSmqlmtvMrrcZHw");'>
+<span class="absolute top-2 right-2 bg-secondary-container text-on-secondary-fixed-variant text-xs font-bold px-2 py-1 rounded-full shadow-sm">VERIFIED LANDLORD</span>
+</div>
+<div class="px-1">
+<h3 class="text-on-surface text-lg font-bold">Greenview Villa</h3>
+<p class="text-on-surface-variant text-sm flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> John Kamau</p>
+<p class="text-primary text-lg font-black mt-2">Ksh 5,500<span class="text-xs font-normal text-on-surface-variant">/month</span></p>
+</div>
+</div>
+<!-- Pending Card 2 -->
+<div class="flex flex-col bg-surface-container-lowest rounded-xl p-3 shadow-sm border border-outline-variant hover:border-primary/50 transition-all cursor-pointer">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg mb-3" data-alt="A stylish studio apartment interior with a contemporary kitchenette and a vibrant orange accent wall. The space is compact but functional, featuring modern student housing design elements like built-in shelving and high-speed Wi-Fi router visible. The lighting is warm and inviting, highlighting a clean and organized living environment." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCR67_DMtiGJ4HSHwSTHHYliIkEWBlc0dwevRR7_sUyu4E36WwFPihdeevgVbmCi9F_ZhlBLFlMYIZOVuhSC66VSeP4Pk3j4D8Ew38JnIsczU-xHTTKkmyU6YU4FolWWS0DxcECH4kMc4Xl2m43UsQcUnMH_sCDMjJFjltDAwkgsNht2UJpI4kqWa4d8JMNO1VeLW7vxCbX7FGVk8lSX71ttd5OPy890uqK0ER8PvVOAbM99gO1d7tJ2xdMahy5l58LxCuCbxAj5y4");'></div>
+<div class="px-1">
+<h3 class="text-on-surface text-lg font-bold">Skyline Studios</h3>
+<p class="text-on-surface-variant text-sm flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Mary Wanjiku</p>
+<p class="text-primary text-lg font-black mt-2">Ksh 7,000<span class="text-xs font-normal text-on-surface-variant">/month</span></p>
+</div>
+</div>
+<!-- Pending Card 3 -->
+<div class="flex flex-col bg-surface-container-lowest rounded-xl p-3 shadow-sm border border-outline-variant hover:border-primary/50 transition-all cursor-pointer">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg mb-3" data-alt="An exterior shot of a modern three-story student residential building under a clear blue sky. The architecture is contemporary with clean lines, large balconies, and a vibrant garden entrance. The lighting is late afternoon golden hour, creating a sense of safety, warmth, and high-quality construction." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBhk7j-HGvx-M0Vxt99RBVV1NHEiB-2gKlRYxKbiATDA0SXg9LljjPP1cXKRRqfGaoHTlHnqFh7xiGXk6B2vUjbqWMPy-5oMb_jfJSKYswFdxsdFerY-rXat5Qivd7zoeajV69t8TCSKQXSTi_wIvAdoNDpdlWRG25r_rYdoGWqjV9LKbqLjZVfNS2HjzLRZmciJmjtHOSt5HL_bCjSApnMlArmljDGIj95eQUnhufE-6_OMCg2AmmIfTT_xys_YmOzhMO3IjZ8CDA");'></div>
+<div class="px-1">
+<h3 class="text-on-surface text-lg font-bold">Oakwood Heights</h3>
+<p class="text-on-surface-variant text-sm flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Peter Musyoka</p>
+<p class="text-primary text-lg font-black mt-2">Ksh 4,800<span class="text-xs font-normal text-on-surface-variant">/month</span></p>
+</div>
+</div>
+<!-- Pending Card 4 -->
+<div class="flex flex-col bg-surface-container-lowest rounded-xl p-3 shadow-sm border border-outline-variant hover:border-primary/50 transition-all cursor-pointer">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg mb-3" data-alt="A brightly lit communal lounge area in a modern student hostel, featuring colorful bean bags, a flat-screen TV, and a ping pong table. Large windows let in plenty of sunlight, emphasizing a social and energetic community atmosphere. The design is minimalist with playful color accents of yellow and azure blue." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCGLuFv7rqoqXP5Ld7h7vdGs-pCiqgkoMmHC0XPEGd44kWUOi9VoDzCm1JlyJ6AX7TgTBADoZh8OfYUcTJUU5GfZmMsZpJ6VlBvhr9aYEBaX0J2agLsjAGPR0HdNssz3cbqR8qwfD-uyOqIfjiG76as7ihThPamahRqmmD-HA7InnaSBapeR_TUPqaRygmzMJ-aUui5i1HLT80az4RV-bfwzIBeN96uIvc9nBBFocsSqwXqul3Uf_ymYQHkCC_XxBVpRmp8UFv31xQ");'></div>
+<div class="px-1">
+<h3 class="text-on-surface text-lg font-bold">Sunset Apartments</h3>
+<p class="text-on-surface-variant text-sm flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Sarah Chenge</p>
+<p class="text-primary text-lg font-black mt-2">Ksh 6,200<span class="text-xs font-normal text-on-surface-variant">/month</span></p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Detail Panel -->
+<div class="w-[450px] bg-surface-container-lowest border border-outline-variant rounded-2xl flex flex-col shadow-xl overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<h2 class="text-headline-md text-on-surface">Review Details</h2>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-xs font-bold rounded-full">PRIORITY REVIEW</span>
+</div>
+<div class="p-6 overflow-y-auto flex-1 space-y-6">
+<!-- Summary Section -->
+<div class="flex gap-4">
+<div class="size-20 bg-cover bg-center rounded-xl shrink-0" data-alt="A detailed close-up of a modern hostel bedroom window view, overlooking a vibrant green courtyard where students are walking. The focus is sharp, the lighting is high-key and natural, highlighting the safety and peaceful environment of the housing location. Professional architectural photography style." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC0F0L-PzKBCRzH6u42eCyddgqIOnIu48-MAwWZF37hAvNugNZyeJ97Bm7QmJ96Qqiuy2dvBw6wXVLYTw5MOL_bV1mG-_DbD5cevGEvzoPogePtd7R3nqzgy4DDBU20nCrfprHsbTNdELf4o5Qb-R9YDslr8Bc2ayXq1yc2kTXgwvAdicjwRRB4csjemiojoCrYZEKK1JEn7CxQhH-d9qU0xI0QZgT9lx8HGw8hXFvE6-D3y4biqRBz88svK4RyEB8lU4dLalc3NJ0");'></div>
+<div>
+<h3 class="text-xl font-bold text-on-surface">Greenview Villa</h3>
+<p class="text-on-surface-variant text-sm">450m from Kibabii Main Gate</p>
+<p class="text-primary font-bold">Ksh 5,500 / month</p>
+</div>
+</div>
+<!-- Amenities Chips -->
+<div class="space-y-2">
+<p class="text-label-md text-on-surface-variant uppercase tracking-wider">Amenities</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-highest text-primary px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">wifi</span> High-Speed Wi-Fi
+                                </span>
+<span class="bg-surface-container-highest text-primary px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">local_drink</span> Piped Water
+                                </span>
+<span class="bg-surface-container-highest text-primary px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">security</span> 24/7 Security
+                                </span>
+<span class="bg-surface-container-highest text-primary px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">electric_bolt</span> Token Electricity
+                                </span>
+</div>
+</div>
+<!-- Documents Section -->
+<div class="space-y-2">
+<p class="text-label-md text-on-surface-variant uppercase tracking-wider">Verification Documents</p>
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant cursor-pointer hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">description</span>
+<span class="text-sm font-medium">Land Title Deed.pdf</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">visibility</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface rounded-xl border border-outline-variant cursor-pointer hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<span class="text-sm font-medium">Compliance Certificate.pdf</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">visibility</span>
+</div>
+</div>
+</div>
+<!-- Action Form -->
+<div class="space-y-4 pt-4 border-t border-outline-variant">
+<div class="flex flex-col gap-2">
+<label class="text-label-md text-on-surface">Internal Review Notes / Rejection Reason</label>
+<textarea class="w-full bg-surface border-outline-variant rounded-xl text-sm focus:ring-primary focus:border-primary h-24 placeholder:text-on-surface-variant" placeholder="Enter notes here if rejecting..."></textarea>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="p-6 border-t border-outline-variant bg-surface-container-low flex gap-4">
+<button class="flex-1 h-12 rounded-xl border border-error text-error font-bold flex items-center justify-center gap-2 hover:bg-error-container transition-colors">
+<span class="material-symbols-outlined text-xl">block</span>
+                            Reject
+                        </button>
+<button class="flex-[1.5] h-12 rounded-xl bg-primary text-on-primary font-bold flex items-center justify-center gap-2 hover:bg-primary-container transition-all active:scale-95 shadow-lg">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+                            Approve Listing
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

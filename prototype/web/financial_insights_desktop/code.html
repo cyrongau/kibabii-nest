@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Financial Insights | Kibabii Nest Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#0b1c30",
+                        "on-surface-variant": "#434655",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "secondary": "#006c49",
+                        "on-tertiary-container": "#ffeedd",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline": "#737686",
+                        "surface-dim": "#cbdbf5",
+                        "primary-container": "#2563eb",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary-container": "#eeefff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary": "#784b00",
+                        "primary": "#004ac6",
+                        "tertiary-container": "#996100",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-container": "#00714d",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-low": "#eff4ff",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary-fixed-dim": "#ffb95f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "gutter": "16px",
+                        "container-margin": "20px"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .chart-gradient {
+            background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation (Shared Component Integration) -->
+<aside class="w-64 border-r border-outline-variant bg-surface-container-lowest flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary size-10 rounded-full flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">nest_multi_room</span>
+</div>
+<div>
+<h1 class="text-on-background text-base font-bold leading-tight">Kibabii Nest</h1>
+<p class="text-on-surface-variant text-xs">Admin Panel</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-container text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="text-sm font-medium">Financials</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">apartment</span>
+<span class="text-sm font-medium">Properties</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Users</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-outline-variant">
+<div class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container cursor-pointer">
+<div class="size-8 rounded-full bg-surface-dim overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young male administrator with a friendly expression. He is wearing a clean, modern navy polo shirt against a blurred office background. The lighting is bright and professional, following a modern corporate aesthetic with soft shadows and high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm8Ia5UiSFwHKq1hwWN9DHZ3BwrzckuueQktcAK8X0PcOk04e-W3ONpeZ7COh2f-w0ux_rrtP3ebEdVvCi0eJxAkuHO167g_FGZWqqDQju0qCQnS-sUhhstJiKt4NjTP_j7FqNJHecxjxnpLXh3OnEDNKGspFvzvcniZeQKGx6lb76BNS-jJLrDQdLEic_2kDbXdDgMfrJAsTqpoqfynNl1yKxsDfkSjPItUUPADApkzg4ByT8GPP5tqv-Pnm8LF_OlWB2PotT5To"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold truncate">James Murimi</p>
+<p class="text-[10px] text-on-surface-variant">Super Admin</p>
+</div>
+<span class="material-symbols-outlined text-sm">logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Header (Shared Style Integration) -->
+<header class="h-16 border-b border-outline-variant bg-surface-container-lowest px-container-margin flex items-center justify-between sticky top-0 z-10">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+<input class="w-full bg-surface border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary" placeholder="Search transactions, landlords, or hostel IDs..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="size-10 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-error rounded-full border-2 border-surface-container-lowest"></span>
+</button>
+<button class="size-10 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+</header>
+<div class="p-container-margin flex flex-col gap-stack-lg">
+<!-- Page Title & Actions -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-headline-lg text-on-background">Financial Insights</h2>
+<p class="text-body-md text-on-surface-variant">Platform performance and revenue breakdown for Kibabii student housing.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline rounded-xl text-sm font-semibold hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+                            Last 30 Days
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm transition-all">
+<span class="material-symbols-outlined text-lg">download</span>
+                            Export CSV
+                        </button>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-2">
+<span class="text-label-md text-on-surface-variant">Total Gross Revenue</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-extrabold">Ksh 450,200</span>
+<span class="text-xs font-bold text-secondary flex items-center">
+<span class="material-symbols-outlined text-xs">trending_up</span> 12.5%
+                            </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-2">
+<span class="text-label-md text-on-surface-variant">Platform Fees (10%)</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-extrabold text-primary">Ksh 45,020</span>
+<span class="text-xs font-bold text-secondary flex items-center">
+<span class="material-symbols-outlined text-xs">trending_up</span> 8.2%
+                            </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-2">
+<span class="text-label-md text-on-surface-variant">Premium Listings</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-extrabold">Ksh 120,500</span>
+<span class="text-xs font-bold text-secondary flex items-center">
+<span class="material-symbols-outlined text-xs">trending_up</span> 15.0%
+                            </span>
+</div>
+</div>
+<div class="bg-error-container p-6 rounded-xl border border-error/10 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+<span class="text-label-md text-on-error-container">Pending Payouts</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-extrabold text-on-error-container">Ksh 85,000</span>
+</div>
+<button class="mt-2 text-xs font-bold underline text-on-error-container">Process Transfers Now</button>
+<span class="material-symbols-outlined absolute -right-2 -bottom-2 text-6xl opacity-10 text-on-error-container">hourglass_empty</span>
+</div>
+</div>
+<!-- Main Chart Area -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-headline-md">Revenue Over Time</h3>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-primary"></span>
+<span class="text-xs text-on-surface-variant font-medium">Total Revenue</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-3 rounded-full bg-secondary-container"></span>
+<span class="text-xs text-on-surface-variant font-medium">Premium</span>
+</div>
+</div>
+</div>
+<div class="h-64 w-full relative flex items-end justify-between px-2">
+<!-- Simulated Chart Visualization -->
+<div class="absolute inset-x-0 bottom-0 h-full chart-gradient pointer-events-none"></div>
+<div class="w-[8%] bg-primary-container/20 h-[40%] rounded-t-lg relative group">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-background text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">Ksh 32k</div>
+</div>
+<div class="w-[8%] bg-primary-container/30 h-[55%] rounded-t-lg relative group"></div>
+<div class="w-[8%] bg-primary-container/40 h-[45%] rounded-t-lg relative group"></div>
+<div class="w-[8%] bg-primary-container/50 h-[70%] rounded-t-lg relative group"></div>
+<div class="w-[8%] bg-primary-container/60 h-[65%] rounded-t-lg relative group"></div>
+<div class="w-[8%] bg-primary-container/70 h-[85%] rounded-t-lg relative group"></div>
+<div class="w-[8%] bg-primary-container/80 h-[95%] rounded-t-lg relative group">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-background text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">Ksh 98k</div>
+</div>
+<div class="w-[8%] bg-primary-container/90 h-[75%] rounded-t-lg relative group"></div>
+<div class="w-[8%] bg-primary h-[80%] rounded-t-lg relative group"></div>
+<div class="w-[8%] bg-primary h-[100%] rounded-t-lg relative group"></div>
+</div>
+<div class="flex justify-between mt-4 px-2 text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">
+<span>Oct 01</span>
+<span>Oct 07</span>
+<span>Oct 14</span>
+<span>Oct 21</span>
+<span>Oct 28</span>
+<span>Nov 01</span>
+</div>
+</div>
+<!-- Split View: Income Breakdown & Transaction Log -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Income Sources -->
+<div class="lg:col-span-1 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-6">
+<h3 class="text-lg font-bold">Income Breakdown</h3>
+<div class="flex-1 flex items-center justify-center py-4">
+<div class="size-40 rounded-full border-[16px] border-primary flex items-center justify-center relative">
+<div class="absolute inset-0 border-[16px] border-secondary-container border-r-transparent border-b-transparent border-l-transparent rounded-full rotate-45"></div>
+<div class="text-center">
+<p class="text-xl font-extrabold">100%</p>
+<p class="text-[10px] text-on-surface-variant font-bold">DISTRIBUTION</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-primary"></div>
+<span class="text-sm font-medium">Hostel Booking Fees</span>
+</div>
+<span class="text-sm font-bold">65%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-secondary-container"></div>
+<span class="text-sm font-medium">Premium Visibility</span>
+</div>
+<span class="text-sm font-bold">28%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-surface-dim"></div>
+<span class="text-sm font-medium">Verification Services</span>
+</div>
+<span class="text-sm font-bold">7%</span>
+</div>
+</div>
+</div>
+<!-- Transaction Log -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="text-lg font-bold">Transaction Log</h3>
+<button class="text-primary text-sm font-bold hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-on-surface-variant text-[10px] font-bold uppercase tracking-wider">
+<tr>
+<th class="px-6 py-3">Transaction ID</th>
+<th class="px-6 py-3">Source / Landlord</th>
+<th class="px-6 py-3">Date</th>
+<th class="px-6 py-3">Status</th>
+<th class="px-6 py-3 text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer">
+<td class="px-6 py-4 text-sm font-mono text-primary">#TXN-89210</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Booking: Nest A1</span>
+<span class="text-xs text-on-surface-variant">John Wanjala (Owner)</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs">Oct 24, 2023</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-secondary text-[10px] font-bold rounded-full">Completed</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right">Ksh 15,000</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer">
+<td class="px-6 py-4 text-sm font-mono text-primary">#TXN-89209</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Premium Listing Fee</span>
+<span class="text-xs text-on-surface-variant">Mama Safi Villas</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs">Oct 24, 2023</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-secondary text-[10px] font-bold rounded-full">Completed</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right">Ksh 2,500</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer">
+<td class="px-6 py-4 text-sm font-mono text-primary">#TXN-89208</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Payout: Monthly Rent</span>
+<span class="text-xs text-on-surface-variant">David Otieno</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs">Oct 23, 2023</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error-container text-error text-[10px] font-bold rounded-full">Pending Payout</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right text-error">Ksh 42,000</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer">
+<td class="px-6 py-4 text-sm font-mono text-primary">#TXN-89207</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Booking: Sunshine Court</span>
+<span class="text-xs text-on-surface-variant">Esther Kamau</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs">Oct 23, 2023</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-secondary text-[10px] font-bold rounded-full">Completed</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right">Ksh 12,500</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer">
+<td class="px-6 py-4 text-sm font-mono text-primary">#TXN-89206</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Payout: Refund</span>
+<span class="text-xs text-on-surface-variant">Kevin Ombati (Student)</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs">Oct 22, 2023</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded-full">Processing</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right">Ksh 5,000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface-container-low border-t border-outline-variant text-center">
+<p class="text-xs text-on-surface-variant">Showing 5 of 124 transactions from the last 30 days.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Spacing -->
+<div class="h-20"></div>
+</main>
+</div>
+</body></html>

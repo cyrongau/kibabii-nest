@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Requests | Property Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-interaction:active {
+            transform: scale(0.95);
+        }
+        .nav-interaction:active {
+            transform: scale(0.90);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-surface": "#0b1c30",
+                        "on-surface-variant": "#434655",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-background": "#0b1c30",
+                        "tertiary-container": "#996100",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "surface-container-low": "#eff4ff",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-tint": "#0053db",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c3c6d7",
+                        "on-secondary-fixed-variant": "#005236",
+                        "tertiary": "#784b00",
+                        "surface-bright": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "outline": "#737686",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#2563eb",
+                        "on-primary-fixed": "#00174b",
+                        "primary": "#004ac6",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary": "#006c49",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#213145",
+                        "surface-container": "#e5eeff",
+                        "on-primary-container": "#eeefff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-secondary-fixed": "#002113",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-tertiary-container": "#ffeedd",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f8f9ff",
+                        "secondary-container": "#6cf8bb",
+                        "on-secondary-container": "#00714d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "48px",
+                        "gutter": "16px",
+                        "stack-sm": "12px",
+                        "stack-md": "24px",
+                        "container-margin": "20px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen pb-32">
+<!-- TopAppBar Section -->
+<header class="bg-slate-50 dark:bg-slate-950 flex justify-between items-center px-5 h-16 w-full docked full-width top-0 border-b border-slate-200 dark:border-slate-800 shadow-sm shadow-blue-500/5 sticky z-40">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="Landlord profile picture" class="w-full h-full object-cover" data-alt="A professional headshot of a confident property manager in a light-filled modern office. He is wearing a sharp navy blue suit and smiling warmly at the camera. The background is softly blurred, showing hints of architectural blueprints and indoor greenery. The lighting is bright and natural, emphasizing a high-key light mode aesthetic with clean blue and white tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTA-0u8VBHQADf0AqMoOXHNZLfccGrRoRhZZ2bTgLGgYR9Eb1XZ5bT_O3rV84WfYuAN1bxNGiurCf0f9VQYt4P1GMN7aGEo7fzvbY2S9AfjnRay1bmWGsGD_3L70gyV961yl-CW6CzqU_zq-s5gGfyLLJh9vPK08gBQJ4C5WI9TpzCRcr5jzhlm0Lw4IojtQ_lXIUP-64vnLsv3r1cF0QEZnlqfsgmP6goEYxTVdQfKloCu4KwrH06njrxYxwdoIdm1pTb7cMemn4"/>
+</div>
+<h1 class="font-plus-jakarta-sans font-bold text-lg text-blue-600 dark:text-blue-400">Property Manager</h1>
+</div>
+<button class="material-symbols-outlined text-slate-500 dark:text-slate-400 active-interaction">notifications</button>
+</header>
+<main class="px-container-margin py-stack-md max-w-4xl mx-auto">
+<!-- Screen Title & Stats -->
+<section class="mb-stack-lg">
+<div class="flex justify-between items-end mb-stack-md">
+<div>
+<span class="text-primary font-label-md tracking-wider">REQUESTS</span>
+<h2 class="font-headline-lg text-on-surface">Booking Inquiries</h2>
+</div>
+<div class="bg-primary-container/10 px-4 py-2 rounded-xl border border-primary-container/20">
+<span class="text-primary font-headline-md">12</span>
+<span class="text-primary font-caption ml-1">PENDING</span>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-5 py-2 rounded-full bg-primary-container text-white font-label-md whitespace-nowrap active-interaction">All Requests</button>
+<button class="px-5 py-2 rounded-full bg-white text-on-surface-variant font-label-md border border-outline-variant whitespace-nowrap hover:bg-surface-container-low transition-colors active-interaction">In Progress</button>
+<button class="px-5 py-2 rounded-full bg-white text-on-surface-variant font-label-md border border-outline-variant whitespace-nowrap hover:bg-surface-container-low transition-colors active-interaction">Waitlist</button>
+</div>
+</section>
+<!-- Booking Requests Grid -->
+<section class="grid gap-stack-md">
+<!-- Request Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-sm shadow-[0_4px_12px_rgba(37,99,235,0.04)] border border-transparent hover:border-primary-container transition-all group">
+<div class="flex flex-col md:flex-row gap-gutter">
+<div class="relative w-full md:w-48 h-48 md:h-auto rounded-lg overflow-hidden shrink-0">
+<img alt="Premium Student Studio" class="w-full h-full object-cover" data-alt="A bright, modern student hostel room featuring a minimalist desk setup, a comfortable bed with teal linens, and a large window letting in natural morning light. The walls are a soft off-white, and the room is decorated with a few potted succulents and artistic posters. The overall mood is youthful, organized, and inviting, aligning with a high-end light mode design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK6QmLGjETLhkRYyVUJrehACjNB0MHy2X1tWrC_KkVqRkWUUta3o9A5pLa_hHoPMsM61o1rH_dLMS9V8ns-PjhQoB2cTp_DyVkTre41RFz_Y9rBfBX73SVdrfDDU0W_D1YNJP4MdF1laHEnnbpuvi41UZaUdliu5GbkdoGn9H7y57cD-s3M3puCrE3IiN0r3gYGeMqUziVNOd_F6KuNhZ5tu7cmPNiVv85S5PaSzciGNhm12nsFIijqdhdfxFqB_QHjxF_uwmuDeo"/>
+<div class="absolute top-2 left-2 bg-secondary-fixed text-on-secondary-container px-3 py-1 rounded-full text-caption font-bold">
+                            $850/mo
+                        </div>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-surface-container-highest">
+<img alt="Student Name" class="w-full h-full object-cover" data-alt="A close-up portrait of a young student with a friendly and optimistic expression. He is wearing a casual mustard-colored sweater and has short, stylishly cut hair. The background is a clean, neutral architectural space with warm natural lighting. The image captures the 'new beginnings' energy of a student looking for their first independent living space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDt4F07PdTYO7syn54e-4a_OgO1EafADQK7tq0B1fGiMgkQ1jot___xdClU9ZEmkRLK2f_u3c9ggQRKp8cT4x3mD34Sua8jhHUVBSvDw5x9nuwYE2KNqtaCHz1rDs-cULFTfAOIxATVI_4T89xIJcWSWSfBAINzza7XtNYpWSwFZjb_wJSqxZkZzSAG4-EDO-7WI8SiWxIizYlsK9Y4bcIEFTRR8zE3dor4JMkS2TnOfyxCuC3yO0RC_a41_5qPmAbLoy8nPonpi8"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Alex Thompson</h3>
+<p class="text-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">school</span> Engineering Graduate
+                                        </p>
+</div>
+</div>
+<span class="bg-surface-container-high text-primary px-3 py-1 rounded-full text-caption font-bold">2h ago</span>
+</div>
+<div class="mt-4">
+<h4 class="font-body-md font-bold text-on-surface">Premium Student Studio B-12</h4>
+<div class="flex gap-4 mt-2">
+<div class="flex items-center gap-1 text-on-surface-variant text-caption">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span> Oct 12, 2023
+                                    </div>
+<div class="flex items-center gap-1 text-on-surface-variant text-caption">
+<span class="material-symbols-outlined text-[16px]">history</span> 12 Months Lease
+                                    </div>
+</div>
+</div>
+</div>
+<div class="flex gap-3 mt-stack-md">
+<button class="flex-1 bg-primary-container text-white py-3 rounded-xl font-label-md active-interaction shadow-lg shadow-primary-container/20 hover:bg-primary transition-colors">
+                                Approve
+                            </button>
+<button class="flex-1 border border-outline-variant text-on-surface-variant py-3 rounded-xl font-label-md active-interaction hover:bg-error-container hover:text-error hover:border-error transition-all">
+                                Decline
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Request Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-sm shadow-[0_4px_12px_rgba(37,99,235,0.04)] border border-transparent hover:border-primary-container transition-all group">
+<div class="flex flex-col md:flex-row gap-gutter">
+<div class="relative w-full md:w-48 h-48 md:h-auto rounded-lg overflow-hidden shrink-0">
+<img alt="Grand Avenue Loft" class="w-full h-full object-cover" data-alt="A stylish, sun-drenched shared apartment living room with vibrant blue accents and modern Scandinavian furniture. Large windows frame a view of the city campus. The space features a clean aesthetic with light oak flooring and high-quality finishes. The atmosphere is energetic and community-focused, perfect for young professionals or students." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVb_01RQEkDQYVYjB3cAwgA8klGdCe3MZl6iLGodwGEWvxg7zZM6gWUkP8GUY6h6kaeGoexG1ssfFQBjYgWAgSC4Qi7n-WncZPlvtAserA4HPLPdn6erSuz0USgSLt1dLz7m1fRZHeFaqt_wZibdG3_NR6Xl9LscdYWthmHcfPi5rKXVh3Z2NMoutnKOQdVTzvoiVfHgWLQnRACOqQWRbd0Rr4XnVpo76EHhL55peMsEFJ_bBc8ZYGcq_jODsC2jKwExc3KKSoHIQ"/>
+<div class="absolute top-2 left-2 bg-secondary-fixed text-on-secondary-container px-3 py-1 rounded-full text-caption font-bold">
+                            $1,200/mo
+                        </div>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-surface-container-highest">
+<img alt="Student Name" class="w-full h-full object-cover" data-alt="A portrait of a cheerful young woman with a bright smile. She is wearing a modern teal blazer and professional yet youthful accessories. The lighting is vibrant and high-key, creating a sense of reliability and optimism. The background is a minimalist, colorful textured wall that complements the brand's energetic blue palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_3kcFiXkxmoKoHK9m4lbEuOPxD1pgRR7FP3qlOi5LL-dl7Y2vQsthIdqZXY3fwWPFY04FysiAQ89Th8L2W0ViZWPtygD_G3jaA8PXWQLWeT-GCUFIJdChPZY0H6s1GglMXfkdPPM72JHv0eNMA1r_b7cg3oL6JontkxkXq8Cc8qSm65AqMJUpYNrTkDhGD7ycLVahrni9Krei7vw4tkzoTooVKB7SkpzZ1KpgiIB_-3oZUSmvx9kthYWmoy0vv61l1abbUyI42Xg"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Sarah Jenkins</h3>
+<p class="text-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span> Verified Student
+                                        </p>
+</div>
+</div>
+<span class="bg-surface-container-high text-primary px-3 py-1 rounded-full text-caption font-bold">5h ago</span>
+</div>
+<div class="mt-4">
+<h4 class="font-body-md font-bold text-on-surface">Grand Avenue Loft - Room 402</h4>
+<div class="flex gap-4 mt-2">
+<div class="flex items-center gap-1 text-on-surface-variant text-caption">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span> Sept 28, 2023
+                                    </div>
+<div class="flex items-center gap-1 text-on-surface-variant text-caption">
+<span class="material-symbols-outlined text-[16px]">history</span> 9 Months Lease
+                                    </div>
+</div>
+</div>
+</div>
+<div class="flex gap-3 mt-stack-md">
+<button class="flex-1 bg-primary-container text-white py-3 rounded-xl font-label-md active-interaction shadow-lg shadow-primary-container/20 hover:bg-primary transition-colors">
+                                Approve
+                            </button>
+<button class="flex-1 border border-outline-variant text-on-surface-variant py-3 rounded-xl font-label-md active-interaction hover:bg-error-container hover:text-error hover:border-error transition-all">
+                                Decline
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Request Item 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-sm shadow-[0_4px_12px_rgba(37,99,235,0.04)] border border-transparent hover:border-primary-container transition-all group">
+<div class="flex flex-col md:flex-row gap-gutter">
+<div class="relative w-full md:w-48 h-48 md:h-auto rounded-lg overflow-hidden shrink-0">
+<img alt="Lakeside Commons" class="w-full h-full object-cover" data-alt="A modern and clean ensuite bedroom with a designated study area. The room is styled with contemporary furniture, a sleek LED lamp, and large windows that offer a panoramic city view. The color palette is a sophisticated mix of grays, whites, and azure blues. The lighting is crisp and soft, creating a calm yet productive environment suitable for a dedicated student." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRk9GHuCpxv9e_QjjkIiJGq5-6VXP0GoBM8OEYN5OzoFSQIxhWZkOt1Cxm0p1KE93FdwlwtlJSwHYZbcOvnfWd9rjkjVI9sBrom9KPK4mzIoCTlwlasKSvBKLGxPI1qEAvIeJyS0p6b6_vmgvKmXl400u3nmlB7BwhyJGlFrbvCzV8MOxSCQell7q6U5jPAhLCOJThCBdJ3Qxu12DP0-SKhofO4gEZLpY-3Pdm1vvvuOP4VvGk1Cchv8Evdm0DCsxvHtCYO7wY4HI"/>
+<div class="absolute top-2 left-2 bg-secondary-fixed text-on-secondary-container px-3 py-1 rounded-full text-caption font-bold">
+                            $920/mo
+                        </div>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-surface-container-highest">
+<img alt="Student Name" class="w-full h-full object-cover" data-alt="A portrait of a young man with a friendly and approachable look. He is wearing a crisp white shirt and a light grey cardigan. The lighting is soft and even, highlighting a clean-shaven face and bright eyes. The background is a blurred university library setting, reinforcing the student identity while maintaining a professional and high-end feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAphuN0Mkx9fjbNICccyvx5eHjLKNVfn9wylZZozgr4rbr2YMtR-6JonCLqBKpFimwvKlVOxGXF_bxdEguhcD6rUuDCEXLi5Pti69xhxgLHsZsE0fb4J8oJe3X20ledc8-JDKP7_J964Onc3EhGBIfmPVbuoWuQJ_BoZJGtl3NUONlnF5FrE-A-ruDK7d_5GRHCvWGu4ZhqH9cKWL8ZRLq52aha46-vSFqNhmHVLv4McrNdAUBTSdfcEoiH8CHGogSqUhnZD5_J_qo"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">David Chen</h3>
+<p class="text-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">school</span> Business Major
+                                        </p>
+</div>
+</div>
+<span class="bg-surface-container-high text-primary px-3 py-1 rounded-full text-caption font-bold">1d ago</span>
+</div>
+<div class="mt-4">
+<h4 class="font-body-md font-bold text-on-surface">Lakeside Commons Ensuite</h4>
+<div class="flex gap-4 mt-2">
+<div class="flex items-center gap-1 text-on-surface-variant text-caption">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span> Oct 01, 2023
+                                    </div>
+<div class="flex items-center gap-1 text-on-surface-variant text-caption">
+<span class="material-symbols-outlined text-[16px]">history</span> 10 Months Lease
+                                    </div>
+</div>
+</div>
+</div>
+<div class="flex gap-3 mt-stack-md">
+<button class="flex-1 bg-primary-container text-white py-3 rounded-xl font-label-md active-interaction shadow-lg shadow-primary-container/20 hover:bg-primary transition-colors">
+                                Approve
+                            </button>
+<button class="flex-1 border border-outline-variant text-on-surface-variant py-3 rounded-xl font-label-md active-interaction hover:bg-error-container hover:text-error hover:border-error transition-all">
+                                Decline
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Section -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_12px_rgba(37,99,235,0.04)] z-50 rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 nav-interaction hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 nav-interaction hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined">apartment</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Properties</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-xl px-3 py-1 nav-interaction" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_available</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 nav-interaction hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Profile</span>
+</a>
+</nav>
+</body></html>

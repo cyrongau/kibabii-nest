@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Management - Kibabii Nest</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#003ea8",
+                        "error": "#ba1a1a",
+                        "tertiary": "#784b00",
+                        "primary-container": "#2563eb",
+                        "tertiary-container": "#996100",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "secondary": "#006c49",
+                        "inverse-surface": "#213145",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-dim": "#cbdbf5",
+                        "surface-bright": "#f8f9ff",
+                        "surface": "#f8f9ff",
+                        "background": "#f8f9ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#eeefff",
+                        "on-background": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "outline-variant": "#c3c6d7",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-secondary-fixed": "#002113",
+                        "outline": "#737686",
+                        "on-tertiary-container": "#ffeedd",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed": "#6ffbbe",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-low": "#eff4ff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#6cf8bb",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-container": "#00714d",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface-variant": "#434655",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary": "#004ac6",
+                        "on-surface": "#0b1c30",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "48px",
+                        "stack-md": "24px",
+                        "gutter": "16px",
+                        "container-margin": "20px",
+                        "base": "8px",
+                        "stack-sm": "12px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8f9ff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .card-shadow { box-shadow: 0 4px 20px -2px rgba(37, 99, 235, 0.04); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-5 h-16 w-full docked full-width top-0 bg-slate-50 border-b border-slate-200 shadow-sm shadow-blue-500/5 z-50 sticky">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img alt="Landlord profile picture" class="w-full h-full object-cover" data-alt="A professional headshot of a mature African American man wearing a crisp white dress shirt and a navy blue blazer. He has a friendly, confident expression and is set against a brightly lit, minimalist office background with soft bokeh. The lighting is high-key and modern, reflecting an atmosphere of trust and institutional leadership." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg0vF3BtorJUUVQdC7rpyfFID5sO43iKDRanRI-j6dGjjyDmBLxrmvzIU5jEyF2SguqxsWOlzY4QmcnIsLtfKU5RHPDXA9aGWW9ibMI3SwNSLANuVhPOClHXIhlaooL3SIwOLdEzPoBCg_6o8feYnjQglCnxIJtUYkL-ogtMn1JcsceCv3qxKNidVNmeHzGk4MN1MJKzW1yyapehaxau1r4attHiYL_mFAxtVwKq5kvEQtC03s-EDVGnE7UPanUEuXh2dI7mZcjcA"/>
+</div>
+<h1 class="font-plus-jakarta-sans font-bold text-lg text-on-background">Property Manager</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-slate-500" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-container-margin pt-stack-md">
+<!-- Header & Stats Section -->
+<section class="mb-stack-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-2">User Management</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Oversee community growth and maintain trust.</p>
+</div>
+<div class="flex gap-stack-sm overflow-x-auto pb-2 md:pb-0">
+<button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-label-md flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                        Invite User
+                    </button>
+</div>
+</div>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-panel p-6 rounded-2xl card-shadow flex items-center gap-4">
+<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="group">group</span>
+</div>
+<div>
+<p class="text-caption font-caption text-on-surface-variant">Total Users</p>
+<p class="text-headline-md font-headline-md text-on-background">1,284</p>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl card-shadow flex items-center gap-4">
+<div class="w-12 h-12 bg-secondary-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<p class="text-caption font-caption text-on-surface-variant">Verified Members</p>
+<p class="text-headline-md font-headline-md text-on-background">942</p>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl card-shadow flex items-center gap-4">
+<div class="w-12 h-12 bg-error-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-error-container" data-icon="pending_actions">pending_actions</span>
+</div>
+<div>
+<p class="text-caption font-caption text-on-surface-variant">Pending Approval</p>
+<p class="text-headline-md font-headline-md text-on-background">36</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters & Search -->
+<section class="mb-stack-md flex flex-col md:flex-row gap-gutter">
+<div class="relative flex-grow">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+<input class="w-full h-14 pl-12 pr-4 bg-white rounded-2xl border-none shadow-sm focus:ring-2 focus:ring-primary/20 font-body-md" placeholder="Search by name, email or hostel name..." type="text"/>
+</div>
+<div class="flex gap-2">
+<div class="relative group">
+<button class="h-14 px-6 bg-white rounded-2xl flex items-center gap-3 font-label-md text-on-surface-variant hover:bg-slate-50 transition-colors border-none shadow-sm">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+                        Role: All
+                        <span class="material-symbols-outlined" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+<div class="relative group">
+<button class="h-14 px-6 bg-white rounded-2xl flex items-center gap-3 font-label-md text-on-surface-variant hover:bg-slate-50 transition-colors border-none shadow-sm">
+<span class="material-symbols-outlined" data-icon="sort">sort</span>
+                        Latest First
+                    </button>
+</div>
+</div>
+</section>
+<!-- User List (Grid Layout) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- User Card 1: Verified Student -->
+<div class="bg-white p-5 rounded-[20px] card-shadow border border-slate-100 hover:border-primary/30 transition-all group">
+<div class="flex items-start justify-between mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/10">
+<img alt="Student profile" class="w-full h-full object-cover" data-alt="A youthful and energetic college student with a bright smile, wearing a yellow mustard hoodie. The lighting is natural and vibrant, capturing a sense of new beginnings and academic optimism. The background is a soft-focus urban campus setting with lush greenery and modern architectural lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUZvlU2DjKsc1EpQm8d_TSPyvbeWDmeCcXUb2nqotFGXa-k_fUEV3_yP6notp3xfKr6MYk7jytUh3RESWWXFpKMYq9R_RABit1QAEN2M0Wxi-FeldconnyGAPLx_t8qJJBbfLaCR9kw-_7RIaM9G68INE6b5AWlH-Jv_QX7LZy5cMOn0PFMv5MJ3lXdDj7ml3K2vWRMnz9DnximV-aV1uP9Vcwo7OBh3BDz_JPu8HLEE9Uwn7_khyaZ7978YhBD6VaUFixQQK7QN8"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-background">David Omondi</h3>
+<p class="text-caption text-slate-500">Student • Joined Apr 2023</p>
+</div>
+</div>
+<span class="bg-secondary-container/30 text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Verified</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<div class="bg-slate-50 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="school">school</span>
+<span class="text-caption text-on-surface-variant">Computer Science</span>
+</div>
+<div class="bg-slate-50 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="apartment">apartment</span>
+<span class="text-caption text-on-surface-variant">Alpine Heights</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-primary/5 text-primary py-2.5 rounded-xl font-label-md hover:bg-primary hover:text-on-primary transition-all active:scale-95">View Profile</button>
+<button class="bg-slate-50 text-slate-500 py-2.5 rounded-xl font-label-md hover:bg-error-container hover:text-error transition-all active:scale-95">Suspend</button>
+</div>
+</div>
+<!-- User Card 2: Pending Landlord -->
+<div class="bg-white p-5 rounded-[20px] card-shadow border border-slate-100 hover:border-primary/30 transition-all group">
+<div class="flex items-start justify-between mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/10">
+<img alt="Landlord profile" class="w-full h-full object-cover" data-alt="A professional Kenyan woman in her 40s, dressed in an elegant emerald green blazer, exuding an air of success and authority. She has a warm, welcoming smile and is positioned in a modern, well-lit apartment interior with stylish furniture and large windows. The lighting is soft and golden, emphasizing trust and luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBw4ZekrJF3hO9DTdFfukLp0a2pV0yYcTxuCY11Br0CAAywXoagBKLg0x-qaE33uyZQI09HEtkkale5Zds4uAjpPTVKa6c8Ej0DdIR7tXNrhlNxMEWVK8zW4-45Sx5xGF_9g4NveB2E7ZcHQpb92mOcHb7QXOOYfHIW7fip1487hOpuVpAR7I9cWgRNUWuaU6znOXCG-sUY0vGLuQnREV6TQ8z4RZTOXX2bb9r67Aero4HnZULGDrYbBvAhe5w_qbDMzZx4tPNwBgo"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-background">Mary Wanjiku</h3>
+<p class="text-caption text-slate-500">Landlord • Joined 2h ago</p>
+</div>
+</div>
+<span class="bg-tertiary-container/20 text-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Pending</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<div class="bg-slate-50 px-3 py-1.5 rounded-lg flex items-center gap-2 w-full">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="real_estate_agent">real_estate_agent</span>
+<span class="text-caption text-on-surface-variant">Owner of 'Riverside Suites'</span>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-2">
+<button class="bg-primary text-on-primary py-2.5 rounded-xl font-label-md shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Review Documents</button>
+</div>
+</div>
+<!-- User Card 3: Suspended Student -->
+<div class="bg-white p-5 rounded-[20px] card-shadow border border-slate-100 hover:border-primary/30 transition-all group">
+<div class="flex items-start justify-between mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/10 grayscale">
+<img alt="Suspended User" class="w-full h-full object-cover" data-alt="A portrait of a young man with a neutral, slightly serious expression. The photo is styled in a desaturated, moody tone with soft shadows. The background is a simple, dark textured wall, creating a sense of isolation and focus. High-quality lighting highlights the facial features with a cinematic touch." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADO9QJbkLnK7QCQ7-6REA3A4hPHS2O4jy3tS26_XhhhvIkOQysDl9Qs9_YyGt2eF9wvSNOxN4J18Dizc2cERE8aBWQxv8i97iIMwyioOyWHJpBY_8wL06NRclTaeuIQimlGKWok8cywDdkuCmbxwoxls0v4ezG-bUxU8aGvgrVm1WplfQXJ8rujzWAddnwAfsvJ_s9TGEpPRATyFwqtfJ8nLywd2C-W2sJoQvwfHF1E8WmOWC0EKHhr-e10oJNa_pfe5wafBsZ7Zo"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-background">Brian Kiprono</h3>
+<p class="text-caption text-slate-500">Student • Joined Jan 2023</p>
+</div>
+</div>
+<span class="bg-error-container/30 text-error px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Suspended</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<div class="bg-slate-50 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="report">report</span>
+<span class="text-caption text-error font-semibold">Multiple policy violations</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-primary/5 text-primary py-2.5 rounded-xl font-label-md hover:bg-primary hover:text-on-primary transition-all active:scale-95">Case Details</button>
+<button class="bg-secondary/10 text-secondary py-2.5 rounded-xl font-label-md hover:bg-secondary hover:text-white transition-all active:scale-95">Reinstate</button>
+</div>
+</div>
+<!-- User Card 4: Verified Landlord -->
+<div class="bg-white p-5 rounded-[20px] card-shadow border border-slate-100 hover:border-primary/30 transition-all group">
+<div class="flex items-start justify-between mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/10">
+<img alt="Landlord profile" class="w-full h-full object-cover" data-alt="A sophisticated middle-aged man with a sharp, tailored business suit and a friendly, approachable demeanor. He is standing in front of a high-tech property management dashboard displayed on a large screen in a modern office. The lighting is crisp and blue-toned, emphasizing professional excellence and reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9oDk2-pLUqub0E7eQeFJH-J1rilrU8zWS3kUObHbk0eJZRYTjml3i_U3x7n0soDzzIhiWGylRXlKyohTvsmjJt_9vPO2VKnRE2-x2dPZ61RCn5-o3Qtf-nUOz7QvO9N630gJTHms7Gm7fXRMM8xhRTRvv5bHsQGGPCAH6WtbeYxbvtfIPayWNOHaIuM-UA0k4KdZn_XDhD60dawXKDV51l-MeT4ScgT9BiZdkOIZdRKYkpUAvoB2UEp_fta7x3F5nbhQNHVEzCaY"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-background">John Kamau</h3>
+<p class="text-caption text-slate-500">Landlord • Joined 2y ago</p>
+</div>
+</div>
+<span class="bg-secondary-container/30 text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Verified</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<div class="bg-slate-50 px-3 py-1.5 rounded-lg flex items-center gap-2 w-full">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="home_work">home_work</span>
+<span class="text-caption text-on-surface-variant">12 Active Listings</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-primary/5 text-primary py-2.5 rounded-xl font-label-md hover:bg-primary hover:text-on-primary transition-all active:scale-95">Portfolio</button>
+<button class="bg-slate-50 text-slate-500 py-2.5 rounded-xl font-label-md hover:bg-error-container hover:text-error transition-all active:scale-95">Suspend</button>
+</div>
+</div>
+<!-- User Card 5: Verified Student -->
+<div class="bg-white p-5 rounded-[20px] card-shadow border border-slate-100 hover:border-primary/30 transition-all group">
+<div class="flex items-start justify-between mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/10">
+<img alt="Student profile" class="w-full h-full object-cover" data-alt="A bright and optimistic young female university student wearing glasses and a casual denim jacket, carrying a tablet. The setting is a sunny library with warm, natural light filtering through books and wood textures. The mood is focused and intelligent, reflecting academic achievement and institutional trust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs-MJISMDIjb_uodfSc1LIJMe9bIFadHn5Y-7W7YoQIQP_008YpuhoH1fVcYEh3xZkVTbOvv63RU9esNcZ63xRZ0QzKNvUoTDzcOH1_bHMSIOQagnOb1BLrTBDdVCgpUW-48R7l7rgf3f7ZpAZpxnszN1zblDEt7xJq8Blhi2Usop2Alz08M_NiZJZL_WCrPjoIsHVYrfJnAZJy26v1M4XktqY9t97l6uRyfKAaFc_SWuSDrEYA7vQVzHZl3GLPHu51AQbAOYTdNM"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-background">Sarah Nyambura</h3>
+<p class="text-caption text-slate-500">Student • Joined Dec 2023</p>
+</div>
+</div>
+<span class="bg-secondary-container/30 text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Verified</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<div class="bg-slate-50 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="school">school</span>
+<span class="text-caption text-on-surface-variant">Public Health</span>
+</div>
+<div class="bg-slate-50 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="star">star</span>
+<span class="text-caption text-on-surface-variant">Top Roommate</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-primary/5 text-primary py-2.5 rounded-xl font-label-md hover:bg-primary hover:text-on-primary transition-all active:scale-95">View Profile</button>
+<button class="bg-slate-50 text-slate-500 py-2.5 rounded-xl font-label-md hover:bg-error-container hover:text-error transition-all active:scale-95">Suspend</button>
+</div>
+</div>
+<!-- User Card 6: Pending Student -->
+<div class="bg-white p-5 rounded-[20px] card-shadow border border-slate-100 hover:border-primary/30 transition-all group">
+<div class="flex items-start justify-between mb-4">
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/10">
+<img alt="Student profile" class="w-full h-full object-cover" data-alt="A portrait of a young man with a focused and determined expression, wearing a simple blue cotton t-shirt. The background is a clean, minimal university corridor with cool artificial lighting that suggests a modern educational environment. The style is clear, crisp, and high-fidelity, focusing on individual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDie3PdW2hLWzzoxrYwkTimjO3VJb1fAbDi0FWYruEiaRSsbJnY9GW1AKo3-mOLPLWbVVt887Gr4hwBDj1apRiHpJGdJuBh2_wzb6mLp_-MR-byCz4G-U4Tc9eEVYuqwPLeQf0N-UGwpcQ9pdUVjkPt9JiUK1iPW8B3-LqKau1B6NCPJJowzTKmDxtsv-HlmY6sWXyVfL_RQe_jtCgGH0tFGqaU8k2rxxEn04NDHYDU9EPVvsrDirJr1wG3Vo7aWmO7GRumsrW7McI"/>
+</div>
+<div>
+<h3 class="font-label-md text-on-background">Peter Maina</h3>
+<p class="text-caption text-slate-500">Student • Joined 4h ago</p>
+</div>
+</div>
+<span class="bg-tertiary-container/20 text-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Pending</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<div class="bg-slate-50 px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="credit_card">credit_card</span>
+<span class="text-caption text-on-surface-variant">ID Verification Pending</span>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-2">
+<button class="bg-primary text-on-primary py-2.5 rounded-xl font-label-md shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Approve Account</button>
+</div>
+</div>
+</section>
+<!-- Pagination -->
+<section class="mt-stack-lg flex justify-center pb-stack-lg">
+<nav class="flex items-center gap-2 bg-white px-4 py-2 rounded-full card-shadow">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-50">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-primary text-on-primary font-label-md">1</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 font-label-md hover:bg-slate-50">2</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 font-label-md hover:bg-slate-50">3</button>
+<span class="text-slate-300">...</span>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 font-label-md hover:bg-slate-50">12</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-50">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</nav>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-white dark:bg-slate-900 shadow-[0_-4px_12px_rgba(37,99,235,0.04)] border-t border-slate-100 z-50">
+<a class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-xl px-3 py-1 active:scale-90 duration-150 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 active:scale-90 duration-150 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="apartment">apartment</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Properties</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 active:scale-90 duration-150 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 active:scale-90 duration-150 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Profile</span>
+</a>
+</nav>
+</body></html>

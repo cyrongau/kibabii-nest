@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Forgot Password - Kibabii Nest</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-on-surface": "#eaf1ff",
+                    "inverse-surface": "#213145",
+                    "surface-variant": "#d3e4fe",
+                    "surface": "#f8f9ff",
+                    "on-primary-container": "#eeefff",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#005236",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-high": "#dce9ff",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#0053db",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary-container": "#996100",
+                    "secondary-container": "#6cf8bb",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#784b00",
+                    "on-primary-fixed": "#00174b",
+                    "on-secondary-container": "#00714d",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-bright": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#006c49",
+                    "primary-container": "#2563eb",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#737686",
+                    "surface-container": "#e5eeff",
+                    "surface-dim": "#cbdbf5",
+                    "on-surface-variant": "#434655",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "tertiary-fixed": "#ffddb8",
+                    "background": "#f8f9ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary": "#004ac6",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary-container": "#ffeedd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "24px",
+                    "stack-lg": "48px",
+                    "gutter": "16px",
+                    "container-margin": "20px",
+                    "stack-sm": "12px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<header class="fixed top-0 left-0 w-full flex items-center justify-between px-5 h-16 bg-[#F8FAFC] dark:bg-gray-900 border-b border-slate-200 dark:border-gray-800 shadow-[0_4px_20px_-4px_rgba(37,99,235,0.04)] z-50">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-[#2563EB]" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="text-lg font-extrabold tracking-tight text-[#2563EB] dark:text-blue-400 font-['Plus_Jakarta_Sans']">Kibabii Nest</span>
+</div>
+</header>
+<main class="flex-1 flex flex-col items-center justify-center px-container-margin py-stack-lg mt-16">
+<div class="w-full max-w-md bg-surface-container-lowest rounded-3xl p-gutter sm:p-stack-md shadow-[0_4px_24px_rgba(37,99,235,0.06)] border border-white">
+<div class="flex flex-col items-center text-center mb-stack-md">
+<div class="w-16 h-16 bg-surface-container-high rounded-2xl flex items-center justify-center mb-stack-sm">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="lock_reset">lock_reset</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Reset Password</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px]">
+                    Enter your registered email to receive reset instructions
+                </p>
+</div>
+<form action="#" class="space-y-stack-md">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface ml-1" for="email">Email Address</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border border-outline-variant rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 outline-none font-body-md text-on-surface" id="email" name="email" placeholder="name@university.edu" required="" type="email"/>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary rounded-2xl font-label-md shadow-lg shadow-primary/20 hover:bg-primary-container active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2" type="submit">
+                    Send Reset Link
+                    <span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+</button>
+</form>
+<div class="mt-stack-md pt-stack-sm border-t border-surface-variant flex justify-center">
+<a class="flex items-center gap-2 text-primary font-label-md hover:underline transition-all" href="/login">
+<span class="material-symbols-outlined text-lg" data-icon="arrow_back">arrow_back</span>
+                    Back to Login
+                </a>
+</div>
+</div>
+<div class="mt-stack-lg grid grid-cols-2 gap-4 w-full max-w-md">
+<div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 flex flex-col gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<p class="font-caption text-caption text-on-surface-variant">Secure access for all student accounts.</p>
+</div>
+<div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 flex flex-col gap-2">
+<span class="material-symbols-outlined text-tertiary" data-icon="support_agent">support_agent</span>
+<p class="font-caption text-caption text-on-surface-variant">Need help? Contact campus support.</p>
+</div>
+</div>
+<div class="mt-12 w-full max-w-2xl px-gutter">
+<div class="relative h-48 w-full rounded-3xl overflow-hidden group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A group of diverse university students laughing and studying together in a brightly lit, modern student lounge. The environment is filled with natural sunlight, minimalist furniture, and vibrant blue and white accents that match the Kibabii Nest brand. The overall mood is optimistic, energetic, and community-focused, suggesting a supportive living environment for scholars." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNXvJQ4eKitMyaOsTky6heP40wajM_Zp6Rj_0AEAVjoa9-qTWFi55-xkb-Zw_xIyjY0At9ZaGm2JtBaTRAIBFN1U5ePTzixE8-CKhrBt01j4nXGJLGZQ5OZMFb7sJQ4xI8LWMmdWVzHf_iR7omCrXiYT58DvvKsi9n-ROngkqY34_TSfDpVXaBRFEXRXRmseC-0ysXq0H89Xc7vZPrs-chxpwVTY-jAFCnl4w7gmhDBn07ejCzKNsEA7y9_KiSYmLFLX-3rQSks_k"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+<p class="text-white font-body-md italic">"Getting back into your nest is just a few clicks away."</p>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-auto py-stack-md text-center opacity-60">
+<p class="font-caption text-caption text-on-surface-variant">© 2024 Kibabii Nest. Empowering Student Living.</p>
+</footer>
+</body></html>

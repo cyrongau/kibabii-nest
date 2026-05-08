@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-background": "#0b1c30",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "tertiary-container": "#996100",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed": "#00174b",
+                        "surface-bright": "#f8f9ff",
+                        "outline-variant": "#c3c6d7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-surface": "#0b1c30",
+                        "inverse-surface": "#213145",
+                        "surface-variant": "#d3e4fe",
+                        "on-surface-variant": "#434655",
+                        "surface-tint": "#0053db",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#006c49",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed": "#002113",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#6cf8bb",
+                        "primary-container": "#2563eb",
+                        "surface-dim": "#cbdbf5",
+                        "outline": "#737686",
+                        "background": "#f8f9ff",
+                        "on-secondary-container": "#00714d",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "error": "#ba1a1a",
+                        "tertiary": "#784b00",
+                        "surface-container": "#e5eeff",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary": "#004ac6",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-tertiary-container": "#ffeedd"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "gutter": "16px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface">
+<!-- Top AppBar - Following JSON Structure -->
+<header class="fixed top-0 left-0 w-full flex items-center justify-between px-5 h-16 bg-[#F8FAFC] dark:bg-gray-900 border-b border-slate-200 dark:border-gray-800 shadow-[0_4px_20px_-4px_rgba(37,99,235,0.04)] z-50">
+<div class="flex items-center gap-4">
+<button class="active:scale-[0.98] transition-transform duration-200 text-[#2563EB] dark:text-blue-400">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="Landlord Portrait" class="w-full h-full object-cover" data-alt="A professional middle-aged man with a friendly smile, wearing a clean linen shirt, photographed in high-key natural light against a soft architectural background. The image has a clean, premium light-mode aesthetic with vibrant clarity and high institutional trust, fitting the Kibabii Nest brand colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMP619nuLaVG02yo6h0FtPu5NUkZ85BPTii1osviCUN-yOPCnvggsGzCTqIVezWamLQlp-Dz3TYoIEaGh-GvAWv8YsDB7oD90wMXF5xdi2bFXAz-NUpvqaET7DtF3pS0heTjowspReF76vEDFon5JiJCRMQYCAoariR0Ad46RkeuOaxxb5h2Wg6Q-ly6WPJg4kyG6eLOo8Gx7sT8Fh9jE0hvdVxE96UHv9Ctf4l2RZzsew3gxzjs0HA_uyVZNsL79eNWx4_lzQWjE"/>
+</div>
+<div>
+<h1 class="font-['Plus_Jakarta_Sans'] font-semibold text-on-background leading-tight">Mr. Benson Kamau</h1>
+<p class="font-caption text-caption text-outline">Azure Heights Apartments</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-100 rounded-full text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+<span class="text-lg font-extrabold tracking-tight text-[#2563EB] dark:text-blue-400">Kibabii Nest</span>
+</div>
+</header>
+<!-- Chat Canvas -->
+<main class="pt-20 pb-32 px-container-margin max-w-3xl mx-auto min-h-screen flex flex-col gap-stack-md">
+<!-- Date Divider -->
+<div class="flex justify-center my-4">
+<span class="bg-surface-container text-outline px-4 py-1 rounded-full text-caption font-medium uppercase tracking-wider">Today</span>
+</div>
+<!-- Landlord Message (Left) -->
+<div class="flex items-end gap-2 max-w-[85%] self-start">
+<div class="flex flex-col gap-1">
+<div class="bg-white p-4 rounded-2xl rounded-bl-none shadow-[0_4px_16px_rgba(37,99,235,0.04)] border border-slate-100">
+<p class="font-body-md text-on-surface">Hello Alex! I've received your inquiry about the Studio Room at Azure Heights. It's still available for the next semester. Would you like to schedule a viewing?</p>
+</div>
+<span class="text-[10px] text-outline font-medium px-1">09:15 AM</span>
+</div>
+</div>
+<!-- Student Message (Right) -->
+<div class="flex items-end gap-2 max-w-[85%] self-end">
+<div class="flex flex-col gap-1 items-end">
+<div class="bg-primary-container text-on-primary-container p-4 rounded-2xl rounded-br-none shadow-md">
+<p class="font-body-md">That sounds great, Mr. Kamau! I'm definitely interested. Is it possible to see it this Saturday morning around 10 AM?</p>
+</div>
+<div class="flex items-center gap-1 px-1">
+<span class="text-[10px] text-outline font-medium">09:18 AM</span>
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="done_all" data-weight="fill" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+</div>
+<!-- Landlord Message (Left) -->
+<div class="flex items-end gap-2 max-w-[85%] self-start">
+<div class="flex flex-col gap-1">
+<div class="bg-white p-4 rounded-2xl rounded-bl-none shadow-[0_4px_16px_rgba(37,99,235,0.04)] border border-slate-100">
+<p class="font-body-md text-on-surface">Saturday at 10 AM works perfectly for me. Here is the exact location of the property for your convenience.</p>
+</div>
+<div class="mt-2 bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100">
+<img alt="Location Map" class="w-full h-40 object-cover" data-alt="A clean, minimalist 3D stylized map interface showing a pinpoint in a vibrant suburban university neighborhood. The map design uses a soft blue and white color palette with rounded icons and bright accents. The lighting is sunny and optimistic, reflecting the modern and safe brand identity of Kibabii Nest." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKEB3fApEmHOb0L0jDK52nhd8U53bzGkf_dgAUX2k2CYPwl_02qd_g3E2MhNbGTpm_8uaUwfnnCahDj_cX7gyBkgkWZjl8iGbxuX_9BiCrpRqW-OHqXxyxbdML2IIUB2ieA3oH56p3GhLbcNa9NIS0k6-NSsGF4wvq_HVjdPmU72ellBzTpf9kI4XjBKihgfODH-1iHUYn2P6hh0Gy-j9ULAz_RvZx9l-SA8qTrw5UFsOfMMvgjfzuyv_yj5mxswwQdE85AJKiBaM"/>
+<div class="p-3">
+<p class="font-label-md text-on-surface">Azure Heights Tower B</p>
+<p class="text-caption text-outline">Kibabii University Road, South Wing</p>
+</div>
+</div>
+<span class="text-[10px] text-outline font-medium px-1">09:20 AM</span>
+</div>
+</div>
+<!-- Student Message (Right) -->
+<div class="flex items-end gap-2 max-w-[85%] self-end">
+<div class="flex flex-col gap-1 items-end">
+<div class="bg-primary-container text-on-primary-container p-4 rounded-2xl rounded-br-none shadow-md">
+<p class="font-body-md">Perfect, I see it! I'll also be bringing my admission letter as requested in the portal. See you then!</p>
+</div>
+<div class="flex items-center gap-1 px-1">
+<span class="text-[10px] text-outline font-medium">09:22 AM</span>
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="done_all" data-weight="fill" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+</div>
+<!-- Typying Indicator -->
+<div class="flex items-center gap-2 self-start ml-2 opacity-60">
+<div class="flex gap-1 bg-white p-3 rounded-full shadow-sm border border-slate-100">
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-pulse"></div>
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-pulse delay-75"></div>
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-pulse delay-150"></div>
+</div>
+</div>
+</main>
+<!-- Bottom Input Area -->
+<footer class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl border-t border-slate-100 px-container-margin pb-safe pt-3 pb-6 z-50">
+<div class="max-w-3xl mx-auto flex items-center gap-3">
+<button class="w-12 h-12 flex items-center justify-center rounded-2xl bg-surface-container text-primary active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<div class="flex-1 relative flex items-center">
+<input class="w-full h-12 pl-4 pr-12 rounded-2xl border-none bg-surface-container text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary-container font-body-md" placeholder="Type your message..." type="text"/>
+<button class="absolute right-2 p-2 text-outline hover:text-primary">
+<span class="material-symbols-outlined" data-icon="attachment">attachment</span>
+</button>
+</div>
+<button class="w-12 h-12 flex items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/20 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="send" data-weight="fill" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</footer>
+<!-- Bottom Nav Suppression Check: This is a task-focused screen (Chat), so global nav is suppressed per design system rules -->
+</body></html>

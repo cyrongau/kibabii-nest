@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kibabii Nest - Admin User Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#0b1c30",
+                        "on-surface-variant": "#434655",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "secondary": "#006c49",
+                        "on-tertiary-container": "#ffeedd",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline": "#737686",
+                        "surface-dim": "#cbdbf5",
+                        "primary-container": "#2563eb",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary-container": "#eeefff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary": "#784b00",
+                        "primary": "#004ac6",
+                        "tertiary-container": "#996100",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-container": "#00714d",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-low": "#eff4ff",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary-fixed-dim": "#ffb95f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "gutter": "16px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .ambient-card { box-shadow: 0 4px 20px -2px rgba(0, 74, 198, 0.04); }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<div class="flex min-h-screen">
+<!-- Side Navigation Sidebar -->
+<aside class="w-72 bg-surface-container-lowest border-r border-outline-variant flex flex-col fixed inset-y-0">
+<div class="p-gutter flex flex-col gap-8 h-full">
+<div class="flex items-center gap-3 px-2">
+<div class="size-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">nest_eco_leaf</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-on-surface font-headline-md text-body-lg leading-tight">Kibabii Nest</h1>
+<p class="text-on-surface-variant text-caption">Admin Portal</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">dashboard</span>
+<p class="text-on-surface font-label-md">Dashboard</p>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary-container text-on-primary shadow-sm cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<p class="font-label-md">User Management</p>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">apartment</span>
+<p class="text-on-surface font-label-md">Property Listings</p>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">payments</span>
+<p class="text-on-surface font-label-md">Transactions</p>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">analytics</span>
+<p class="text-on-surface font-label-md">Reports</p>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">chat</span>
+<p class="text-on-surface font-label-md">Support Tickets</p>
+</div>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant pt-4">
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">settings</span>
+<p class="text-on-surface font-label-md">Settings</p>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-error-container/20 text-error cursor-pointer group">
+<span class="material-symbols-outlined">logout</span>
+<p class="font-label-md">Logout</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-72 p-stack-lg">
+<div class="max-w-7xl mx-auto flex flex-col gap-stack-md">
+<!-- Header Section -->
+<div class="flex flex-wrap justify-between items-end gap-gutter">
+<div class="flex flex-col gap-2">
+<h2 class="text-on-surface text-headline-xl">User Management</h2>
+<p class="text-on-surface-variant text-body-md max-w-xl">
+                        Oversee the entire student and landlord ecosystem. Monitor verification requests, handle disputes, and maintain platform safety.
+                    </p>
+</div>
+<div class="flex gap-gutter">
+<button class="flex items-center gap-2 px-6 h-12 bg-surface-container-highest text-primary font-label-md rounded-xl hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">download</span>
+                        Export Data
+                    </button>
+<button class="flex items-center gap-2 px-6 h-12 bg-primary text-on-primary font-label-md rounded-xl hover:shadow-lg transition-all">
+<span class="material-symbols-outlined">person_add</span>
+                        Create User
+                    </button>
+</div>
+</div>
+<!-- Stats Bar -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="bg-surface-container-lowest p-stack-sm rounded-xl ambient-card border border-outline-variant flex flex-col gap-1">
+<p class="text-on-surface-variant text-caption uppercase tracking-wider">Total Users</p>
+<p class="text-on-surface text-headline-md">2,845</p>
+<p class="text-secondary text-caption flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +12% this month
+                    </p>
+</div>
+<div class="bg-surface-container-lowest p-stack-sm rounded-xl ambient-card border border-outline-variant flex flex-col gap-1">
+<p class="text-on-surface-variant text-caption uppercase tracking-wider">Pending Verification</p>
+<p class="text-on-surface text-headline-md">48</p>
+<p class="text-tertiary text-caption flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[14px]">timer</span> 12 overdue
+                    </p>
+</div>
+<div class="bg-surface-container-lowest p-stack-sm rounded-xl ambient-card border border-outline-variant flex flex-col gap-1">
+<p class="text-on-surface-variant text-caption uppercase tracking-wider">Active Landlords</p>
+<p class="text-on-surface text-headline-md">156</p>
+<p class="text-on-surface-variant text-caption font-medium">92% verified</p>
+</div>
+<div class="bg-surface-container-lowest p-stack-sm rounded-xl ambient-card border border-outline-variant flex flex-col gap-1">
+<p class="text-on-surface-variant text-caption uppercase tracking-wider">Flagged Accounts</p>
+<p class="text-on-surface text-headline-md text-error">7</p>
+<p class="text-error text-caption font-bold">Action required</p>
+</div>
+</div>
+<!-- Filters & Search -->
+<div class="bg-surface-container-lowest p-gutter rounded-2xl ambient-card border border-outline-variant flex flex-col gap-gutter">
+<div class="flex flex-wrap items-center gap-gutter">
+<div class="flex-1 min-w-[300px]">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary">search</span>
+<input class="w-full h-12 pl-12 pr-4 bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-xl text-on-surface placeholder:text-on-surface-variant" placeholder="Search by name, email, or student ID..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-stack-sm">
+<select class="h-12 px-4 bg-surface-container-low border-transparent rounded-xl text-on-surface font-label-md focus:border-primary focus:ring-0">
+<option>All Roles</option>
+<option>Student</option>
+<option>Landlord</option>
+<option>Admin</option>
+</select>
+<select class="h-12 px-4 bg-surface-container-low border-transparent rounded-xl text-on-surface font-label-md focus:border-primary focus:ring-0">
+<option>All Statuses</option>
+<option>Verified</option>
+<option>Pending</option>
+<option>Flagged</option>
+</select>
+<button class="h-12 w-12 flex items-center justify-center bg-surface-container-low text-outline rounded-xl hover:text-primary">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr class="text-left border-b border-outline-variant">
+<th class="pb-4 px-2 font-label-md text-on-surface-variant uppercase text-[12px] tracking-widest">Name &amp; Identity</th>
+<th class="pb-4 px-2 font-label-md text-on-surface-variant uppercase text-[12px] tracking-widest">Role</th>
+<th class="pb-4 px-2 font-label-md text-on-surface-variant uppercase text-[12px] tracking-widest">Date Joined</th>
+<th class="pb-4 px-2 font-label-md text-on-surface-variant uppercase text-[12px] tracking-widest">Verification Status</th>
+<th class="pb-4 px-2 font-label-md text-on-surface-variant uppercase text-[12px] tracking-widest text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-5 px-2">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young man with a friendly expression, set against a blurred urban background. The image is brightly lit with high contrast, mirroring the clean, modern light-mode UI design. He wears a smart-casual shirt, and the overall mood is approachable yet trustworthy for an administrative user profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmbYF_lB_OXnT-OY3jSX65f6hE5Aqpk55oGHXHRwOBFvuzglJ5nr1p0ofTmls9Ww8e8ivavJFXFYPnYUWnMN0oe7LX_Z1I8kxebPAN73u7Gm1KW4b25FNA5qMDxfDeUR6ppfC6UaYb_icoBQBo8cTx6DoOc9xfo3PVc-qBw0IzVNziKcU9QdGbaVUQBxHqPFVJinK96zd3fxDdQPo9AAaeas9lLtJaAisKwunFe6PxAZXNNMyUsUPe5RR9QGwpLonJI2FXB1WqIT4"/>
+</div>
+<div class="flex flex-col">
+<p class="text-on-surface font-label-md">Kelvin Wanyama</p>
+<p class="text-on-surface-variant text-caption">k.wanyama@kibabii.ac.ke</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-2">
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant font-label-md rounded-full text-[12px]">Student</span>
+</td>
+<td class="py-5 px-2 text-on-surface-variant text-body-md">Oct 24, 2023</td>
+<td class="py-5 px-2">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-md text-[13px]">Verified</span>
+</div>
+</td>
+<td class="py-5 px-2 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-primary hover:bg-primary/10" title="View details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-primary hover:bg-primary/10" title="Edit user">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-error hover:bg-error/10" title="Suspend user">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-5 px-2">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a mature woman smiling warmly, representing a landlord user. The setting is a bright, modern office with soft natural light. The aesthetic is clean and corporate, matching the platform's focus on trust and institutional reliability, with vibrant blue tones in the background reflecting the brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsdh3LrTNRe1bi_PPDheN4Z5-JTId-QCw8I7vqJlReSXiOeybTxYUgaGks7iW6vnGbQxAFfOV_HhInYaeOR2-qZ3louDZ9KuJtO1miZmjqfF8WuyaqKRh1jMZFf2vwkYrGoDSc2HpniBphvYGVRTj1hqnBNkKCpk7L8AolmO3EQfBhZmG7RCHSNyEPcDU8iwbwnoeQZoRAGqtSRvBGUFn5czNqADA1PVJx2AMhXdl_12M9wMUvwlwU0OJVVD9We4s3tYt9rq-5MAU"/>
+</div>
+<div class="flex flex-col">
+<p class="text-on-surface font-label-md">Grace Musyoka</p>
+<p class="text-on-surface-variant text-caption">g.musyoka@hostelnest.com</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-2">
+<span class="px-3 py-1 bg-secondary-container/20 text-on-secondary-container font-label-md rounded-full text-[12px]">Landlord</span>
+</td>
+<td class="py-5 px-2 text-on-surface-variant text-body-md">Oct 22, 2023</td>
+<td class="py-5 px-2">
+<div class="flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined text-[18px]">pending_actions</span>
+<span class="font-label-md text-[13px]">Pending</span>
+</div>
+</td>
+<td class="py-5 px-2 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-error hover:bg-error/10">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-5 px-2">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A portrait of a serious young man, framed as a student user profile. The lighting is crisp and cool-toned, emphasizing clarity and modernism. He is looking slightly away from the camera in a vast, minimalist room that feels academic and secure. The style is consistent with the sleek, high-energy institutional admin dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnCNMHxd2KGlDJghTl7ofwN8PMOSRvzbaCqzXmZ_pCyMlNOFvhzBQlWexxrVmdRtGV2hKDjw2eK3nTC_vK-BMyiMNbAz3sl8Es724TghHfmGyd7P8Saff8MEaz8wEXad7CKM2gofbd2vYI6NGRM9e2ktnK5bGex9VNBt-8XvrhqZj0opeOsyrs_36Hxe2EkBqyd0SHkyL5bLRbhVrLvxjxLhrIvPOrSmUhIPFmik_uPN_Sq856owHkag_P7Zl2yO0NW94MzeTupmo"/>
+</div>
+<div class="flex flex-col">
+<p class="text-on-surface font-label-md">Brian Chemutai</p>
+<p class="text-on-surface-variant text-caption">b.chemutai@student.kb.ac.ke</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-2">
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant font-label-md rounded-full text-[12px]">Student</span>
+</td>
+<td class="py-5 px-2 text-on-surface-variant text-body-md">Oct 15, 2023</td>
+<td class="py-5 px-2">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-[18px]">report</span>
+<span class="font-label-md text-[13px]">Flagged</span>
+</div>
+</td>
+<td class="py-5 px-2 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-error bg-error/10">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-5 px-2">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A headshot of a smiling young professional woman, representing a verified property manager or landlord. The image features soft bokeh and bright sunlight, creating an optimistic and helpful 'Empowering Roommate' vibe. Her posture is confident, and the colors harmonize with the Electric Azure and Growth Green accents of the platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_iz891uRmr7FXHn3iQmnCgnE-SmJRjfq1sYZVON3PmwL-fxErDMK4QCbsZeRrrkWNf4Vziow6RehaxjLdbcCUhgql8ZastzTOwXXM3p26D-p_0dgTx2khZKzx4YCqKTuXYOVmdj4newcUcpyE7qcggf8eRqnHN-wGkJEzVZtxfZ9upXcNeLiALQ8LbdwNHDHXuBLVwqBM75mhc9fDGcp5ouA4GdS7Z36yr0QrOBUkBLFYqK2rmLFAe4L-65V6BNApgrpSk2mZlqs"/>
+</div>
+<div class="flex flex-col">
+<p class="text-on-surface font-label-md">Mercy Atieno</p>
+<p class="text-on-surface-variant text-caption">m.atieno@outlook.com</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-2">
+<span class="px-3 py-1 bg-secondary-container/20 text-on-secondary-container font-label-md rounded-full text-[12px]">Landlord</span>
+</td>
+<td class="py-5 px-2 text-on-surface-variant text-body-md">Sep 30, 2023</td>
+<td class="py-5 px-2">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-md text-[13px]">Verified</span>
+</div>
+</td>
+<td class="py-5 px-2 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg text-outline hover:text-error hover:bg-error/10">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant">
+<p class="text-on-surface-variant text-caption">Showing 1 to 4 of 2,845 users</p>
+<div class="flex items-center gap-2">
+<button class="size-10 flex items-center justify-center rounded-lg border border-outline-variant text-outline hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="size-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-label-md">1</button>
+<button class="size-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low">2</button>
+<button class="size-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low">3</button>
+<span class="px-2 text-outline">...</span>
+<button class="size-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low">72</button>
+<button class="size-10 flex items-center justify-center rounded-lg border border-outline-variant text-outline hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Action Section -->
+<div class="bg-primary p-gutter rounded-2xl flex items-center justify-between text-on-primary overflow-hidden relative">
+<div class="flex flex-col gap-1 relative z-10">
+<p class="font-headline-md text-body-lg">Audit Logs</p>
+<p class="text-on-primary/80 text-caption">Review the history of administrative changes and system-wide user updates.</p>
+</div>
+<button class="px-6 h-12 bg-white text-primary font-label-md rounded-xl hover:bg-surface-container-lowest transition-all relative z-10">
+                    View Activity Log
+                </button>
+<!-- Decorative element -->
+<div class="absolute -right-10 -bottom-10 size-48 bg-white/10 rounded-full blur-3xl"></div>
+<div class="absolute -left-10 -top-10 size-48 bg-secondary-container/20 rounded-full blur-3xl"></div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

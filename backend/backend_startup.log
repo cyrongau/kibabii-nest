@@ -1,0 +1,938 @@
+
+> backend@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m1:16:44 AM[0m] Starting compilation in watch mode...
+
+[[90m1:16:53 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +34ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTaxonomyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUploadsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTenancyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServiceRequestsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBookingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMessagesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mContractsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPropertiesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKycModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:54 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mNotificationsModule dependencies initialized[39m[38;5;3m +0ms[39m
+⚠️ Seeding failed: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\dev\kibabii-nest\backend\src\main.ts:22:40
+
+  19 ];
+  20 
+  21 for (const u of seedUsers) {
+→ 22   const exists = await prisma.user.findUnique(
+Can't reach database server at `localhost:5432`
+
+Please make sure your database server is running at `localhost:5432`.
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +4152ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/google, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/2fa/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mNotificationsController {/notifications}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/:id/read, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/read-all, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/email/test, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentsController {/payments}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/generate-monthly, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/receipt, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/verify, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/upfront/:tenancyId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/mpesa, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/mpesa/callback, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/tenancy/:tenancyId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord/summary, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/process-overdue, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPropertiesController {/properties}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/stats/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/generate-description, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/stats, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBookingsController {/bookings}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/my-bookings, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/role, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/suspend, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/activate, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/identity, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminStatsController {/admin/stats}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/overview, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/growth, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMessagesController {/messages}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/contacts, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/conversation/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUploadsController {/uploads}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/image, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/document, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/video, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mContractsController {/contracts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/contracts/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTaxonomyController {/taxonomy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTenancyController {/tenancy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/from-booking/:bookingId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/vacation-notice, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/end-break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/my-tenancies, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mServiceRequestsController {/service-requests}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/my-requests, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id/status, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKycController {/kyc}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/submit, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/pending, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26900  - [39m05/04/2026, 1:16:59 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112
+You may have to run ${qe("prisma generate")} for your changes to take effect.`,this.config.clientVersion);return t}}parseEngineResponse(t){if(!t)throw new B("Response from the Engine was empty",{clientVersion:this.config.clientVersion});try{return JSON.parse(t)}catch{throw new B("Unable to JSON.parse response from engine",{clientVersion:this.config.clientVersion})}}async loadEngine(){if(!this.engine){this.QueryEngineConstructor||(this.library=await this.libraryLoader.loadLibrary(this.config),this.QueryEngineConstructor=this.library.QueryEngine);try{let t=new WeakRef(this),{adapter:r}=this.config;r&&Ae("Using driver adapter: %O",r),this.engine=new this.QueryEngineConstructor({datamodel:this.datamodel,env:process.env,logQueries:this.config.logQueries??!1,ignoreEnvVarErrors:!0,datasourceOverrides:this.datasourceOverrides??{},logLevel:this.logLevel,configDir:this.config.cwd,engineProtocol:"json"},n=>{t.deref()?.logger(n)},r)}catch(t){let r=t,n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}}}logger(t){let r=this.parseEngineResponse(t);if(r){if("span"in r){this.config.tracingHelper.createEngineSpan(r);return}r.level=r?.level.toLowerCase()??"unknown",fm(r)?this.logEmitter.emit("query",{timestamp:new Date,query:r.query,params:r.params,duration:Number(r.duration_ms),target:r.module_path}):gm(r)?this.loggerRustPanic=new le(lo(this,`${r.message}: ${r.reason} in ${r.file}:${r.line}:${r.column}`),this.config.clientVersion):this.logEmitter.emit(r.level,{timestamp:new Date,message:r.message,target:r.module_path})}}parseInitError(t){try{return JSON.parse(t)}catch{}return t}parseRequestError(t){try{return JSON.parse(t)}catch{}return t}onBeforeExit(){throw new Error('"beforeExit" hook is not applicable to the library engine since Prisma 5.0.0, it is only relevant and implemented for the binary engine. Please add your event listener to the `process` object directly instead.')}async start(){if(await this.libraryInstantiationPromise,await this.libraryStoppingPromise,this.libraryStartingPromise)return Ae(`library already starting, this.libraryStarted: ${this.libraryStarted}`),this.libraryStartingPromise;if(this.libraryStarted)return;let t=async()=>{Ae("library starting");try{let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.connect(JSON.stringify(r)),this.libraryStarted=!0,Ae("library started")}catch(r){let n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}finally{this.libraryStartingPromise=void 0}};return this.libraryStartingPromise=this.config.tracingHelper.runInChildSpan("connect",t),this.libraryStartingPromise}async stop(){if(await this.libraryStartingPromise,await this.executingQueryPromise,this.libraryStoppingPromise)return Ae("library is already stopping"),this.libraryStoppingPromise;if(!this.libraryStarted)return;let t=async()=>{await new Promise(n=>setTimeout(n,5)),Ae("library stopping");let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.disconnect(JSON.stringify(r)),this.libraryStarted=!1,this.libraryStoppingPromise=void 0,Ae("library stopped")};return this.libraryStoppingPromise=this.config.tracingHelper.runInChildSpan("disconnect",t),this.libraryStoppingPromise}version(){return this.versionInfo=this.library?.version(),this.versionInfo?.version??"unknown"}debugPanic(t){return this.library?.debugPanic(t)}async request(t,{traceparent:r,interactiveTransaction:n}){Ae(`sending request, this.libraryStarted: ${this.libraryStarted}`);let i=JSON.stringify({traceparent:r}),o=JSON.stringify(t);try{await this.start(),this.executingQueryPromise=this.engine?.query(o,i,n?.id),this.lastQuery=o;let s=this.parseEngineResponse(await this.executingQueryPromise);if(s.errors)throw s.errors.length===1?this.buildQueryError(s.errors[0]):new B(JSON.stringify(s.errors),{clientVersion:this.config.clientVersion});if(this.loggerRustPanic)throw this.loggerRustPanic;return{data:s,elapsed:0}}catch(s){if(s instanceof R)throw s;if(s.code==="GenericFailure"&&s.message?.startsWith("PANIC:"))throw new le(lo(this,s.message),this.config.clientVersion);let a=this.parseRequestError(s.message);throw typeof a=="string"?s:new B(`${a.message}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+PrismaClientInitializationError: Can't reach database server at `localhost:5432`
+
+Please make sure your database server is running at `localhost:5432`.
+    at t (C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112:2488)
+    at async Proxy.onModuleInit (C:\dev\kibabii-nest\backend\src\prisma\prisma.service.ts:17:5)
+    at async Promise.all (index 0)
+    at async callModuleInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\hooks\on-module-init.hook.js:43:5)
+    at async NestApplication.callInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application-context.js:252:13)
+    at async NestApplication.init (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:103:9)
+    at async NestApplication.listen (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:175:13)
+    at async bootstrap (C:\dev\kibabii-nest\backend\src\main.ts:39:3) {
+  clientVersion: '5.22.0',
+  errorCode: 'P1001'
+}
+
+Node.js v24.15.0
+[2J[3J[H[[90m1:18:11 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:18:12 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +72ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTaxonomyModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUploadsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTenancyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServiceRequestsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBookingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMessagesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mContractsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPropertiesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKycModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:14 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mNotificationsModule dependencies initialized[39m[38;5;3m +0ms[39m
+⚠️ Seeding failed: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\dev\kibabii-nest\backend\src\main.ts:22:40
+
+  19 ];
+  20 
+  21 for (const u of seedUsers) {
+→ 22   const exists = await prisma.user.findUnique(
+Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +2122ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/google, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/2fa/verify, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mNotificationsController {/notifications}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications, GET} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/:id/read, PATCH} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/read-all, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/email/test, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentsController {/payments}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/generate-monthly, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/receipt, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/upfront/:tenancyId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/mpesa, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/mpesa/callback, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/tenancy/:tenancyId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord/summary, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/process-overdue, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPropertiesController {/properties}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/stats/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/generate-description, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBookingsController {/bookings}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/my-bookings, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/stats, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/role, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/suspend, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/activate, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/me, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/identity, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminStatsController {/admin/stats}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/overview, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/growth, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMessagesController {/messages}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/contacts, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/conversation/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUploadsController {/uploads}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/image, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/document, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/video, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mContractsController {/contracts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/contracts/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTaxonomyController {/taxonomy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTenancyController {/tenancy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/from-booking/:bookingId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/vacation-notice, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/end-break-hold, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/my-tenancies, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mServiceRequestsController {/service-requests}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/my-requests, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKycController {/kyc}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/submit, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/pending, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10328  - [39m05/04/2026, 1:18:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/:id/verify, PATCH} route[39m[38;5;3m +1ms[39m
+C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112
+You may have to run ${qe("prisma generate")} for your changes to take effect.`,this.config.clientVersion);return t}}parseEngineResponse(t){if(!t)throw new B("Response from the Engine was empty",{clientVersion:this.config.clientVersion});try{return JSON.parse(t)}catch{throw new B("Unable to JSON.parse response from engine",{clientVersion:this.config.clientVersion})}}async loadEngine(){if(!this.engine){this.QueryEngineConstructor||(this.library=await this.libraryLoader.loadLibrary(this.config),this.QueryEngineConstructor=this.library.QueryEngine);try{let t=new WeakRef(this),{adapter:r}=this.config;r&&Ae("Using driver adapter: %O",r),this.engine=new this.QueryEngineConstructor({datamodel:this.datamodel,env:process.env,logQueries:this.config.logQueries??!1,ignoreEnvVarErrors:!0,datasourceOverrides:this.datasourceOverrides??{},logLevel:this.logLevel,configDir:this.config.cwd,engineProtocol:"json"},n=>{t.deref()?.logger(n)},r)}catch(t){let r=t,n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}}}logger(t){let r=this.parseEngineResponse(t);if(r){if("span"in r){this.config.tracingHelper.createEngineSpan(r);return}r.level=r?.level.toLowerCase()??"unknown",fm(r)?this.logEmitter.emit("query",{timestamp:new Date,query:r.query,params:r.params,duration:Number(r.duration_ms),target:r.module_path}):gm(r)?this.loggerRustPanic=new le(lo(this,`${r.message}: ${r.reason} in ${r.file}:${r.line}:${r.column}`),this.config.clientVersion):this.logEmitter.emit(r.level,{timestamp:new Date,message:r.message,target:r.module_path})}}parseInitError(t){try{return JSON.parse(t)}catch{}return t}parseRequestError(t){try{return JSON.parse(t)}catch{}return t}onBeforeExit(){throw new Error('"beforeExit" hook is not applicable to the library engine since Prisma 5.0.0, it is only relevant and implemented for the binary engine. Please add your event listener to the `process` object directly instead.')}async start(){if(await this.libraryInstantiationPromise,await this.libraryStoppingPromise,this.libraryStartingPromise)return Ae(`library already starting, this.libraryStarted: ${this.libraryStarted}`),this.libraryStartingPromise;if(this.libraryStarted)return;let t=async()=>{Ae("library starting");try{let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.connect(JSON.stringify(r)),this.libraryStarted=!0,Ae("library started")}catch(r){let n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}finally{this.libraryStartingPromise=void 0}};return this.libraryStartingPromise=this.config.tracingHelper.runInChildSpan("connect",t),this.libraryStartingPromise}async stop(){if(await this.libraryStartingPromise,await this.executingQueryPromise,this.libraryStoppingPromise)return Ae("library is already stopping"),this.libraryStoppingPromise;if(!this.libraryStarted)return;let t=async()=>{await new Promise(n=>setTimeout(n,5)),Ae("library stopping");let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.disconnect(JSON.stringify(r)),this.libraryStarted=!1,this.libraryStoppingPromise=void 0,Ae("library stopped")};return this.libraryStoppingPromise=this.config.tracingHelper.runInChildSpan("disconnect",t),this.libraryStoppingPromise}version(){return this.versionInfo=this.library?.version(),this.versionInfo?.version??"unknown"}debugPanic(t){return this.library?.debugPanic(t)}async request(t,{traceparent:r,interactiveTransaction:n}){Ae(`sending request, this.libraryStarted: ${this.libraryStarted}`);let i=JSON.stringify({traceparent:r}),o=JSON.stringify(t);try{await this.start(),this.executingQueryPromise=this.engine?.query(o,i,n?.id),this.lastQuery=o;let s=this.parseEngineResponse(await this.executingQueryPromise);if(s.errors)throw s.errors.length===1?this.buildQueryError(s.errors[0]):new B(JSON.stringify(s.errors),{clientVersion:this.config.clientVersion});if(this.loggerRustPanic)throw this.loggerRustPanic;return{data:s,elapsed:0}}catch(s){if(s instanceof R)throw s;if(s.code==="GenericFailure"&&s.message?.startsWith("PANIC:"))throw new le(lo(this,s.message),this.config.clientVersion);let a=this.parseRequestError(s.message);throw typeof a=="string"?s:new B(`${a.message}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+PrismaClientInitializationError: Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+    at t (C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112:2488)
+    at async Proxy.onModuleInit (C:\dev\kibabii-nest\backend\src\prisma\prisma.service.ts:17:5)
+    at async Promise.all (index 0)
+    at async callModuleInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\hooks\on-module-init.hook.js:43:5)
+    at async NestApplication.callInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application-context.js:252:13)
+    at async NestApplication.init (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:103:9)
+    at async NestApplication.listen (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:175:13)
+    at async bootstrap (C:\dev\kibabii-nest\backend\src\main.ts:39:3) {
+  clientVersion: '5.22.0',
+  errorCode: 'P1001'
+}
+
+Node.js v24.15.0
+[2J[3J[H[[90m1:18:23 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:18:24 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +46ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTaxonomyModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUploadsModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTenancyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServiceRequestsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBookingsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMessagesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mContractsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPropertiesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKycModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:26 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mNotificationsModule dependencies initialized[39m[38;5;3m +0ms[39m
+⚠️ Seeding failed: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\dev\kibabii-nest\backend\src\main.ts:22:40
+
+  19 ];
+  20 
+  21 for (const u of seedUsers) {
+→ 22   const exists = await prisma.user.findUnique(
+Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +2139ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/google, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/2fa/verify, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mNotificationsController {/notifications}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/:id/read, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/read-all, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/email/test, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentsController {/payments}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/generate-monthly, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/receipt, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/upfront/:tenancyId, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/mpesa, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/mpesa/callback, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/tenancy/:tenancyId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord/summary, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/process-overdue, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPropertiesController {/properties}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/stats/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/generate-description, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id/verify, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBookingsController {/bookings}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/my-bookings, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/stats, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/role, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/suspend, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/activate, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/me, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/identity, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminStatsController {/admin/stats}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/overview, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/growth, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMessagesController {/messages}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/contacts, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/conversation/:userId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUploadsController {/uploads}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/image, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/document, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/video, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mContractsController {/contracts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/contracts/upload, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTaxonomyController {/taxonomy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTenancyController {/tenancy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/from-booking/:bookingId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/vacation-notice, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/end-break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/my-tenancies, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/config, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mServiceRequestsController {/service-requests}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/my-requests, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKycController {/kyc}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/submit, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/pending, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26616  - [39m05/04/2026, 1:18:28 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/:id/verify, PATCH} route[39m[38;5;3m +1ms[39m
+C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112
+You may have to run ${qe("prisma generate")} for your changes to take effect.`,this.config.clientVersion);return t}}parseEngineResponse(t){if(!t)throw new B("Response from the Engine was empty",{clientVersion:this.config.clientVersion});try{return JSON.parse(t)}catch{throw new B("Unable to JSON.parse response from engine",{clientVersion:this.config.clientVersion})}}async loadEngine(){if(!this.engine){this.QueryEngineConstructor||(this.library=await this.libraryLoader.loadLibrary(this.config),this.QueryEngineConstructor=this.library.QueryEngine);try{let t=new WeakRef(this),{adapter:r}=this.config;r&&Ae("Using driver adapter: %O",r),this.engine=new this.QueryEngineConstructor({datamodel:this.datamodel,env:process.env,logQueries:this.config.logQueries??!1,ignoreEnvVarErrors:!0,datasourceOverrides:this.datasourceOverrides??{},logLevel:this.logLevel,configDir:this.config.cwd,engineProtocol:"json"},n=>{t.deref()?.logger(n)},r)}catch(t){let r=t,n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}}}logger(t){let r=this.parseEngineResponse(t);if(r){if("span"in r){this.config.tracingHelper.createEngineSpan(r);return}r.level=r?.level.toLowerCase()??"unknown",fm(r)?this.logEmitter.emit("query",{timestamp:new Date,query:r.query,params:r.params,duration:Number(r.duration_ms),target:r.module_path}):gm(r)?this.loggerRustPanic=new le(lo(this,`${r.message}: ${r.reason} in ${r.file}:${r.line}:${r.column}`),this.config.clientVersion):this.logEmitter.emit(r.level,{timestamp:new Date,message:r.message,target:r.module_path})}}parseInitError(t){try{return JSON.parse(t)}catch{}return t}parseRequestError(t){try{return JSON.parse(t)}catch{}return t}onBeforeExit(){throw new Error('"beforeExit" hook is not applicable to the library engine since Prisma 5.0.0, it is only relevant and implemented for the binary engine. Please add your event listener to the `process` object directly instead.')}async start(){if(await this.libraryInstantiationPromise,await this.libraryStoppingPromise,this.libraryStartingPromise)return Ae(`library already starting, this.libraryStarted: ${this.libraryStarted}`),this.libraryStartingPromise;if(this.libraryStarted)return;let t=async()=>{Ae("library starting");try{let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.connect(JSON.stringify(r)),this.libraryStarted=!0,Ae("library started")}catch(r){let n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}finally{this.libraryStartingPromise=void 0}};return this.libraryStartingPromise=this.config.tracingHelper.runInChildSpan("connect",t),this.libraryStartingPromise}async stop(){if(await this.libraryStartingPromise,await this.executingQueryPromise,this.libraryStoppingPromise)return Ae("library is already stopping"),this.libraryStoppingPromise;if(!this.libraryStarted)return;let t=async()=>{await new Promise(n=>setTimeout(n,5)),Ae("library stopping");let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.disconnect(JSON.stringify(r)),this.libraryStarted=!1,this.libraryStoppingPromise=void 0,Ae("library stopped")};return this.libraryStoppingPromise=this.config.tracingHelper.runInChildSpan("disconnect",t),this.libraryStoppingPromise}version(){return this.versionInfo=this.library?.version(),this.versionInfo?.version??"unknown"}debugPanic(t){return this.library?.debugPanic(t)}async request(t,{traceparent:r,interactiveTransaction:n}){Ae(`sending request, this.libraryStarted: ${this.libraryStarted}`);let i=JSON.stringify({traceparent:r}),o=JSON.stringify(t);try{await this.start(),this.executingQueryPromise=this.engine?.query(o,i,n?.id),this.lastQuery=o;let s=this.parseEngineResponse(await this.executingQueryPromise);if(s.errors)throw s.errors.length===1?this.buildQueryError(s.errors[0]):new B(JSON.stringify(s.errors),{clientVersion:this.config.clientVersion});if(this.loggerRustPanic)throw this.loggerRustPanic;return{data:s,elapsed:0}}catch(s){if(s instanceof R)throw s;if(s.code==="GenericFailure"&&s.message?.startsWith("PANIC:"))throw new le(lo(this,s.message),this.config.clientVersion);let a=this.parseRequestError(s.message);throw typeof a=="string"?s:new B(`${a.message}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+PrismaClientInitializationError: Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+    at t (C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112:2488)
+    at async Proxy.onModuleInit (C:\dev\kibabii-nest\backend\src\prisma\prisma.service.ts:17:5)
+    at async Promise.all (index 0)
+    at async callModuleInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\hooks\on-module-init.hook.js:43:5)
+    at async NestApplication.callInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application-context.js:252:13)
+    at async NestApplication.init (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:103:9)
+    at async NestApplication.listen (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:175:13)
+    at async bootstrap (C:\dev\kibabii-nest\backend\src\main.ts:39:3) {
+  clientVersion: '5.22.0',
+  errorCode: 'P1001'
+}
+
+Node.js v24.15.0
+[2J[3J[H[[90m1:18:36 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:18:37 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +50ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTaxonomyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUploadsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTenancyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServiceRequestsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBookingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMessagesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mContractsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPropertiesModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKycModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:39 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mNotificationsModule dependencies initialized[39m[38;5;3m +0ms[39m
+⚠️ Seeding failed: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\dev\kibabii-nest\backend\src\main.ts:22:40
+
+  19 ];
+  20 
+  21 for (const u of seedUsers) {
+→ 22   const exists = await prisma.user.findUnique(
+Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +2129ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/google, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/2fa/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mNotificationsController {/notifications}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/:id/read, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/read-all, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/email/test, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentsController {/payments}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/generate-monthly, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/receipt, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/upfront/:tenancyId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/mpesa, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/mpesa/callback, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/tenancy/:tenancyId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord/summary, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/process-overdue, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPropertiesController {/properties}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/stats/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/generate-description, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBookingsController {/bookings}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/my-bookings, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/role, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/suspend, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/activate, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/identity, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminStatsController {/admin/stats}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/overview, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/growth, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMessagesController {/messages}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/contacts, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/conversation/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUploadsController {/uploads}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/image, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/document, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/video, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mContractsController {/contracts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/contracts/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTaxonomyController {/taxonomy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTenancyController {/tenancy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/from-booking/:bookingId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/vacation-notice, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/end-break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/my-tenancies, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mServiceRequestsController {/service-requests}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/my-requests, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id/status, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKycController {/kyc}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/submit, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/pending, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13336  - [39m05/04/2026, 1:18:41 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112
+You may have to run ${qe("prisma generate")} for your changes to take effect.`,this.config.clientVersion);return t}}parseEngineResponse(t){if(!t)throw new B("Response from the Engine was empty",{clientVersion:this.config.clientVersion});try{return JSON.parse(t)}catch{throw new B("Unable to JSON.parse response from engine",{clientVersion:this.config.clientVersion})}}async loadEngine(){if(!this.engine){this.QueryEngineConstructor||(this.library=await this.libraryLoader.loadLibrary(this.config),this.QueryEngineConstructor=this.library.QueryEngine);try{let t=new WeakRef(this),{adapter:r}=this.config;r&&Ae("Using driver adapter: %O",r),this.engine=new this.QueryEngineConstructor({datamodel:this.datamodel,env:process.env,logQueries:this.config.logQueries??!1,ignoreEnvVarErrors:!0,datasourceOverrides:this.datasourceOverrides??{},logLevel:this.logLevel,configDir:this.config.cwd,engineProtocol:"json"},n=>{t.deref()?.logger(n)},r)}catch(t){let r=t,n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}}}logger(t){let r=this.parseEngineResponse(t);if(r){if("span"in r){this.config.tracingHelper.createEngineSpan(r);return}r.level=r?.level.toLowerCase()??"unknown",fm(r)?this.logEmitter.emit("query",{timestamp:new Date,query:r.query,params:r.params,duration:Number(r.duration_ms),target:r.module_path}):gm(r)?this.loggerRustPanic=new le(lo(this,`${r.message}: ${r.reason} in ${r.file}:${r.line}:${r.column}`),this.config.clientVersion):this.logEmitter.emit(r.level,{timestamp:new Date,message:r.message,target:r.module_path})}}parseInitError(t){try{return JSON.parse(t)}catch{}return t}parseRequestError(t){try{return JSON.parse(t)}catch{}return t}onBeforeExit(){throw new Error('"beforeExit" hook is not applicable to the library engine since Prisma 5.0.0, it is only relevant and implemented for the binary engine. Please add your event listener to the `process` object directly instead.')}async start(){if(await this.libraryInstantiationPromise,await this.libraryStoppingPromise,this.libraryStartingPromise)return Ae(`library already starting, this.libraryStarted: ${this.libraryStarted}`),this.libraryStartingPromise;if(this.libraryStarted)return;let t=async()=>{Ae("library starting");try{let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.connect(JSON.stringify(r)),this.libraryStarted=!0,Ae("library started")}catch(r){let n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}finally{this.libraryStartingPromise=void 0}};return this.libraryStartingPromise=this.config.tracingHelper.runInChildSpan("connect",t),this.libraryStartingPromise}async stop(){if(await this.libraryStartingPromise,await this.executingQueryPromise,this.libraryStoppingPromise)return Ae("library is already stopping"),this.libraryStoppingPromise;if(!this.libraryStarted)return;let t=async()=>{await new Promise(n=>setTimeout(n,5)),Ae("library stopping");let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.disconnect(JSON.stringify(r)),this.libraryStarted=!1,this.libraryStoppingPromise=void 0,Ae("library stopped")};return this.libraryStoppingPromise=this.config.tracingHelper.runInChildSpan("disconnect",t),this.libraryStoppingPromise}version(){return this.versionInfo=this.library?.version(),this.versionInfo?.version??"unknown"}debugPanic(t){return this.library?.debugPanic(t)}async request(t,{traceparent:r,interactiveTransaction:n}){Ae(`sending request, this.libraryStarted: ${this.libraryStarted}`);let i=JSON.stringify({traceparent:r}),o=JSON.stringify(t);try{await this.start(),this.executingQueryPromise=this.engine?.query(o,i,n?.id),this.lastQuery=o;let s=this.parseEngineResponse(await this.executingQueryPromise);if(s.errors)throw s.errors.length===1?this.buildQueryError(s.errors[0]):new B(JSON.stringify(s.errors),{clientVersion:this.config.clientVersion});if(this.loggerRustPanic)throw this.loggerRustPanic;return{data:s,elapsed:0}}catch(s){if(s instanceof R)throw s;if(s.code==="GenericFailure"&&s.message?.startsWith("PANIC:"))throw new le(lo(this,s.message),this.config.clientVersion);let a=this.parseRequestError(s.message);throw typeof a=="string"?s:new B(`${a.message}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+PrismaClientInitializationError: Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+    at t (C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112:2488)
+    at async Proxy.onModuleInit (C:\dev\kibabii-nest\backend\src\prisma\prisma.service.ts:17:5)
+    at async Promise.all (index 0)
+    at async callModuleInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\hooks\on-module-init.hook.js:43:5)
+    at async NestApplication.callInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application-context.js:252:13)
+    at async NestApplication.init (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:103:9)
+    at async NestApplication.listen (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:175:13)
+    at async bootstrap (C:\dev\kibabii-nest\backend\src\main.ts:39:3) {
+  clientVersion: '5.22.0',
+  errorCode: 'P1001'
+}
+
+Node.js v24.15.0
+[2J[3J[H[[90m1:18:54 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:18:54 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +61ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTaxonomyModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUploadsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTenancyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServiceRequestsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAdminModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBookingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMessagesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mContractsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPropertiesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKycModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:56 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mNotificationsModule dependencies initialized[39m[38;5;3m +0ms[39m
+⚠️ Seeding failed: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\dev\kibabii-nest\backend\src\main.ts:22:40
+
+  19 ];
+  20 
+  21 for (const u of seedUsers) {
+→ 22   const exists = await prisma.user.findUnique(
+Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +2135ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +4ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/google, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/2fa/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mNotificationsController {/notifications}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/:id/read, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/read-all, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/email/test, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentsController {/payments}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/generate-monthly, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/receipt, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/upfront/:tenancyId, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/mpesa, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/mpesa/callback, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/tenancy/:tenancyId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord/summary, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/process-overdue, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPropertiesController {/properties}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/stats/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/generate-description, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/all, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBookingsController {/bookings}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/my-bookings, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id/status, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/role, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/suspend, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/activate, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/identity, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminStatsController {/admin/stats}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/overview, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/growth, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMessagesController {/messages}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/contacts, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/conversation/:userId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUploadsController {/uploads}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/image, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/document, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/video, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mContractsController {/contracts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/contracts/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTaxonomyController {/taxonomy}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTenancyController {/tenancy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/from-booking/:bookingId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/vacation-notice, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/break-hold, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/end-break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/my-tenancies, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mServiceRequestsController {/service-requests}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/my-requests, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKycController {/kyc}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/submit, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/pending, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminController {/admin}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/overview, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26472  - [39m05/04/2026, 1:18:58 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/growth, GET} route[39m[38;5;3m +0ms[39m
+C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112
+You may have to run ${qe("prisma generate")} for your changes to take effect.`,this.config.clientVersion);return t}}parseEngineResponse(t){if(!t)throw new B("Response from the Engine was empty",{clientVersion:this.config.clientVersion});try{return JSON.parse(t)}catch{throw new B("Unable to JSON.parse response from engine",{clientVersion:this.config.clientVersion})}}async loadEngine(){if(!this.engine){this.QueryEngineConstructor||(this.library=await this.libraryLoader.loadLibrary(this.config),this.QueryEngineConstructor=this.library.QueryEngine);try{let t=new WeakRef(this),{adapter:r}=this.config;r&&Ae("Using driver adapter: %O",r),this.engine=new this.QueryEngineConstructor({datamodel:this.datamodel,env:process.env,logQueries:this.config.logQueries??!1,ignoreEnvVarErrors:!0,datasourceOverrides:this.datasourceOverrides??{},logLevel:this.logLevel,configDir:this.config.cwd,engineProtocol:"json"},n=>{t.deref()?.logger(n)},r)}catch(t){let r=t,n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}}}logger(t){let r=this.parseEngineResponse(t);if(r){if("span"in r){this.config.tracingHelper.createEngineSpan(r);return}r.level=r?.level.toLowerCase()??"unknown",fm(r)?this.logEmitter.emit("query",{timestamp:new Date,query:r.query,params:r.params,duration:Number(r.duration_ms),target:r.module_path}):gm(r)?this.loggerRustPanic=new le(lo(this,`${r.message}: ${r.reason} in ${r.file}:${r.line}:${r.column}`),this.config.clientVersion):this.logEmitter.emit(r.level,{timestamp:new Date,message:r.message,target:r.module_path})}}parseInitError(t){try{return JSON.parse(t)}catch{}return t}parseRequestError(t){try{return JSON.parse(t)}catch{}return t}onBeforeExit(){throw new Error('"beforeExit" hook is not applicable to the library engine since Prisma 5.0.0, it is only relevant and implemented for the binary engine. Please add your event listener to the `process` object directly instead.')}async start(){if(await this.libraryInstantiationPromise,await this.libraryStoppingPromise,this.libraryStartingPromise)return Ae(`library already starting, this.libraryStarted: ${this.libraryStarted}`),this.libraryStartingPromise;if(this.libraryStarted)return;let t=async()=>{Ae("library starting");try{let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.connect(JSON.stringify(r)),this.libraryStarted=!0,Ae("library started")}catch(r){let n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}finally{this.libraryStartingPromise=void 0}};return this.libraryStartingPromise=this.config.tracingHelper.runInChildSpan("connect",t),this.libraryStartingPromise}async stop(){if(await this.libraryStartingPromise,await this.executingQueryPromise,this.libraryStoppingPromise)return Ae("library is already stopping"),this.libraryStoppingPromise;if(!this.libraryStarted)return;let t=async()=>{await new Promise(n=>setTimeout(n,5)),Ae("library stopping");let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.disconnect(JSON.stringify(r)),this.libraryStarted=!1,this.libraryStoppingPromise=void 0,Ae("library stopped")};return this.libraryStoppingPromise=this.config.tracingHelper.runInChildSpan("disconnect",t),this.libraryStoppingPromise}version(){return this.versionInfo=this.library?.version(),this.versionInfo?.version??"unknown"}debugPanic(t){return this.library?.debugPanic(t)}async request(t,{traceparent:r,interactiveTransaction:n}){Ae(`sending request, this.libraryStarted: ${this.libraryStarted}`);let i=JSON.stringify({traceparent:r}),o=JSON.stringify(t);try{await this.start(),this.executingQueryPromise=this.engine?.query(o,i,n?.id),this.lastQuery=o;let s=this.parseEngineResponse(await this.executingQueryPromise);if(s.errors)throw s.errors.length===1?this.buildQueryError(s.errors[0]):new B(JSON.stringify(s.errors),{clientVersion:this.config.clientVersion});if(this.loggerRustPanic)throw this.loggerRustPanic;return{data:s,elapsed:0}}catch(s){if(s instanceof R)throw s;if(s.code==="GenericFailure"&&s.message?.startsWith("PANIC:"))throw new le(lo(this,s.message),this.config.clientVersion);let a=this.parseRequestError(s.message);throw typeof a=="string"?s:new B(`${a.message}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+PrismaClientInitializationError: Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+    at t (C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112:2488)
+    at async Proxy.onModuleInit (C:\dev\kibabii-nest\backend\src\prisma\prisma.service.ts:17:5)
+    at async Promise.all (index 0)
+    at async callModuleInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\hooks\on-module-init.hook.js:43:5)
+    at async NestApplication.callInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application-context.js:252:13)
+    at async NestApplication.init (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:103:9)
+    at async NestApplication.listen (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:175:13)
+    at async bootstrap (C:\dev\kibabii-nest\backend\src\main.ts:39:3) {
+  clientVersion: '5.22.0',
+  errorCode: 'P1001'
+}
+
+Node.js v24.15.0
+[2J[3J[H[[90m1:23:58 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:23:58 AM[0m] Found 0 errors. Watching for file changes.
+
+node:internal/modules/cjs/loader:1479
+  throw err;
+  ^
+
+Error: Cannot find module './app.module'
+Require stack:
+- C:\dev\kibabii-nest\backend\dist\src\main.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)
+    at Module._load (node:internal/modules/cjs/loader:1262:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1576:12)
+    at require (node:internal/modules/helpers:153:16)
+    at Object.<anonymous> (C:\dev\kibabii-nest\backend\src\main.ts:2:1)
+    at Module._compile (node:internal/modules/cjs/loader:1830:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'C:\\dev\\kibabii-nest\\backend\\dist\\src\\main.js' ]
+}
+
+Node.js v24.15.0
+[2J[3J[H[[90m1:24:05 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:24:11 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +31ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTaxonomyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUploadsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTenancyModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServiceRequestsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAdminModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBookingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMessagesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mContractsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPropertiesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKycModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mNotificationsModule dependencies initialized[39m[38;5;3m +0ms[39m
+⚠️ Seeding failed: 
+Invalid `prisma.user.findUnique()` invocation in
+C:\dev\kibabii-nest\backend\src\main.ts:22:40
+
+  19 ];
+  20 
+  21 for (const u of seedUsers) {
+→ 22   const exists = await prisma.user.findUnique(
+Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +2138ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +4ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/google, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/2fa/verify, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mNotificationsController {/notifications}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/:id/read, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/read-all, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifications/email/test, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentsController {/payments}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/generate-monthly, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/receipt, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/upfront/:tenancyId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/:id/mpesa, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/mpesa/callback, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/tenancy/:tenancyId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/landlord/summary, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments/process-overdue, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPropertiesController {/properties}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/stats/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/generate-description, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/all, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/properties/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBookingsController {/bookings}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/my-bookings, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/admin/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bookings/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/stats, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/role, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/suspend, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/activate, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/upload, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/identity/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/identity, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminStatsController {/admin/stats}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/overview, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/growth, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMessagesController {/messages}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/contacts, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/messages/conversation/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUploadsController {/uploads}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/image, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/document, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/uploads/video, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mContractsController {/contracts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/contracts/upload, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTaxonomyController {/taxonomy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/categories/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/taxonomy/types/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTenancyController {/tenancy}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/from-booking/:bookingId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/vacation-notice, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/end-break-hold, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/my-tenancies, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/landlord, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tenancy/:id/config, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mServiceRequestsController {/service-requests}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/my-requests, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/landlord, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/service-requests/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKycController {/kyc}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/submit, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/pending, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kyc/admin/:id/verify, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminController {/admin}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/overview, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21804  - [39m05/04/2026, 1:24:14 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/stats/growth, GET} route[39m[38;5;3m +0ms[39m
+C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112
+You may have to run ${qe("prisma generate")} for your changes to take effect.`,this.config.clientVersion);return t}}parseEngineResponse(t){if(!t)throw new B("Response from the Engine was empty",{clientVersion:this.config.clientVersion});try{return JSON.parse(t)}catch{throw new B("Unable to JSON.parse response from engine",{clientVersion:this.config.clientVersion})}}async loadEngine(){if(!this.engine){this.QueryEngineConstructor||(this.library=await this.libraryLoader.loadLibrary(this.config),this.QueryEngineConstructor=this.library.QueryEngine);try{let t=new WeakRef(this),{adapter:r}=this.config;r&&Ae("Using driver adapter: %O",r),this.engine=new this.QueryEngineConstructor({datamodel:this.datamodel,env:process.env,logQueries:this.config.logQueries??!1,ignoreEnvVarErrors:!0,datasourceOverrides:this.datasourceOverrides??{},logLevel:this.logLevel,configDir:this.config.cwd,engineProtocol:"json"},n=>{t.deref()?.logger(n)},r)}catch(t){let r=t,n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}}}logger(t){let r=this.parseEngineResponse(t);if(r){if("span"in r){this.config.tracingHelper.createEngineSpan(r);return}r.level=r?.level.toLowerCase()??"unknown",fm(r)?this.logEmitter.emit("query",{timestamp:new Date,query:r.query,params:r.params,duration:Number(r.duration_ms),target:r.module_path}):gm(r)?this.loggerRustPanic=new le(lo(this,`${r.message}: ${r.reason} in ${r.file}:${r.line}:${r.column}`),this.config.clientVersion):this.logEmitter.emit(r.level,{timestamp:new Date,message:r.message,target:r.module_path})}}parseInitError(t){try{return JSON.parse(t)}catch{}return t}parseRequestError(t){try{return JSON.parse(t)}catch{}return t}onBeforeExit(){throw new Error('"beforeExit" hook is not applicable to the library engine since Prisma 5.0.0, it is only relevant and implemented for the binary engine. Please add your event listener to the `process` object directly instead.')}async start(){if(await this.libraryInstantiationPromise,await this.libraryStoppingPromise,this.libraryStartingPromise)return Ae(`library already starting, this.libraryStarted: ${this.libraryStarted}`),this.libraryStartingPromise;if(this.libraryStarted)return;let t=async()=>{Ae("library starting");try{let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.connect(JSON.stringify(r)),this.libraryStarted=!0,Ae("library started")}catch(r){let n=this.parseInitError(r.message);throw typeof n=="string"?r:new R(n.message,this.config.clientVersion,n.error_code)}finally{this.libraryStartingPromise=void 0}};return this.libraryStartingPromise=this.config.tracingHelper.runInChildSpan("connect",t),this.libraryStartingPromise}async stop(){if(await this.libraryStartingPromise,await this.executingQueryPromise,this.libraryStoppingPromise)return Ae("library is already stopping"),this.libraryStoppingPromise;if(!this.libraryStarted)return;let t=async()=>{await new Promise(n=>setTimeout(n,5)),Ae("library stopping");let r={traceparent:this.config.tracingHelper.getTraceParent()};await this.engine?.disconnect(JSON.stringify(r)),this.libraryStarted=!1,this.libraryStoppingPromise=void 0,Ae("library stopped")};return this.libraryStoppingPromise=this.config.tracingHelper.runInChildSpan("disconnect",t),this.libraryStoppingPromise}version(){return this.versionInfo=this.library?.version(),this.versionInfo?.version??"unknown"}debugPanic(t){return this.library?.debugPanic(t)}async request(t,{traceparent:r,interactiveTransaction:n}){Ae(`sending request, this.libraryStarted: ${this.libraryStarted}`);let i=JSON.stringify({traceparent:r}),o=JSON.stringify(t);try{await this.start(),this.executingQueryPromise=this.engine?.query(o,i,n?.id),this.lastQuery=o;let s=this.parseEngineResponse(await this.executingQueryPromise);if(s.errors)throw s.errors.length===1?this.buildQueryError(s.errors[0]):new B(JSON.stringify(s.errors),{clientVersion:this.config.clientVersion});if(this.loggerRustPanic)throw this.loggerRustPanic;return{data:s,elapsed:0}}catch(s){if(s instanceof R)throw s;if(s.code==="GenericFailure"&&s.message?.startsWith("PANIC:"))throw new le(lo(this,s.message),this.config.clientVersion);let a=this.parseRequestError(s.message);throw typeof a=="string"?s:new B(`${a.message}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+PrismaClientInitializationError: Can't reach database server at `127.0.0.1:5432`
+
+Please make sure your database server is running at `127.0.0.1:5432`.
+    at t (C:\dev\kibabii-nest\backend\node_modules\@prisma\client\runtime\library.js:112:2488)
+    at async Proxy.onModuleInit (C:\dev\kibabii-nest\backend\src\prisma\prisma.service.ts:17:5)
+    at async Promise.all (index 0)
+    at async callModuleInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\hooks\on-module-init.hook.js:43:5)
+    at async NestApplication.callInitHook (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application-context.js:252:13)
+    at async NestApplication.init (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:103:9)
+    at async NestApplication.listen (C:\dev\kibabii-nest\backend\node_modules\@nestjs\core\nest-application.js:175:13)
+    at async bootstrap (C:\dev\kibabii-nest\backend\src\main.ts:39:3) {
+  clientVersion: '5.22.0',
+  errorCode: 'P1001'
+}
+
+Node.js v24.15.0

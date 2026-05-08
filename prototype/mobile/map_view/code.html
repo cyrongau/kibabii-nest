@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary": "#004ac6",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary-container": "#ffeedd",
+                    "surface-container": "#e5eeff",
+                    "surface-dim": "#cbdbf5",
+                    "on-surface-variant": "#434655",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-secondary-fixed": "#002113",
+                    "tertiary-fixed": "#ffddb8",
+                    "background": "#f8f9ff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#737686",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-background": "#0b1c30",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#006c49",
+                    "primary-container": "#2563eb",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-bright": "#f8f9ff",
+                    "surface-container-high": "#dce9ff",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#0053db",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#6cf8bb",
+                    "tertiary-container": "#996100",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary": "#784b00",
+                    "on-primary-fixed": "#00174b",
+                    "on-secondary-container": "#00714d",
+                    "on-primary-container": "#eeefff",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#005236",
+                    "inverse-primary": "#b4c5ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "inverse-surface": "#213145",
+                    "surface-variant": "#d3e4fe",
+                    "surface": "#f8f9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-margin": "20px",
+                    "base": "8px",
+                    "stack-sm": "12px",
+                    "gutter": "16px",
+                    "stack-md": "24px",
+                    "stack-lg": "48px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 sticky z-40 bg-[#F8FAFC] dark:bg-slate-950">
+<div class="flex justify-between items-center w-full px-5 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A high-quality 3D rendered avatar of a young student with a friendly expression, wearing a stylish denim jacket and glasses. The lighting is soft and professional, set against a clean, minimal blue background that matches the app's electric azure and trust blue brand palette. The character exudes a sense of optimistic energy and modern academic life." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL9g95w7pHJeHg5ZuLD1gWqqhGk9lxy7WwolI7PNA8OJm4_ByqtDDv7YdO_m2uLUj9fiTEKn13mCbre_PPtQt2vOqjgCqygV8eb4Z0bEpjvgkiEGgdcpIcyfS8dOTKzC_d0uhAFyguJ37taEVDv-mMg2p3uW20NQVsoZO7zG46oM3weoU5e8Wa8CXHVlMf_P5hER-diURbXDkxCmS7xOHsgGTcHiArI3cVIVj3Ymk0ILhRP0-uIHH5_zRzr6royuNAVJV6mCC6nhQ"/>
+</div>
+<h1 class="font-headline-md text-blue-600 dark:text-blue-500 font-black tracking-tighter text-2xl">Kibabii Nest</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:opacity-80 active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas: Interactive Map -->
+<main class="flex-grow relative w-full overflow-hidden">
+<!-- Map Background -->
+<div class="absolute inset-0 bg-surface-container-high">
+<img class="w-full h-full object-cover opacity-50 grayscale-[20%]" data-alt="A detailed, clean, and modern minimalist architectural map representation of a vibrant university neighborhood. The map features simplified building blocks, lush green campus spaces, and winding streets shown in a soft light gray and pale blue color scheme. Subtle depth is created with ambient shadows, reflecting a high-end digital interface for urban navigation and student housing discovery." data-location="Boston University Neighborhood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA48ufBloC4B6R4uw9CX82ZLYKazuh88IgPfGrYBAXr5I-VF57h3fdCAJI6lbl4wDnaFJMzKKPvmbnQ4-F6Q9DZzfTulwlls1xc_D77Cor_MX2PcU6tsVpU23IGlqVC3ARvl4RejrTaDHOgHsD7Ixs8Csyvl5IF2FkthDGi2rpgUvPTEUFpfj0WLJX3rTaAzSQ9G48n4F3lTueXzmcfs6yWz4F72CpcYTwALZWdzh-0h2VMPsNmkiGXkOKetpBhX_kjjW24pvo3BI8"/>
+</div>
+<!-- Floating Map Interface Elements -->
+<div class="absolute top-6 left-1/2 -translate-x-1/2 z-20 w-[calc(100%-40px)] max-w-md">
+<div class="bg-white/80 backdrop-blur-xl rounded-full px-5 py-3 shadow-[0_4px_20px_rgba(37,99,235,0.08)] flex items-center gap-3 border border-white/40">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder:text-outline-variant" placeholder="Search near University..." type="text"/>
+<span class="material-symbols-outlined text-outline" data-icon="tune">tune</span>
+</div>
+</div>
+<!-- Custom Map Pins -->
+<!-- Pin 1 - Active -->
+<div class="absolute top-[35%] left-[45%] -translate-x-1/2 -translate-y-1/2 z-30 group cursor-pointer">
+<div class="flex flex-col items-center">
+<div class="bg-primary text-white font-label-md px-3 py-1 rounded-full shadow-lg mb-1 transition-transform group-hover:scale-110">
+                    $850
+                </div>
+<div class="relative">
+<div class="w-4 h-4 bg-primary rounded-full border-2 border-white shadow-md"></div>
+<div class="absolute -inset-2 bg-primary/20 rounded-full animate-ping"></div>
+</div>
+</div>
+</div>
+<!-- Pin 2 -->
+<div class="absolute top-[20%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-20 group cursor-pointer">
+<div class="flex flex-col items-center">
+<div class="bg-white text-on-surface font-label-md px-3 py-1 rounded-full shadow-md mb-1 border border-outline-variant group-hover:bg-primary-container group-hover:text-white transition-colors">
+                    $1,200
+                </div>
+<div class="w-3 h-3 bg-white rounded-full border-2 border-primary shadow-sm"></div>
+</div>
+</div>
+<!-- Pin 3 -->
+<div class="absolute top-[55%] left-[70%] -translate-x-1/2 -translate-y-1/2 z-20 group cursor-pointer">
+<div class="flex flex-col items-center">
+<div class="bg-white text-on-surface font-label-md px-3 py-1 rounded-full shadow-md mb-1 border border-outline-variant group-hover:bg-primary-container group-hover:text-white transition-colors">
+                    $950
+                </div>
+<div class="w-3 h-3 bg-white rounded-full border-2 border-primary shadow-sm"></div>
+</div>
+</div>
+<!-- Pin 4 -->
+<div class="absolute top-[45%] left-[15%] -translate-x-1/2 -translate-y-1/2 z-20 group cursor-pointer">
+<div class="flex flex-col items-center">
+<div class="bg-white text-on-surface font-label-md px-3 py-1 rounded-full shadow-md mb-1 border border-outline-variant group-hover:bg-primary-container group-hover:text-white transition-colors">
+                    $780
+                </div>
+<div class="w-3 h-3 bg-white rounded-full border-2 border-primary shadow-sm"></div>
+</div>
+</div>
+<!-- Swipeable Card Carousel -->
+<div class="absolute bottom-28 left-0 w-full z-30">
+<div class="flex gap-4 overflow-x-auto no-scrollbar px-container-margin pb-4 snap-x">
+<!-- Card 1 (Active) -->
+<div class="min-w-[300px] bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] p-3 snap-center border-2 border-primary">
+<div class="flex gap-4">
+<div class="relative w-24 h-24 flex-shrink-0">
+<img class="w-full h-full object-cover rounded-xl" data-alt="A cozy, sun-drenched student studio apartment with large windows overlooking a green campus. The room features a clean oak wooden desk, a modern ergonomic chair, and minimalist white shelving. Soft, morning golden-hour light fills the space, creating a warm and productive atmosphere. The interior design reflects the modern minimalism style with vibrant energy-pop accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACEpcEtG7t3rn-BtjJlmuZTu1Kl557kCp2EKsrtKkONk8o8i4wACXl3_Cr1s0jsf2NQirMtP4DMocVOQzWFGLftMdLec-fGIiSyVeGzwb0Zbq6dODbJZoXb2lRpJXwM7dg7v6Va56SKCzGyN2nYs8GTWkKJd9Z42C9xL0VeIhfhnmbVI7vyG8Xl86HFA9QqDJ7suodqmHo9hfUzhQUo5Vz2XXyAbsAEkqPuiJc-qiYBN9U40aLzDvtWnhNSehPLdxXGWKDajdDI1w"/>
+<div class="absolute top-1 left-1 bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full text-[10px] font-bold">
+                                VERIFIED
+                            </div>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h3 class="font-headline-md text-base leading-tight">Ivy Hall Residence</h3>
+<p class="text-caption text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                                    0.4 miles to Campus
+                                </p>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-primary text-lg">$850<span class="text-caption text-outline font-normal">/mo</span></span>
+<div class="flex items-center gap-1 text-secondary font-bold">
+<span class="material-symbols-outlined text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption">4.8</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[300px] bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-3 snap-center opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex gap-4">
+<div class="relative w-24 h-24 flex-shrink-0">
+<img class="w-full h-full object-cover rounded-xl" data-alt="A modern and spacious shared student lounge and living area in a luxury hostel. The space features contemporary modular furniture, a large screen for gaming, and communal study pods. Large floor-to-ceiling windows show a cityscape at dusk. The mood is social, vibrant, and upscale, perfectly capturing the student lifestyle brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdKTroUsxiLam4s-XPEKzHKlL1NYU4050VErRJYdx1tUNzqRAbdL7B9rO4JHTTO6G2chU9A5luw20xVtkTEZzpkq3F4yqgD74gdVzhTAUSdwSr58n9ylqtZ2a8ogM8LGLUL_97bil5CYcLRwBwLnQCkyejO-JXiK1XHfEO34tgBPCmXD0T0px4YGTQCzYZwG6WxqeVn9O7OOqy80WW8uPsf58pxj_SammaDmOk94YtKNXrE-1Hr7UyADjUG7w50r6Ht-xG5Vpde3o"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h3 class="font-headline-md text-base leading-tight">Skyline Commons</h3>
+<p class="text-caption text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                                    1.2 miles to Campus
+                                </p>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-primary text-lg">$1,200<span class="text-caption text-outline font-normal">/mo</span></span>
+<div class="flex items-center gap-1 text-secondary font-bold">
+<span class="material-symbols-outlined text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption">4.5</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[300px] bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-3 snap-center opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex gap-4">
+<div class="relative w-24 h-24 flex-shrink-0">
+<img class="w-full h-full object-cover rounded-xl" data-alt="A vibrant student dormitory room featuring a sleek bunk-bed design with integrated storage. The walls are decorated with minimal line-art posters and a bright magnetic calendar. Soft LED strip lighting under the bed frame adds a youthful, tech-forward touch. The clean, organized space represents the organized and helpful personality of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVD753kNKbUb4BIICgATTB9_JfDd5bIuCU0jnt_dRXslxnHUUAN_vyyeh48VkgxgQCKhJjKsJ8pR4g5pxU4lqXKGv2WcnnumcWNxUOToH1B1MG6vvo6mKMwSyeNkV-Eu_N7sPW3Rd9ArZR1l55ijlLvvJ2FErqocrrYEKsZzYfWDmsWuhKUebMFd2gTxK91A_kyJXYzMKIaEbF71BL6wrAfZwJkCfoNTQL46iJ3QNfBYSuL8n44G-sSyRznicg2YR5DqEuRMtWWhs"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h3 class="font-headline-md text-base leading-tight">Westside Studios</h3>
+<p class="text-caption text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                                    0.8 miles to Campus
+                                </p>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-primary text-lg">$950<span class="text-caption text-outline font-normal">/mo</span></span>
+<div class="flex items-center gap-1 text-secondary font-bold">
+<span class="material-symbols-outlined text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption">4.9</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute right-5 bottom-60 z-30 flex flex-col gap-3">
+<button class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-on-surface active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="my_location">my_location</span>
+</button>
+<button class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-on-surface active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<button class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-on-surface active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl z-50 border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(37,99,235,0.04)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-2xl px-5 py-1.5 transition-all duration-300 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="map" data-weight="fill" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Profile</span>
+</a>
+</nav>
+</body></html>

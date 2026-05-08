@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-background": "#0b1c30",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary-container": "#996100",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed": "#00174b",
+                    "surface-bright": "#f8f9ff",
+                    "outline-variant": "#c3c6d7",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-surface": "#0b1c30",
+                    "inverse-surface": "#213145",
+                    "surface-variant": "#d3e4fe",
+                    "on-surface-variant": "#434655",
+                    "surface-tint": "#0053db",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#006c49",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-primary": "#b4c5ff",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#6cf8bb",
+                    "primary-container": "#2563eb",
+                    "surface-dim": "#cbdbf5",
+                    "outline": "#737686",
+                    "background": "#f8f9ff",
+                    "on-secondary-container": "#00714d",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "error": "#ba1a1a",
+                    "tertiary": "#784b00",
+                    "surface-container": "#e5eeff",
+                    "tertiary-fixed": "#ffddb8",
+                    "primary": "#004ac6",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container-high": "#dce9ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-tertiary-container": "#ffeedd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "stack-sm": "12px",
+                    "stack-md": "24px",
+                    "stack-lg": "48px",
+                    "gutter": "16px",
+                    "container-margin": "20px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f8f9ff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full flex items-center justify-between px-5 h-16 bg-[#F8FAFC] dark:bg-gray-900 border-b border-slate-200 dark:border-gray-800 shadow-[0_4px_20px_-4px_rgba(37,99,235,0.04)] z-50">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#2563EB] active:scale-[0.98] transition-transform duration-200" data-icon="arrow_back">arrow_back</button>
+<h1 class="text-lg font-extrabold tracking-tight text-[#2563EB] dark:text-blue-400 font-['Plus_Jakarta_Sans'] font-semibold">Payment Method</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-slate-500 font-label-md text-caption">Step 3 of 3</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-5 max-w-2xl mx-auto">
+<!-- Order Summary Glassmorphism Card -->
+<section class="mb-stack-lg">
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_16px_rgba(37,99,235,0.04)] border border-blue-50 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/5 rounded-full -mr-16 -mt-16"></div>
+<div class="relative z-10">
+<p class="text-on-surface-variant font-label-md text-caption uppercase tracking-wider mb-2">Total Amount Due</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-primary">Ksh 18,500</span>
+<span class="text-on-surface-variant font-body-md">/ Semester</span>
+</div>
+<div class="mt-4 flex items-center gap-2 p-3 bg-secondary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<p class="text-secondary font-label-md text-caption">Secure Encrypted Payment via Kibabii Nest</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Payment Options Selection -->
+<section class="space-y-4">
+<h2 class="font-headline-md text-on-background mb-4">Choose Payment Method</h2>
+<!-- Recommended Option: M-PESA -->
+<label class="block cursor-pointer group">
+<input checked="" class="hidden peer" name="payment" type="radio"/>
+<div class="flex items-center justify-between p-5 bg-white border-2 border-primary-container rounded-2xl shadow-lg shadow-primary/5 transition-all peer-checked:bg-blue-50/50">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center overflow-hidden">
+<img class="w-10 h-10 object-contain" data-alt="A clean, professional studio photograph of a smartphone screen displaying a bright green mobile money logo against a white background. The lighting is crisp and modern, reflecting a sense of digital security and fintech innovation. The composition is minimalist, emphasizing the ease of mobile transactions in a contemporary African financial ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoccnadEx7C43MmGQfEsnHmoUcR9coAy7pu0lqjrKJFrnbfxfCF7SpVAdsPXuvh8a8mA3Dt5rlZ0jHGssHOhAJ8EvRFKUgScYV9FGOvYQmouXWY1q2Fnbgqci-hhXSUG1IB1niBh6jTUPIAejUc1WttQ2PW7X30jiLoeen6_SeiqpDEEVvMhEJH7txcvLCOh8iHa5zdIA2IpArYI4-oPLQUeONMEs-UHdd_aQXgy7g_9EJ1Od6y0pIcoJm3DZWYTXgpb3W5rR5gV4"/>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-on-surface text-lg">M-PESA</span>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Recommended</span>
+</div>
+<p class="text-on-surface-variant font-body-md text-sm">Instant confirmation via STK Push</p>
+</div>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center">
+<div class="w-3 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+</label>
+<!-- Credit/Debit Card -->
+<label class="block cursor-pointer group">
+<input class="hidden peer" name="payment" type="radio"/>
+<div class="flex items-center justify-between p-5 bg-white border border-slate-200 rounded-2xl transition-all hover:border-primary/40 peer-checked:border-primary peer-checked:bg-blue-50/50">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-slate-50 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl" data-icon="credit_card">credit_card</span>
+</div>
+<div>
+<span class="font-headline-md text-on-surface text-lg">Credit/Debit Card</span>
+<p class="text-on-surface-variant font-body-md text-sm">Visa, Mastercard, Maestro</p>
+</div>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center peer-checked:border-primary">
+<div class="w-3 h-3 bg-transparent peer-checked:bg-primary rounded-full"></div>
+</div>
+</div>
+</label>
+<!-- Bank Transfer -->
+<label class="block cursor-pointer group">
+<input class="hidden peer" name="payment" type="radio"/>
+<div class="flex items-center justify-between p-5 bg-white border border-slate-200 rounded-2xl transition-all hover:border-primary/40 peer-checked:border-primary peer-checked:bg-blue-50/50">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-slate-50 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<span class="font-headline-md text-on-surface text-lg">Bank Transfer</span>
+<p class="text-on-surface-variant font-body-md text-sm">Processing takes 1-2 business days</p>
+</div>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center peer-checked:border-primary">
+<div class="w-3 h-3 bg-transparent peer-checked:bg-primary rounded-full"></div>
+</div>
+</div>
+</label>
+</section>
+<!-- Promotional/Info Section -->
+<section class="mt-stack-lg p-5 bg-primary-fixed/30 rounded-2xl border border-primary-fixed border-dashed">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="info" style="font-variation-settings: 'FILL' 1;">info</span>
+<div>
+<h4 class="font-label-md text-on-primary-fixed">Safe Payment Guarantee</h4>
+<p class="text-on-primary-fixed-variant text-sm mt-1">Your payment is held in escrow until you check in to your hostel. Cancel for a full refund within 48 hours.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Footer Action -->
+<div class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl border-t border-slate-100 px-5 py-4 z-50 md:hidden">
+<button class="w-full bg-primary-container text-on-primary-container h-14 rounded-xl font-headline-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
+<span>Pay Ksh 18,500</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- BottomNavBar (Hidden on transactional screen as per Shell Visibility Rule, but added for structure reference) -->
+<!-- The prompt implies a transactional flow, so we prioritize the Pay CTA above. 
+         However, for the task's component mandate, we include it but it's suppressed by UI logic for focus. -->
+<nav class="hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-slate-100 dark:border-gray-800 shadow-[0_-4px_16px_rgba(0,0,0,0.02)] rounded-t-2xl">
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-gray-500 font-['Plus_Jakarta_Sans'] text-[11px] font-medium">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span>Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-gray-500 font-['Plus_Jakarta_Sans'] text-[11px] font-medium">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span>Explore</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-gray-500 font-['Plus_Jakarta_Sans'] text-[11px] font-medium">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span>Saved</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#2563EB] dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl px-3 py-1 font-['Plus_Jakarta_Sans'] text-[11px] font-bold">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span>Profile</span>
+</div>
+</nav>
+</body></html>

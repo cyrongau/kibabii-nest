@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kibabii Nest — Tenancy Agreement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'serif': ['Playfair Display', 'Georgia', 'serif'],
+                    },
+                    colors: {
+                        'brand': {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                            950: '#172554',
+                        },
+                        'gold': {
+                            400: '#c9a84c',
+                            500: '#b8942e',
+                            600: '#9a7b22',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        @media print {
+            body {
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .print-break {
+                page-break-before: always;
+            }
+
+            .agreement-container {
+                box-shadow: none !important;
+                border: 2px solid #1e3a8a !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+        }
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 8rem;
+            font-weight: 800;
+            color: rgba(30, 58, 138, 0.03);
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+            letter-spacing: 0.3em;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .signature-line {
+            border-bottom: 1.5px solid #1e3a8a;
+            min-width: 220px;
+            display: inline-block;
+        }
+
+        .checkmark-list li::before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231d4ed8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checkmark-list li {
+            display: flex;
+            align-items: flex-start;
+            padding-left: 0;
+        }
+
+        input[type="checkbox"].secure-check {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #1d4ed8;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        input[type="checkbox"].secure-check:checked {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        input[type="checkbox"].secure-check:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .qr-placeholder {
+            background: #f9fafb;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="bg-stone-100 min-h-screen py-6 px-4 sm:px-6 lg:px-8 font-sans text-gray-800 antialiased">
+
+    <!-- Action Bar (No Print) -->
+    <div class="no-print max-w-4xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-brand-700"></i>
+            <span class="text-sm font-medium text-brand-800">Secure Document · DO-2025-</span><span
+                class="text-sm font-mono text-brand-600" id="docIdDisplay">KN-TA-00{{random}}</span>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="window.print()"
+                class="flex items-center gap-2 bg-brand-700 hover:bg-brand-800 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95">
+                <i data-lucide="printer" class="w-4 h-4"></i> Print Agreement
+            </button>
+            <button id="signBtn"
+                class="flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95">
+                <i data-lucide="pen-line" class="w-4 h-4"></i> E-Sign
+            </button>
+        </div>
+    </div>
+
+    <!-- Agreement Document -->
+    <div class="agreement-container max-w-4xl mx-auto bg-white shadow-2xl rounded-none sm:rounded-xl overflow-hidden relative border-2 border-brand-900/20"
+        id="agreementDocument">
+
+        <!-- Watermark -->
+        <div class="watermark">KIBABII NEST</div>
+
+        <!-- Header -->
+        <div
+            class="relative z-10 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 text-white px-8 sm:px-12 py-8 sm:py-10">
+            <div class="absolute top-0 right-0 w-64 h-full opacity-10 pointer-events-none">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                    <path fill="currentColor"
+                        d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-45.8C87.4,-32.5,90,-16.3,89.1,-0.5C88.2,15.2,83.8,30.5,74.4,41.8C65,53.2,50.7,60.7,36.3,66.4C21.8,72.2,7.3,76.2,-6.2,74.6C-19.8,73,-39.5,65.8,-53.2,54.3C-66.9,42.7,-74.6,26.8,-77.9,10.1C-81.2,-6.6,-80.2,-24.1,-71.8,-37.1C-63.5,-50.2,-47.8,-58.7,-33.1,-65.9C-18.4,-73.1,-4.7,-79,9.1,-76.6C22.8,-74.2,30.6,-83.6,44.7,-76.4Z"
+                        transform="translate(100 100)" />
+                </svg>
+            </div>
+            <div class="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <div class="w-10 h-10 bg-white/15 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                            <i data-lucide="building-2" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-serif text-2xl sm:text-3xl font-bold tracking-tight">KIBABII NEST</h1>
+                            <p class="text-xs text-blue-200 tracking-widest uppercase">Student Housing Ecosystem</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right text-sm text-blue-100">
+                    <p class="font-semibold text-white text-base">TENANCY AGREEMENT</p>
+                    <p class="text-xs">Document Ref: <span class="font-mono text-blue-200"
+                            id="docRef">KN-TA-2025-{{random}}</span></p>
+                    <p class="text-xs">Version 2.4 · Secure Digital Document</p>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-white/15 flex flex-wrap gap-4 text-xs text-blue-200">
+                <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Digitally
+                    Verifiable</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="lock" class="w-3.5 h-3.5"></i> AES-256
+                    Encrypted</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                    Timestamped</span>
+            </div>
+        </div>
+
+        <!-- Body Content -->
+        <div class="relative z-10 px-8 sm:px-12 py-8 sm:py-10 space-y-8 text-sm leading-relaxed">
+
+            <!-- Section 1: Parties -->
+            <section>
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">1</span>
+                    PARTIES TO THIS AGREEMENT
+                </h2>
+                <div
+                    class="bg-brand-50/50 border border-brand-100 rounded-lg p-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-brand-600 font-semibold mb-2">Landlord / Agent
+                        </p>
+                        <p class="font-semibold text-gray-900">Kibabii Nest Management</p>
+                        <p class="text-gray-600">ACK Road, Kibabii</p>
+                        <p class="text-gray-600">P.O Box 456, Bungoma, Kenya</p>
+                        <p class="text-gray-600">ZIP: 50200</p>
+                        <p class="text-gray-600">Phone: +254 769 729 129</p>
+                        <p class="text-gray-600">Email: admin@kibabiinest.co.ke</p>
+                    </div>
+                    <div class="border-t md:border-t-0 md:border-l border-brand-100 pt-4 md:pt-0 md:pl-6">
+                        <p class="text-xs uppercase tracking-widest text-brand-600 font-semibold mb-2">Tenant / Student
+                        </p>
+                        <div class="space-y-1">
+                            <p class="font-semibold text-gray-900">_________________________________</p>
+                            <p class="text-xs text-gray-400">Full Name (as per Student ID)</p>
+                            <p class="text-gray-600 mt-2">Student ID: ____________________________</p>
+                            <p class="text-gray-600">University: ____________________________</p>
+                            <p class="text-gray-600">Phone: ____________________________</p>
+                            <p class="text-gray-600">Email: ____________________________</p>
+                            <p class="text-gray-600">Emergency Contact: _____________________</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Property Details -->
+            <section>
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">2</span>
+                    PROPERTY & TERM DETAILS
+                </h2>
+                <div
+                    class="bg-amber-50/40 border border-amber-100 rounded-lg p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-amber-700 font-semibold">Property Name</p>
+                        <p class="font-semibold text-gray-900">Kibabii Orange House</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-amber-700 font-semibold">Room / Unit No.</p>
+                        <p class="font-semibold text-gray-900">___________________________</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-amber-700 font-semibold">Property Ref</p>
+                        <p class="font-semibold text-gray-900 font-mono">LR/TUUTI-B0465</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-amber-700 font-semibold">Lease Start Date</p>
+                        <p class="font-semibold text-gray-900">___________________________</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-amber-700 font-semibold">Lease End Date</p>
+                        <p class="font-semibold text-gray-900">___________________________</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-amber-700 font-semibold">Academic Year</p>
+                        <p class="font-semibold text-gray-900">2025 / 2026</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Payment Terms -->
+            <section>
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">3</span>
+                    PAYMENT TERMS
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-brand-800 text-white">
+                                <th class="px-4 py-3 text-left font-semibold">Item</th>
+                                <th class="px-4 py-3 text-right font-semibold">Amount (KES)</th>
+                                <th class="px-4 py-3 text-left font-semibold">Due Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 border border-gray-200">
+                            <tr class="hover:bg-brand-50/30 transition-colors">
+                                <td class="px-4 py-3 font-medium">Monthly Rent</td>
+                                <td class="px-4 py-3 text-right font-mono">_________________</td>
+                                <td class="px-4 py-3">5th of each month</td>
+                            </tr>
+                            <tr class="hover:bg-brand-50/30 transition-colors bg-gray-50/50">
+                                <td class="px-4 py-3 font-medium">Security Deposit (Refundable)</td>
+                                <td class="px-4 py-3 text-right font-mono">_________________</td>
+                                <td class="px-4 py-3">Upon signing</td>
+                            </tr>
+                            <tr class="hover:bg-brand-50/30 transition-colors">
+                                <td class="px-4 py-3 font-medium">Registration / Admin Fee</td>
+                                <td class="px-4 py-3 text-right font-mono">_________________</td>
+                                <td class="px-4 py-3">Upon signing</td>
+                            </tr>
+                            <tr class="hover:bg-brand-50/30 transition-colors bg-gray-50/50">
+                                <td class="px-4 py-3 font-medium">Water & Electricity (Monthly Est.)</td>
+                                <td class="px-4 py-3 text-right font-mono">_________________</td>
+                                <td class="px-4 py-3">With rent</td>
+                            </tr>
+                            <tr class="bg-brand-900/5 font-semibold">
+                                <td class="px-4 py-3 text-brand-900">Total Due at Signing</td>
+                                <td class="px-4 py-3 text-right font-mono text-brand-800 text-base" id="totalDue">KES
+                                    ___________</td>
+                                <td class="px-4 py-3">Immediate</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 p-4 bg-red-50/60 border border-red-200 rounded-lg text-xs text-red-800">
+                    <p class="font-semibold flex items-center gap-1.5"><i data-lucide="alert-triangle"
+                            class="w-3.5 h-3.5"></i> Late Payment Policy:</p>
+                    <p class="mt-1">A late fee of <strong>KES 500</strong> applies for payments received after the 10th
+                        of the month. Continued non-payment beyond 30 days may result in eviction proceedings and
+                        forfeiture of the security deposit as per Section 4.2 of the full terms.</p>
+                </div>
+                <div class="mt-3 p-3 bg-brand-50/70 border border-brand-200 rounded-lg text-xs">
+                    <p class="font-semibold text-brand-800">Accepted Payment Methods:</p>
+                    <p class="mt-1 text-brand-700">M-Pesa Paybill: 522522 · Account: <span
+                            class="font-mono">KIBABII-[RoomNo]</span> · Bank Transfer: Kibabii Nest, KCB Bungoma · Cash
+                        payments at the Kibabii Nest Office only (receipt mandatory).</p>
+                </div>
+            </section>
+
+            <!-- Section 4: Deposit -->
+            <section class="print-break">
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">4</span>
+                    SECURITY DEPOSIT
+                </h2>
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-5 space-y-3 text-sm">
+                    <p><strong>4.1</strong> A refundable security deposit equivalent to <strong>one (1) month's
+                            rent</strong> shall be paid by the Tenant upon signing this Agreement.</p>
+                    <p><strong>4.2</strong> The deposit shall be held in a designated Kibabii Nest Trust Account and
+                        shall not be utilized as rent for any month unless expressly agreed in writing.</p>
+                    <p><strong>4.3</strong> The deposit shall be refunded within <strong>thirty (30) days</strong> of
+                        lease termination, less any deductions for:</p>
+                    <ul class="checkmark-list space-y-1 ml-2 text-gray-700">
+                        <li>Unpaid rent or utility bills</li>
+                        <li>Cost of repairing damages beyond normal wear and tear</li>
+                        <li>Replacement of lost or damaged inventory items</li>
+                        <li>Cleaning fees if the room is left in unacceptable condition</li>
+                    </ul>
+                    <p><strong>4.4</strong> An itemized deduction statement will be provided to the Tenant within the
+                        refund period.</p>
+                </div>
+            </section>
+
+            <!-- Section 5: Rules of Residency -->
+            <section>
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">5</span>
+                    RULES OF RESIDENCY
+                </h2>
+                <div class="bg-stone-50 border border-stone-200 rounded-lg p-5 space-y-4">
+                    <div>
+                        <p class="font-semibold text-brand-800 text-sm uppercase tracking-wide">5.1 — Quiet Hours &
+                            Conduct</p>
+                        <p class="text-gray-700 mt-1">Quiet hours are observed from <strong>10:00 PM to 6:00 AM</strong>
+                            daily. During examination periods, extended quiet hours apply 24/7. Excessive noise,
+                            disruptive behavior, or any activity that disturbs fellow residents is strictly prohibited.
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-brand-800 text-sm uppercase tracking-wide">5.2 — Visitors & Guests
+                        </p>
+                        <p class="text-gray-700 mt-1">Visitors are permitted between <strong>8:00 AM and 9:00
+                                PM</strong> only. All visitors must register at the reception and present valid
+                            identification. Overnight guests are <strong>not permitted</strong> without prior written
+                            approval from management. The Tenant is fully responsible for their visitors' conduct.</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-brand-800 text-sm uppercase tracking-wide">5.3 — Alcohol,
+                            Substances & Smoking</p>
+                        <p class="text-gray-700 mt-1">The possession, consumption, or distribution of <strong>alcohol,
+                                illegal drugs, or any controlled substances</strong> within the premises is strictly
+                            prohibited. Smoking and vaping are not permitted inside any building. Designated smoking
+                            areas are clearly marked outside.</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-brand-800 text-sm uppercase tracking-wide">5.4 — Cleanliness &
+                            Hygiene</p>
+                        <p class="text-gray-700 mt-1">Tenants must maintain their rooms and shared spaces in a clean and
+                            sanitary condition. Weekly inspections may be conducted by management. Garbage must be
+                            disposed of in designated bins only. Cooking inside rooms is prohibited unless the room is
+                            designated as self-contained with a kitchenette.</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-brand-800 text-sm uppercase tracking-wide">5.5 — Security & Access
+                        </p>
+                        <p class="text-gray-700 mt-1">Main gate access is from <strong>6:00 AM to 10:30 PM</strong>.
+                            Tenants must carry their Kibabii Nest ID card at all times. Loss of keys/access cards must
+                            be reported immediately and a replacement fee of <strong>KES 800</strong> applies.</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-brand-800 text-sm uppercase tracking-wide">5.6 — Prohibited Items
+                        </p>
+                        <p class="text-gray-700 mt-1">The following are strictly prohibited: electric heaters, hot
+                            plates, gas cylinders, candles, incense, weapons of any kind, pets, and any item deemed a
+                            fire or safety hazard by management.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: Maintenance & Repairs -->
+            <section class="print-break">
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">6</span>
+                    MAINTENANCE & REPAIR REQUESTS
+                </h2>
+                <div class="bg-blue-50/50 border border-blue-100 rounded-lg p-5 space-y-4">
+                    <p><strong>6.1</strong> All maintenance and repair requests <strong>must</strong> be submitted
+                        through the official Kibabii Nest platform (app or web portal) under the "Maintenance Request"
+                        section. Verbal requests will not be processed.</p>
+                    <p><strong>6.2</strong> The request must include:</p>
+                    <ul class="checkmark-list space-y-1 ml-2 text-gray-700">
+                        <li>A clear description of the issue</li>
+                        <li>Photo evidence (where applicable)</li>
+                        <li>Preferred time for technician access (between 8 AM–5 PM, Mon–Sat)</li>
+                    </ul>
+                    <p><strong>6.3</strong> Response Timeline:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+                        <div class="bg-white border border-blue-200 rounded-lg p-3 text-center">
+                            <p class="text-red-600 font-bold text-lg">4 Hours</p>
+                            <p class="text-xs text-gray-500">Emergency<br>(flood, electrical, lockout)</p>
+                        </div>
+                        <div class="bg-white border border-blue-200 rounded-lg p-3 text-center">
+                            <p class="text-amber-600 font-bold text-lg">48 Hours</p>
+                            <p class="text-xs text-gray-500">Urgent<br>(plumbing, broken window)</p>
+                        </div>
+                        <div class="bg-white border border-blue-200 rounded-lg p-3 text-center">
+                            <p class="text-brand-600 font-bold text-lg">5 Days</p>
+                            <p class="text-xs text-gray-500">Standard<br>(cosmetic, non-urgent)</p>
+                        </div>
+                    </div>
+                    <p><strong>6.4</strong> Tenants shall not attempt DIY repairs. Any damage caused by unauthorized
+                        repair attempts will be billed to the Tenant.</p>
+                    <p><strong>6.5</strong> Emergency after-hours contact: <strong class="text-red-700">+254 769 729
+                            129</strong> (Security & Maintenance hotline).</p>
+                </div>
+            </section>
+
+            <!-- Section 7: Tenant Obligations -->
+            <section>
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">7</span>
+                    TENANT OBLIGATIONS
+                </h2>
+                <div class="bg-brand-50/40 border border-brand-100 rounded-lg p-5">
+                    <ul class="checkmark-list space-y-2 text-gray-700">
+                        <li>Pay rent and all applicable charges on or before the due date.</li>
+                        <li>Use the premises exclusively for <strong>residential student accommodation</strong>
+                            purposes.</li>
+                        <li>Keep the room, furnishings, and shared areas clean and in good condition.</li>
+                        <li>Report any damage, malfunction, or safety concern immediately via the Kibabii Nest platform.
+                        </li>
+                        <li>Comply with all Rules of Residency (Section 5) and any additional house rules communicated
+                            by management.</li>
+                        <li>Not sublet, assign, or share the room with any other person without written consent.</li>
+                        <li>Allow management reasonable access for inspections and repairs (with 24-hour notice except
+                            in emergencies).</li>
+                        <li>Not alter, paint, or make structural changes to the room.</li>
+                        <li>Return all keys, access cards, and inventory items at the end of the tenancy.</li>
+                        <li>Provide updated contact and next-of-kin information throughout the tenancy period.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 8: Landlord Obligations -->
+            <section>
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">8</span>
+                    LANDLORD / MANAGEMENT OBLIGATIONS
+                </h2>
+                <div class="bg-purple-50/40 border border-purple-100 rounded-lg p-5">
+                    <ul class="checkmark-list space-y-2 text-gray-700">
+                        <li>Ensure the property is <strong>safe, habitable, and well-maintained</strong> at all times.
+                        </li>
+                        <li>Provide secure locking mechanisms, adequate lighting, and functional fire safety equipment.
+                        </li>
+                        <li>Respond to maintenance requests within the stipulated timelines (Section 6).</li>
+                        <li>Provide clean water supply, functional electrical systems, and internet connectivity (where
+                            included).</li>
+                        <li>Respect tenant privacy and provide <strong>24-hour written notice</strong> before
+                            inspections (except emergencies).</li>
+                        <li>Maintain accurate records of all payments and provide receipts upon request.</li>
+                        <li>Refund the security deposit within 30 days as per Section 4.</li>
+                        <li>Not increase rent during the fixed lease period without mutual written agreement.</li>
+                        <li>Provide a safe and discrimination-free environment for all tenants.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 9: Termination -->
+            <section>
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">9</span>
+                    TERMINATION & BREACH
+                </h2>
+                <div class="bg-rose-50/30 border border-rose-200 rounded-lg p-5 space-y-2 text-sm">
+                    <p><strong>9.1</strong> Either party may terminate this agreement with <strong>thirty (30) days'
+                            written notice</strong>.</p>
+                    <p><strong>9.2</strong> The Landlord may terminate immediately upon: non-payment beyond 30 days,
+                        serious breach of residency rules, illegal activity, or behavior endangering others.</p>
+                    <p><strong>9.3</strong> Early termination by the Tenant before the lease end date incurs a penalty
+                        equivalent to <strong>one month's rent</strong>.</p>
+                </div>
+            </section>
+
+            <!-- Acknowledgment & Signatures -->
+            <section class="print-break">
+                <h2
+                    class="font-serif text-xl font-bold text-brand-900 border-b-2 border-brand-200 pb-2 mb-4 flex items-center gap-2">
+                    <span
+                        class="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 text-sm font-bold">✦</span>
+                    ACKNOWLEDGMENT & SIGNATURES
+                </h2>
+                <p class="text-gray-700 mb-4">By signing below, both parties acknowledge they have read, understood, and
+                    agree to be bound by all terms and conditions of this Tenancy Agreement, including all sections
+                    referenced herein.</p>
+
+                <!-- Secure Checkboxes -->
+                <div class="space-y-3 mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" class="secure-check mt-0.5" id="ack1">
+                        <span class="text-sm text-gray-700">I confirm that I have <strong>read and understood</strong>
+                            all sections of this agreement (Sections 1–9).</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" class="secure-check mt-0.5" id="ack2">
+                        <span class="text-sm text-gray-700">I acknowledge the <strong>Rules of Residency</strong>
+                            (Section 5) and agree to abide by them at all times.</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" class="secure-check mt-0.5" id="ack3">
+                        <span class="text-sm text-gray-700">I understand the <strong>payment terms & late fee
+                                policy</strong> (Section 3) and accept financial responsibility.</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" class="secure-check mt-0.5" id="ack4">
+                        <span class="text-sm text-gray-700">I consent to the use of my personal data for <strong>Kibabii
+                                Nest platform operations</strong> in accordance with the Data Protection Policy.</span>
+                    </label>
+                </div>
+
+                <!-- Signature Blocks -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+                    <!-- Tenant Signature -->
+                    <div class="bg-white border-2 border-brand-200 rounded-xl p-6 relative">
+                        <div
+                            class="absolute -top-4 left-6 bg-brand-700 text-white text-xs font-bold px-4 py-1 rounded-full tracking-wider">
+                            TENANT</div>
+                        <p class="text-xs text-gray-400 mt-2 mb-4">Student / Tenant Signature Block</p>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center min-h-[120px] flex flex-col items-center justify-center bg-gray-50/50"
+                            id="tenantSignaturePad">
+                            <p class="text-gray-400 text-sm" id="tenantSigPlaceholder">Tap or click to sign here</p>
+                            <canvas id="tenantSigCanvas" class="w-full max-w-[280px] h-[80px] hidden"></canvas>
+                        </div>
+                        <p class="signature-line mt-3 text-center text-gray-500 text-xs">Tenant's Digital Signature</p>
+                        <div class="mt-3 space-y-1 text-xs text-gray-600">
+                            <p>Name: _________________________________</p>
+                            <p>Date: <span id="tenantSigDate">_________________________</span></p>
+                            <p>Time: <span id="tenantSigTime">_________________________</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Landlord Signature -->
+                    <div class="bg-white border-2 border-gold-400/40 rounded-xl p-6 relative">
+                        <div
+                            class="absolute -top-4 left-6 bg-gold-500 text-white text-xs font-bold px-4 py-1 rounded-full tracking-wider">
+                            LANDLORD</div>
+                        <p class="text-xs text-gray-400 mt-2 mb-4">Landlord / Management Signature Block</p>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center min-h-[120px] flex flex-col items-center justify-center bg-gray-50/50"
+                            id="landlordSignaturePad">
+                            <p class="text-gray-400 text-sm" id="landlordSigPlaceholder">Tap or click to sign here</p>
+                            <canvas id="landlordSigCanvas" class="w-full max-w-[280px] h-[80px] hidden"></canvas>
+                        </div>
+                        <p class="signature-line mt-3 text-center text-gray-500 text-xs">Landlord's Digital Signature
+                        </p>
+                        <div class="mt-3 space-y-1 text-xs text-gray-600">
+                            <p>Name: Alex Thompson Wanyonyi</p>
+                            <p>Title: Property Manager, Kibabii Nest</p>
+                            <p>Date: <span id="landlordSigDate">_________________________</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Verification Section -->
+            <section class="border-t-2 border-dotted border-gray-300 pt-6">
+                <div
+                    class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-100 rounded-xl p-5">
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-gray-500 font-semibold">Document Verification
+                        </p>
+                        <p class="text-sm text-gray-700 mt-1">Scan this code or visit <span
+                                class="font-mono text-brand-700">verify.kibabiinest.co.ke</span></p>
+                        <p class="text-xs text-gray-500 mt-1">Ref: <span class="font-mono"
+                                id="verifyRef">KN-TA-2025-{{random}}</span></p>
+                    </div>
+                    <div class="qr-placeholder flex-shrink-0">
+                        <span>QR Code<br>Verification</span>
+                    </div>
+                    <div class="text-xs text-gray-500 text-right flex-shrink-0">
+                        <p>Document Generated:</p>
+                        <p class="font-mono text-gray-700" id="generatedTimestamp"></p>
+                        <p class="mt-2 text-blue-700 font-semibold">🔒 Secured Document</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <div
+            class="relative z-10 bg-brand-900 text-blue-200 text-xs px-8 sm:px-12 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>© 2025 Kibabii Nest · Student Housing Ecosystem · All Rights Reserved</p>
+            <p class="font-mono">DOC-ID: <span id="footerDocId">KN-TA-2025-{{random}}</span> · PAGE 1/1</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"
+        class="no-print fixed bottom-6 right-6 bg-gray-900 text-white px-5 py-3 rounded-lg shadow-2xl text-sm font-medium transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-400"></i>
+        <span id="toastMsg">Signature saved!</span>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+
+        // Generate random DOC ID
+        function generateDocId() {
+            const random = Math.floor(1000 + Math.random() * 9000);
+            return 'KN-TA-2025-' + random;
+        }
+        const docId = generateDocId() || 'KN-TA-2025-0000'; // safety fallback
+        document.querySelectorAll('[id*="docId"], [id*="docRef"], [id*="verifyRef"], [id*="footerDocId"]').forEach(el => {
+            if (el.textContent.includes('{{random}}') || el.textContent === '') {
+                el.textContent = docId;
+            }
+        });
+        // Update the main doc ref
+        const docRefSpan = document.getElementById('docRef');
+        if (docRefSpan) docRefSpan.textContent = docId;
+        const verifyRefSpan = document.getElementById('verifyRef');
+        if (verifyRefSpan) verifyRefSpan.textContent = docId;
+        const footerDocIdSpan = document.getElementById('footerDocId');
+        if (footerDocIdSpan) footerDocIdSpan.textContent = docId;
+        const docIdDisplay = document.getElementById('docIdDisplay');
+        if (docIdDisplay) docIdDisplay.textContent = docId;
+
+        // Set generated timestamp
+        const now = new Date();
+        const formatted = now.toLocaleString('en-KE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+            timeZone: 'Africa/Nairobi'
+        });
+        document.getElementById('generatedTimestamp').textContent = formatted;
+
+        // Toast function
+        function showToast(message, icon = 'check-circle-2') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 2500);
+        }
+
+        // Signature Pad Logic
+        function setupSignaturePad(padId, canvasId, placeholderId, dateId, timeId) {
+            const pad = document.getElementById(padId);
+            const canvas = document.getElementById(canvasId);
+            const placeholder = document.getElementById(placeholderId);
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            let hasSigned = false;
+
+            function resizeCanvas() {
+                const rect = pad.getBoundingClientRect();
+                canvas.width = rect.width - 40;
+                canvas.height = 80;
+                ctx.strokeStyle = '#1e3a8a';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+
+            function startDrawing(e) {
+                e.preventDefault();
+                isDrawing = true;
+                hasSigned = true;
+                placeholder.classList.add('hidden');
+                canvas.classList.remove('hidden');
+                resizeCanvas();
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+                const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+                const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+
+            function stopDrawing() {
+                if (!isDrawing) return;
+                isDrawing = false;
+                if (hasSigned && dateId) {
+                    const now = new Date();
+                    document.getElementById(dateId).textContent = now.toLocaleDateString('en-KE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    if (timeId) {
+                        document.getElementById(timeId).textContent = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+                    }
+                }
+            }
+
+            pad.addEventListener('mousedown', startDrawing);
+            pad.addEventListener('mousemove', draw);
+            pad.addEventListener('mouseup', stopDrawing);
+            pad.addEventListener('mouseleave', stopDrawing);
+            pad.addEventListener('touchstart', startDrawing, { passive: false });
+            pad.addEventListener('touchmove', draw, { passive: false });
+            pad.addEventListener('touchend', stopDrawing);
+
+            // Double click to clear
+            pad.addEventListener('dblclick', () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                canvas.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                hasSigned = false;
+                if (dateId) document.getElementById(dateId).textContent = '_________________________';
+                if (timeId && dateId === 'tenantSigDate') document.getElementById('tenantSigTime').textContent = '_________________________';
+                showToast('Signature cleared ✏️', 'rotate-ccw');
+            });
+        }
+
+        setupSignaturePad('tenantSignaturePad', 'tenantSigCanvas', 'tenantSigPlaceholder', 'tenantSigDate', 'tenantSigTime');
+        setupSignaturePad('landlordSignaturePad', 'landlordSigCanvas', 'landlordSigPlaceholder', 'landlordSigDate', null);
+
+        // E-Sign Button
+        document.getElementById('signBtn').addEventListener('click', () => {
+            const allChecked = [document.getElementById('ack1'), document.getElementById('ack2'), document.getElementById('ack3'), document.getElementById('ack4')].every(cb => cb.checked);
+            if (!allChecked) {
+                showToast('Please check all acknowledgment boxes first ⚠️', 'alert-triangle');
+                // Highlight unchecked ones
+                [document.getElementById('ack1'), document.getElementById('ack2'), document.getElementById('ack3'), document.getElementById('ack4')].forEach(cb => {
+                    if (!cb.checked) {
+                        cb.parentElement.classList.add('ring-2', 'ring-red-400', 'rounded-lg');
+                        setTimeout(() => cb.parentElement.classList.remove('ring-2', 'ring-red-400', 'rounded-lg'), 2000);
+                    }
+                });
+                return;
+            }
+            // Auto-fill landlord date
+            const now = new Date();
+            document.getElementById('landlordSigDate').textContent = now.toLocaleDateString('en-KE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            showToast('✅ Agreement signed & secured! Ready to print.', 'check-circle-2');
+            // Add visual confirmation
+            document.getElementById('signBtn').classList.add('bg-blue-600', 'pointer-events-none');
+            document.getElementById('signBtn').innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Signed & Secured';
+            lucide.createIcons();
+        });
+
+        // Acknowledgment checkboxes interaction
+        document.querySelectorAll('.secure-check').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const allChecked = [document.getElementById('ack1'), document.getElementById('ack2'), document.getElementById('ack3'), document.getElementById('ack4')].every(c => c.checked);
+                if (allChecked) {
+                    showToast('All acknowledgments confirmed! You can now sign. ✨', 'thumbs-up');
+                }
+            });
+        });
+
+        // Initialize landlord signature date to today
+        const today = new Date();
+        document.getElementById('landlordSigDate').textContent = today.toLocaleDateString('en-KE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+        console.log('🏠 Kibabii Nest Tenancy Agreement Loaded');
+        console.log('📄 Document Ref:', docId);
+        console.log('🔒 Security: AES-256 | Timestamped | Verifiable');
+    </script>
+    <script src="https://deepsite.hf.co/deepsite-badge.js"></script>
+</body>
+
+</html>

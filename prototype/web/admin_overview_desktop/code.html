@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kibabii Nest Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#0b1c30",
+                        "on-surface-variant": "#434655",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "secondary": "#006c49",
+                        "on-tertiary-container": "#ffeedd",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline": "#737686",
+                        "surface-dim": "#cbdbf5",
+                        "primary-container": "#2563eb",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary-container": "#eeefff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary": "#784b00",
+                        "primary": "#004ac6",
+                        "tertiary-container": "#996100",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-container": "#00714d",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-low": "#eff4ff",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary-fixed-dim": "#ffb95f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "gutter": "16px",
+                        "container-margin": "20px"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 74, 198, 0.04);
+        }
+    </style>
+</head>
+<body class="text-on-background">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation (Shared Component Integration) -->
+<aside class="w-72 bg-surface border-r border-outline-variant flex flex-col shrink-0">
+<div class="p-6 flex flex-col gap-6">
+<!-- Branding Section -->
+<div class="flex items-center gap-3">
+<div class="bg-primary size-10 rounded-full flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">nest_eco</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-on-background text-base font-bold leading-none">Kibabii Nest</h1>
+<p class="text-outline text-xs font-medium">Admin Dashboard</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary text-on-primary font-semibold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">apartment</span>
+<span class="text-sm">Properties</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-sm">Finances</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+</nav>
+</div>
+<!-- User Profile Bottom (Sidebar) -->
+<div class="mt-auto p-6 border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img alt="Admin" class="w-full h-full object-cover" data-alt="A professional headshot of a smiling young male administrator in a brightly lit modern office setting. The lighting is warm and welcoming, reflecting a clean tech-focused brand aesthetic with soft blue tones in the background. High-quality portrait photography style with a shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClRtG-5r0IPaYkeqMgHawQe4893rPwRk6NxF-bdxj1nMviuWP7uutNv66NagcgShTbWyus9Jb74-Ti7JMnhGPDqIojAR8cO0hUvKleRcdWb-GhC8KzOpBBPHxF-zH1o1cjnSU3KbdK4mOueliK15J2SOBaZprQ2Ce0hupoDxTJ32hwpNLexqbEeaP4TjQv7QHvszRU1bZewDn_3n3KoSGInfN3sKXq6W2QD00PBOEcYa1vvEgINqbj_HN56KRedEYZzhU8K-1-RE8"/>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-bold">James Omari</p>
+<p class="text-[10px] text-outline uppercase tracking-wider">Super Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Header (Based on Shared Components) -->
+<header class="h-20 border-b border-outline-variant bg-surface-container-lowest flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-extrabold tracking-tight">Dashboard Overview</h2>
+<div class="h-6 w-[1px] bg-outline-variant"></div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search system data..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="size-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        New Listing
+                    </button>
+</div>
+</header>
+<!-- Dashboard Body -->
+<div class="p-8 flex flex-col gap-stack-lg max-w-[1400px]">
+<!-- KPI Cards Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter">
+<!-- Total Students -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl custom-shadow border border-outline-variant flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">school</span>
+</div>
+<span class="text-secondary text-xs font-bold px-2 py-1 bg-secondary-container/30 rounded-full">+12.5%</span>
+</div>
+<p class="text-outline text-sm font-medium mt-2">Total Students</p>
+<h3 class="text-3xl font-extrabold">4,250</h3>
+<p class="text-[10px] text-outline mt-1 uppercase tracking-widest">Active Seekers</p>
+</div>
+<!-- Active Landlords -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl custom-shadow border border-outline-variant flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="p-2 bg-secondary/10 rounded-lg text-secondary">
+<span class="material-symbols-outlined">real_estate_agent</span>
+</div>
+<span class="text-secondary text-xs font-bold px-2 py-1 bg-secondary-container/30 rounded-full">+5.2%</span>
+</div>
+<p class="text-outline text-sm font-medium mt-2">Active Landlords</p>
+<h3 class="text-3xl font-extrabold">128</h3>
+<p class="text-[10px] text-outline mt-1 uppercase tracking-widest">Verified Hosts</p>
+</div>
+<!-- Pending Verifications -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl custom-shadow border border-outline-variant flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="p-2 bg-tertiary/10 rounded-lg text-tertiary">
+<span class="material-symbols-outlined">fact_check</span>
+</div>
+<span class="text-error text-xs font-bold px-2 py-1 bg-error-container/30 rounded-full">-2.4%</span>
+</div>
+<p class="text-outline text-sm font-medium mt-2">Pending Verifications</p>
+<h3 class="text-3xl font-extrabold">15</h3>
+<p class="text-[10px] text-outline mt-1 uppercase tracking-widest">Awaiting Review</p>
+</div>
+<!-- Monthly Revenue -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl custom-shadow border border-outline-variant flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="text-secondary text-xs font-bold px-2 py-1 bg-secondary-container/30 rounded-full">+18.0%</span>
+</div>
+<p class="text-outline text-sm font-medium mt-2">Monthly Revenue</p>
+<h3 class="text-3xl font-extrabold">Ksh 1.2M</h3>
+<p class="text-[10px] text-outline mt-1 uppercase tracking-widest">Platform Fees</p>
+</div>
+</div>
+<!-- Main Grid: Charts and Feed -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-stack-md">
+<!-- System Health Chart -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-2xl custom-shadow border border-outline-variant overflow-hidden flex flex-col">
+<div class="p-6 flex items-center justify-between border-b border-outline-variant">
+<div>
+<h4 class="text-lg font-bold">System Health</h4>
+<p class="text-outline text-xs">Uptime &amp; response trends (Last 7 days)</p>
+</div>
+<div class="flex gap-2">
+<div class="flex items-center gap-1">
+<div class="size-2 rounded-full bg-primary"></div>
+<span class="text-[10px] font-bold text-outline">Uptime</span>
+</div>
+<div class="flex items-center gap-1">
+<div class="size-2 rounded-full bg-outline-variant"></div>
+<span class="text-[10px] font-bold text-outline">Latency</span>
+</div>
+</div>
+</div>
+<div class="p-6 grow min-h-[300px] flex flex-col justify-end">
+<!-- SVG Chart Visualization -->
+<div class="relative w-full h-48">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<lineargradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="rgba(0, 74, 198, 0.2)"></stop>
+<stop offset="100%" stop-color="rgba(0, 74, 198, 0)"></stop>
+</lineargradient>
+</defs>
+<path d="M 0,80 Q 15,30 30,50 T 60,20 T 100,40 V 100 H 0 Z" fill="url(#chartGradient)"></path>
+<path d="M 0,80 Q 15,30 30,50 T 60,20 T 100,40" fill="none" stroke="#004ac6" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<!-- Data Points -->
+<circle cx="30" cy="50" fill="#004ac6" r="1.5"></circle>
+<circle cx="60" cy="20" fill="#004ac6" r="1.5"></circle>
+<circle cx="100" cy="40" fill="#004ac6" r="1.5"></circle>
+</svg>
+</div>
+<div class="flex justify-between mt-4 px-2">
+<span class="text-[10px] font-bold text-outline">Mon</span>
+<span class="text-[10px] font-bold text-outline">Tue</span>
+<span class="text-[10px] font-bold text-outline">Wed</span>
+<span class="text-[10px] font-bold text-outline">Thu</span>
+<span class="text-[10px] font-bold text-outline">Fri</span>
+<span class="text-[10px] font-bold text-outline">Sat</span>
+<span class="text-[10px] font-bold text-outline text-primary">Sun (Today)</span>
+</div>
+</div>
+<div class="bg-surface p-4 flex gap-8 border-t border-outline-variant">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">Avg Response</span>
+<span class="text-sm font-bold text-on-background">124ms</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">Peak Load</span>
+<span class="text-sm font-bold text-on-background">94%</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">Error Rate</span>
+<span class="text-sm font-bold text-secondary">0.02%</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity Feed -->
+<div class="bg-surface-container-lowest rounded-2xl custom-shadow border border-outline-variant flex flex-col">
+<div class="p-6 border-b border-outline-variant flex items-center justify-between">
+<h4 class="text-lg font-bold">Recent Activity</h4>
+<button class="text-primary text-xs font-bold hover:underline">View All</button>
+</div>
+<div class="overflow-y-auto max-h-[460px] p-6 space-y-6">
+<!-- Signup Entry -->
+<div class="flex gap-4">
+<div class="size-10 rounded-full bg-secondary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]">person_add</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm text-on-background font-medium"><span class="font-bold">Sarah Wanjiku</span> joined as a Student</p>
+<span class="text-[10px] text-outline">2 mins ago • Engineering Dept</span>
+</div>
+</div>
+<!-- Listing Entry -->
+<div class="flex gap-4">
+<div class="size-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[20px]">house</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm text-on-background font-medium"><span class="font-bold">The Heights</span> added 4 new listings</p>
+<span class="text-[10px] text-outline">15 mins ago • Near Main Gate</span>
+</div>
+</div>
+<!-- Payment Entry -->
+<div class="flex gap-4">
+<div class="size-10 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-outline text-[20px]">receipt_long</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm text-on-background font-medium"><span class="font-bold">MPESA Payment</span> verified for Room B4</p>
+<span class="text-[10px] text-outline">45 mins ago • ID: TRX-99201</span>
+</div>
+</div>
+<!-- Signup Entry -->
+<div class="flex gap-4">
+<div class="size-10 rounded-full bg-secondary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]">person_add</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm text-on-background font-medium"><span class="font-bold">Peter Musyoka</span> joined as a Landlord</p>
+<span class="text-[10px] text-outline">1 hour ago • 5 properties pending</span>
+</div>
+</div>
+<!-- Maintenance Report -->
+<div class="flex gap-4">
+<div class="size-10 rounded-full bg-error/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error text-[20px]">report</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm text-on-background font-medium"><span class="font-bold">Maintenance Alert</span> in Blue Nile Hostel</p>
+<span class="text-[10px] text-outline">2 hours ago • Plumbing Issue</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions / Table Section -->
+<div class="bg-surface-container-lowest rounded-2xl custom-shadow border border-outline-variant overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex items-center justify-between bg-surface-container-low/50">
+<h4 class="text-lg font-bold">Pending Approvals</h4>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-xs font-bold">Filter</button>
+<button class="px-3 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-xs font-bold">Export CSV</button>
+</div>
+</div>
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/30 border-b border-outline-variant">
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-wider">Property Name</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-wider">Host/Landlord</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-wider">Submitted</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-wider">Risk Level</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A modern and cozy student dormitory room with sleek wooden bunk beds, a clean minimalist study desk, and vibrant teal accents. The lighting is bright and airy, suggesting a premium student living space. Photorealistic architectural photography with clean lines and a professional, tech-friendly finish." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUqSB4HfyTVafsHi-aKUGiexRoAucP2wUZPk5UVL3TygtEDsouLlheynw6sAzaa1HHAOzUVGjHq6mFWV9hWQeEHxfMIGvKuJxZ6xHAWkJQFtR90oK7JgxfZsbXhjPoCoRHhRcIN2BQmv4oxnViKtYPnEHGVIaf5X0dInBhVTHWv_sLBDbaLydkEpxa6krzawWlwahQCP3pn4bU5E49Y4LfuKafRB8RLrbpTrxHUkZLmM2BO7djg75vd2SFxYODFJOqizIxDbDzFZM"/>
+</div>
+<span class="text-sm font-bold">Sunrise Executive Suites</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Kevin Maina</td>
+<td class="px-6 py-4 text-sm">Today, 09:42 AM</td>
+<td class="px-6 py-4">
+<span class="text-[10px] font-bold px-2 py-1 bg-secondary-container/30 text-secondary rounded-full">LOW</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-bold text-xs hover:bg-primary/5 px-3 py-2 rounded-lg">Review</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A modern apartment interior with large windows overlooking a university campus area. The room is styled with contemporary furniture, neutral grays and blues, and vibrant plant life, creating a welcoming and studious atmosphere. Soft daylight floods the space, rendered in a crisp, clean-tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD46zZ-0qGXtVOGjg-d_k5n4YpPPznaPVVycWcpXY4Gr__roE4ETjwV8zWU3Rq0c42GqFP4tqz3leFetik0uoWvgcRlFLlY11OUCZ9K7XEHruFpl_RZ4mk6hxp8FBtPlIrH4mVQvb49vSLRNDJlbVtkogjNniVqyx6opr8oPZbApqna3EaY9R-CIJ44oHc7FfFt7jBfGRWvizO3R0WOS4wA0rXLypwLZ-Rt7SmfNsW4IFB98k5Zhmgcde58wqGNAMHsGP2yrZoww2U"/>
+</div>
+<span class="text-sm font-bold">Kanduyi Haven Hostel</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Alice Njeri</td>
+<td class="px-6 py-4 text-sm">Yesterday, 04:15 PM</td>
+<td class="px-6 py-4">
+<span class="text-[10px] font-bold px-2 py-1 bg-error-container/30 text-error rounded-full">MODERATE</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-bold text-xs hover:bg-primary/5 px-3 py-2 rounded-lg">Review</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 bg-surface-container-low/30 text-center">
+<button class="text-sm font-bold text-primary hover:underline">See all pending verifications</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kibabii Nest - Messages</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-background": "#0b1c30",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary-container": "#996100",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed": "#00174b",
+                    "surface-bright": "#f8f9ff",
+                    "outline-variant": "#c3c6d7",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-surface": "#0b1c30",
+                    "inverse-surface": "#213145",
+                    "surface-variant": "#d3e4fe",
+                    "on-surface-variant": "#434655",
+                    "surface-tint": "#0053db",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#006c49",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-primary": "#b4c5ff",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#6cf8bb",
+                    "primary-container": "#2563eb",
+                    "surface-dim": "#cbdbf5",
+                    "outline": "#737686",
+                    "background": "#f8f9ff",
+                    "on-secondary-container": "#00714d",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "error": "#ba1a1a",
+                    "tertiary": "#784b00",
+                    "surface-container": "#e5eeff",
+                    "tertiary-fixed": "#ffddb8",
+                    "primary": "#004ac6",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container-high": "#dce9ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-tertiary-container": "#ffeedd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "stack-sm": "12px",
+                    "stack-md": "24px",
+                    "stack-lg": "48px",
+                    "gutter": "16px",
+                    "container-margin": "20px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .glass-effect {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 left-0 w-full flex items-center justify-between px-5 h-16 bg-[#F8FAFC] dark:bg-gray-900 border-b border-slate-200 dark:border-gray-800 shadow-[0_4px_20px_-4px_rgba(37,99,235,0.04)] z-50">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-[#2563EB] dark:text-blue-400 p-2 hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors rounded-full active:scale-[0.98]">arrow_back</button>
+<h1 class="text-lg font-extrabold tracking-tight text-[#2563EB] dark:text-blue-400 font-['Plus_Jakarta_Sans']">Kibabii Nest</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-500 dark:text-gray-400 p-2">more_vert</button>
+</div>
+</header>
+<main class="pt-20 pb-24 px-container-margin max-w-2xl mx-auto">
+<!-- Page Title & Search Section -->
+<section class="mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Messages</h2>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border-none ring-1 ring-outline-variant focus:ring-2 focus:ring-primary rounded-xl font-body-md text-on-surface placeholder:text-outline transition-all" placeholder="Search landlords or properties..." type="text"/>
+</div>
+</section>
+<!-- Chat List -->
+<div class="space-y-3">
+<!-- Active Chat Item 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_16px_rgba(37,99,235,0.04)] border border-transparent hover:border-primary-container transition-all cursor-pointer flex items-center gap-4 active:scale-[0.98]">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A professional and friendly landlord in a bright, modern office setting. The portrait features warm, natural sunlight and a clean, minimalist background that conveys trust and reliability. He wears a smart-casual shirt, reflecting the youthful yet institutional tone of the Kibabii Nest brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD3dYshXCrRjyp6P_qKAQWusekLDhcL8fVw9hG8eZQjiX90M5p2y0hooyU_ARvfcQ0f3odpl5fobd4gT2l6gKvN8W2M73BpMufHO4XeKLBcon17olUBwmmgr73LK5gA7LBxsifpGsYdgIWpEz4ReNLPcZaRP4RblpFU0SxS2kLuJuRag5kKbAsuwvmxDQLMBwpwUaA7_G48NftjQD3g1dUtyTKz3oJ3k7GUstj2zE9VagfJzxwEHEQaMSL4kfnvsM1iYzJsEzbgIQ"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-secondary border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-label-md text-on-surface truncate">Mr. Samuel Mwangi</h3>
+<span class="font-caption text-outline">10:45 AM</span>
+</div>
+<p class="font-caption text-primary mb-1">Skyline Heights</p>
+<p class="font-body-md text-on-surface-variant truncate font-semibold">The deposit has been confirmed! When would you like to pick up the keys?</p>
+</div>
+<div class="flex-shrink-0 flex flex-col items-end gap-2">
+<div class="w-2.5 h-2.5 bg-primary rounded-full"></div>
+</div>
+</div>
+<!-- Active Chat Item 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_16px_rgba(37,99,235,0.04)] border border-transparent hover:border-primary-container transition-all cursor-pointer flex items-center gap-4 active:scale-[0.98]">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A professional female landlord smiling warmly in a high-key, modern apartment interior. The background features light wood textures and soft blue accents, maintaining the brand's aesthetic of empowering beginnings and clean minimalism. The lighting is soft and airy, creating an inviting atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2q5_QRDFYtpOrWrLHWZCj5ZV5oK8hNcoFjFrtyTqltclJntVc_7oavQBJZkayxj7l7UJLxI-ktC1cU3sF8Q0K3ayPMi9EfkJVdUF1vkIgwoUbt6Bn6Z7r7ZAEyN-RLFxtbAfoTYW0CPWihrabw19370kvNq2cg_CfXETeWpywImLCd6eQf7yzWxOf-jgVvV7hJwhAwrgwH1qN34DpOKFPilhHRThZEzokSV8jqGaaDxPjr6zBKwa9OFDfX6_Fw6PT9xvC-Ctk5YI"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-label-md text-on-surface truncate">Sarah Jenkins</h3>
+<span class="font-caption text-outline">Yesterday</span>
+</div>
+<p class="font-caption text-primary mb-1">Elite Residency</p>
+<p class="font-body-md text-on-surface-variant truncate">I'll send the updated lease agreement by evening. Let me know if you have questions.</p>
+</div>
+</div>
+<!-- Active Chat Item 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_16px_rgba(37,99,235,0.04)] border border-transparent hover:border-primary-container transition-all cursor-pointer flex items-center gap-4 active:scale-[0.98]">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A mature, professional landlord portrait with a background of a modern architectural residential building. The scene is bright and optimistic, utilizing a professional photography style with a shallow depth of field. The color palette aligns with the Electric Azure and Trust Blue brand tokens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLc2ENyht5VWGVtC6fkIkpgb4FJiPKUTlWuv9MpE90K9kgEiCO8Vf0_VfV4xFHgL4HW1AnfgZ-Y-BeT0kab1pcAiEz_PNR11eHYH-3KRmVV8NEO_YB6yIhy2YgcHhIPCyqoosZuoYA1rYmRpiwf1nADYIuvdfQ19BaQ0W-FJ67jxYLAe5A8t21_RfdDmYJYxcTZYrXu9wmDc8sSTCkhXQbuio8oWPjBkWiBpBDh0tuLozgo9jv6vnMU-r2ZPSbeAcJmWOp7d42Gbc"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-label-md text-on-surface truncate">David Korir</h3>
+<span class="font-caption text-outline">Mon</span>
+</div>
+<p class="font-caption text-primary mb-1">Acacia Courts</p>
+<p class="font-body-md text-on-surface-variant truncate">The Wi-Fi upgrade is scheduled for this weekend. All units will have 50Mbps.</p>
+</div>
+</div>
+<!-- Active Chat Item 4 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_16px_rgba(37,99,235,0.04)] border border-transparent hover:border-primary-container transition-all cursor-pointer flex items-center gap-4 active:scale-[0.98]">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A cheerful student housing manager in a vibrant, community-oriented common room. The lighting is high-key and energetic, featuring pops of vibrant green and blue. The scene conveys a sense of belonging and support, perfectly capturing 'The Empowering Roommate' brand personality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfoClhFSb2_al2dkbsKu2TjUtt0Jnr0H3v9MNhJ4t0HuGcOrHUNLcKwtnWjC70faOrW9BbDh-vPxdQyHBNxyxoI4GJChTk7lJK_-xQhMY_21Q9ydfDmmGF0Uy-coez6cJ5wg2fu5YsSlQ36NuBWyjFWQ_-AmTBs1fPtiSbmpvBeoXDqoATQd46b8N2Qk35Ty1hyzr6ZvqxckmNNA6ogV5Z-4l1c8evHQ4nJTWW0SUgNICSpcCwGi-833Oy6pSet_gII1C-fCbD41M"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-label-md text-on-surface truncate">Admin - Nest Management</h3>
+<span class="font-caption text-outline">Oct 12</span>
+</div>
+<p class="font-caption text-primary mb-1">General Inquiry</p>
+<p class="font-body-md text-on-surface-variant truncate">Your verification process is now complete. Welcome to Kibabii Nest!</p>
+</div>
+</div>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center active:scale-90 transition-all duration-200 z-40">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_comment</span>
+</button>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-slate-100 dark:border-gray-800 shadow-[0_-4px_16px_rgba(0,0,0,0.02)] rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-gray-500 hover:text-[#2563EB] dark:hover:text-blue-400 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-gray-500 hover:text-[#2563EB] dark:hover:text-blue-400 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-medium">Explore</span>
+</a>
+<!-- Chat is the current active section -->
+<a class="flex flex-col items-center justify-center text-[#2563EB] dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl px-3 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-bold">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-gray-500 hover:text-[#2563EB] dark:hover:text-blue-400 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] font-medium">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nestly | Kibabii Nest Hostel Finder</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#00714d",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-dim": "#cbdbf5",
+                        "surface": "#f8f9ff",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-container": "#ffeedd",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-tint": "#0053db",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-surface": "#0b1c30",
+                        "on-primary": "#ffffff",
+                        "primary": "#004ac6",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed": "#002113",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary-container": "#996100",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-fixed-dim": "#4edea3",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#eff4ff",
+                        "on-primary-fixed": "#00174b",
+                        "primary-container": "#2563eb",
+                        "surface-variant": "#d3e4fe",
+                        "outline-variant": "#c3c6d7",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#e5eeff",
+                        "outline": "#737686",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "on-surface-variant": "#434655",
+                        "on-background": "#0b1c30",
+                        "tertiary": "#784b00",
+                        "on-error": "#ffffff",
+                        "secondary": "#006c49"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "gutter": "16px",
+                        "container-margin": "20px",
+                        "base": "8px",
+                        "stack-sm": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .ambient-shadow { shadow: 0 4px 20px rgba(37, 99, 235, 0.04); }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar Navigation (Desktop) -->
+<header class="docked full-width top-0 sticky z-40 bg-[#F8FAFC] dark:bg-slate-950">
+<nav class="flex justify-between items-center w-full px-5 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center gap-8">
+<a class="text-blue-600 dark:text-blue-500 font-black tracking-tighter text-2xl font-headline-lg" href="#">Nestly</a>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-blue-600 font-bold font-label-md" href="#">Home</a>
+<a class="text-slate-600 dark:text-slate-400 font-label-md hover:opacity-80 transition-all" href="#">Explore</a>
+<a class="text-slate-600 dark:text-slate-400 font-label-md hover:opacity-80 transition-all" href="#">Support</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-white border border-outline-variant rounded-full px-4 py-2 gap-2 ambient-shadow">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="border-none focus:ring-0 text-body-md w-64 bg-transparent" placeholder="Search hostels near Kibabii..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-blue-600 p-2 hover:bg-blue-50 rounded-full transition-all" data-icon="notifications">notifications</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User Profile" data-alt="A close-up portrait of a friendly young student with a warm smile, set against a blurred academic campus backdrop. The lighting is soft and natural, emphasizing the professional yet approachable atmosphere of the student accommodation platform. The image is crisp with high-key lighting, maintaining the clean and modern aesthetic of the Nestly brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL8nhlBmqbt74wzdv5S31lMJr59KZ6Ou3JrL98i4vrVSW312he4JgHiqK3oNGTY-xP3iOFYrxZRpcxoWkadEHvgp_SAa-gC5Hj1tYJ-KcTcwuTJJRPXvQDkfDBhLmUJIBCzJCwZotZnouVgcyumDsmgvMpaxRxdq0L-V1aLyfgkFu_KEqwNAwyVWUzN-tXf2C7UHW6cR37nzpJb6MB1j5TppKbf0v-XiZFIdJ5ycXIHJpjN5iha8unWxLnFrY3-71o8oSNIswxBXQ"/>
+</div>
+</div>
+</nav>
+</header>
+<!-- Hero Section -->
+<section class="relative px-container-margin py-stack-lg max-w-screen-xl mx-auto">
+<div class="grid lg:grid-cols-2 gap-12 items-center">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-stack-sm">
+                    Find your home at <span class="text-primary">Kibabii University</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-stack-md max-w-lg">
+                    Discover verified student hostels with high-speed Wi-Fi, 24/7 security, and an amazing community of like-minded students.
+                </p>
+<!-- Search & Filter Card -->
+<div class="bg-surface-container-lowest p-gutter rounded-xl ambient-shadow border border-surface-container-high space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="space-y-1">
+<label class="font-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> Location
+                            </label>
+<select class="w-full bg-surface rounded-lg border-outline-variant font-body-md">
+<option>Near Main Gate</option>
+<option>Bungoma Town</option>
+<option>Kanduyi Area</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="font-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="payments">payments</span> Budget
+                            </label>
+<select class="w-full bg-surface rounded-lg border-outline-variant font-body-md">
+<option>KES 3k - 5k</option>
+<option>KES 5k - 8k</option>
+<option>KES 8k+</option>
+</select>
+</div>
+<div class="flex items-end">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md hover:bg-primary-container active:scale-[0.98] transition-all">
+                                Search Hostels
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<div class="relative hidden lg:block">
+<div class="rounded-3xl overflow-hidden aspect-[4/3] ambient-shadow border-8 border-white">
+<img class="w-full h-full object-cover" data-alt="A bright and airy modern student hostel room with organized furniture, including a wooden desk and a comfortable bed with clean blue linens. Large windows allow ample sunlight to flood the space, highlighting the minimalist and clean interior design. The vibe is productive yet cozy, perfect for a focused university student. The color palette features whites and soft blues to match the brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj-Pk_7Pnntbh1qZGMQhgvymRpaD5DtBxqYiZQmdF8s45hT_sKxNP2T9YX5veAk6WPujK__wtWyApeebC0UgNk3WWDq-IUFd6GIiud6foFyTuDB1k9JOVUjKlZkXX8zDCmWUo6rvS27_-yBG8VKGyyqjn4YGHqGMrk56kRMZZojuZPyV6UxLFZjoBV7491P5c4zhO5v-PyMBdB8yLIiaGk7q8cQoRl6cmjgXAHIbbejow9qbwvUsWzmoC4kyubVbPdq01zSUouOGU"/>
+</div>
+<div class="absolute -bottom-6 -left-6 bg-secondary-container text-on-secondary-fixed p-4 rounded-2xl ambient-shadow flex items-center gap-3">
+<span class="material-symbols-outlined bg-white p-2 rounded-xl" data-icon="verified" data-weight="fill">verified</span>
+<div>
+<p class="font-label-md">Verified Hosts</p>
+<p class="font-caption text-on-secondary-fixed-variant">100% Secure Bookings</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Integrated Split-View: Map and Listings -->
+<section class="bg-surface-container-low py-stack-lg border-y border-outline-variant">
+<div class="max-w-screen-xl mx-auto px-container-margin">
+<div class="flex justify-between items-end mb-stack-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Recent Hostel Listings</h2>
+<p class="font-body-md text-on-surface-variant">Real-time updates of available spots near campus.</p>
+</div>
+<button class="text-primary font-label-md flex items-center gap-1 hover:underline">
+                    View all listings <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-col lg:flex-row gap-6 h-[600px]">
+<!-- Map Side -->
+<div class="w-full lg:w-5/12 bg-white rounded-3xl overflow-hidden ambient-shadow border border-outline-variant relative">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-80" data-alt="A stylized digital map interface showing the geographical area around Kibabii University in Bungoma, Kenya. The map features modern, minimal aesthetics with clean white and soft blue streets. Interactive blue pins are scattered across the map, indicating available hostel locations. The layout is clean, high-contrast, and designed for effortless navigation in a desktop browser environment." data-location="Bungoma, Kenya" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1dKAfhTxDlR94pp2dlZ7B2XqXJrE4eb80RkKUEwdI9iDQ54PAkW2OQ0Wz2FI-EE6FLxi1_RTbK-TLt1eaEQwe7WrS96biIHQO6JPpyFtbmWqUjSwVVL7PoMHz3_yAeyQEZHLmEnWBkQWkn0VfFxIJR5pAhA_cvFNhcnlk1ncEgHjVJpVYrN6SzD-BZfsgmZon24PjjHu2_-yb4jFcYvOdAp_I1zVO6mApwQ-vgEfH0z700hwxX_J9E8Gwk92IXzVe5wbwYo2qAJs"/>
+</div>
+<div class="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-primary-container flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-caption text-on-surface">42 active listings found</span>
+</div>
+</div>
+<!-- Listings Grid Side -->
+<div class="w-full lg:w-7/12 overflow-y-auto pr-2 custom-scrollbar grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Hostel Card 1 -->
+<div class="bg-white rounded-2xl overflow-hidden ambient-shadow border border-surface-container-high hover:border-primary transition-all group">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A modern and stylish student apartment interior featuring a minimalist aesthetic. The room is well-lit with natural light coming from large windows, showcasing high-quality finishes and contemporary furniture. The primary color palette includes crisp whites and soft wood tones, creating a welcoming and safe environment for young residents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmcgiZM_bqxlqPMfKjV90ebBgtCswEYF9oE1ujNKioLvNkMidn08DsRnXE7X35qRQgWzh7tlDzUO-p7R9CIO3A2CJ33jAVcqd79AG7TMQ5OvKvO-9MHKnxLSP_PtaFOql5j2YXV4wbA-YNvYfrUUYx_Ztpj_ZANaD7JGPEey6SpWYiDVEq8gV1JtjzwQ2KZiW_TJu4Lzsv1MOAn5MTFG040YI7itu-lvjqUGOYqCgDbJvlVfytqAhDn_GSkhn0eN2XeBBOO-sV2Go"/>
+<span class="absolute top-3 left-3 bg-on-secondary-container text-white font-label-md px-3 py-1 rounded-full text-sm">KES 4,500/mo</span>
+<button class="absolute top-3 right-3 bg-white/80 backdrop-blur p-2 rounded-full hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-error text-xl" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-lg text-on-surface">Royal Plaza Residency</h3>
+<div class="flex items-center gap-1 text-on-secondary-container">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill">star</span>
+<span class="font-label-md">4.9</span>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm mb-4">500m from Main Gate • Kanduyi</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-high text-on-primary-fixed-variant px-2 py-1 rounded-md font-caption flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="wifi">wifi</span> Fiber
+                                </span>
+<span class="bg-surface-container-high text-on-primary-fixed-variant px-2 py-1 rounded-md font-caption flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="security">security</span> 24/7
+                                </span>
+</div>
+</div>
+</div>
+<!-- Hostel Card 2 -->
+<div class="bg-white rounded-2xl overflow-hidden ambient-shadow border border-surface-container-high hover:border-primary transition-all group">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An inviting and spacious student hostel room featuring a cozy sleeping area and a dedicated study nook. The lighting is warm and bright, with large glass windows offering a pleasant view. The interior design is professional yet energetic, utilizing a palette of electric blue accents and neutral grays to evoke a sense of modern comfort." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4hmb9DS-tTySxGpFIEZqVWs5FGPuteUYzNaK6LvUZyg0Kx6O8LdQDDFnx56vOYZEUcDJ0LpPdTSEe3Hjas8xKD49Xs0ZgR1pxNGzvAJ7vgt0REUWIpTKUwpBgvnTvdzQH7TQzO-6WNN_vx9YxMehQJzbqBRrlonxEy9Uy8OUSF8_ARL4UVdYLkbwDysjFKdxcWU6-1gKGudjWGlqpHeruD4tMq8r9IlDBaU-GHJBleIW-4udKLWl8eScmcGhBC1YSCmQWPV5yge4"/>
+<span class="absolute top-3 left-3 bg-on-secondary-container text-white font-label-md px-3 py-1 rounded-full text-sm">KES 5,200/mo</span>
+<button class="absolute top-3 right-3 bg-white/80 backdrop-blur p-2 rounded-full hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-outline text-xl" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-lg text-on-surface">The Hive Elite</h3>
+<div class="flex items-center gap-1 text-on-secondary-container">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill">star</span>
+<span class="font-label-md">4.7</span>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm mb-4">800m from Library • Campus View</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-high text-on-primary-fixed-variant px-2 py-1 rounded-md font-caption flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="local_laundry_service">local_laundry_service</span> Laundry
+                                </span>
+<span class="bg-surface-container-high text-on-primary-fixed-variant px-2 py-1 rounded-md font-caption flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span> Backup Gen
+                                </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- App Features Section -->
+<section class="py-stack-lg max-w-screen-xl mx-auto px-container-margin">
+<div class="text-center mb-stack-lg">
+<h2 class="font-headline-lg text-headline-lg mb-stack-sm">Why students choose Nestly</h2>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">We bridge the gap between institutional trust and youthful energy to ensure your university life starts right.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<div class="p-8 bg-white rounded-3xl ambient-shadow border border-surface-container-high text-center hover:translate-y-[-4px] transition-all">
+<div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="verified_user">verified_user</span>
+</div>
+<h3 class="font-headline-md text-xl mb-4">100% Verified</h3>
+<p class="font-body-md text-on-surface-variant">Every listing on our platform is physically inspected by our team for safety and accuracy.</p>
+</div>
+<div class="p-8 bg-white rounded-3xl ambient-shadow border border-surface-container-high text-center hover:translate-y-[-4px] transition-all">
+<div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="reviews">reviews</span>
+</div>
+<h3 class="font-headline-md text-xl mb-4">Student Reviews</h3>
+<p class="font-body-md text-on-surface-variant">Read authentic feedback from fellow students who have lived in these hostels before you.</p>
+</div>
+<div class="p-8 bg-white rounded-3xl ambient-shadow border border-surface-container-high text-center hover:translate-y-[-4px] transition-all">
+<div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="support_agent">support_agent</span>
+</div>
+<h3 class="font-headline-md text-xl mb-4">24/7 Support</h3>
+<p class="font-body-md text-on-surface-variant">Our roommate-first support team is always available to help with bookings or disputes.</p>
+</div>
+</div>
+</section>
+<!-- How It Works Section -->
+<section class="bg-surface py-stack-lg">
+<div class="max-w-screen-xl mx-auto px-container-margin">
+<h2 class="font-headline-lg text-headline-lg text-center mb-stack-lg">How to secure your Nest</h2>
+<div class="grid md:grid-cols-3 gap-12 relative">
+<!-- Connecting lines for desktop -->
+<div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-dashed bg-surface-container-highest -z-10"></div>
+<div class="flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center font-headline-md mb-6 relative z-10">1</div>
+<h3 class="font-label-md text-lg mb-2">Explore Options</h3>
+<p class="font-body-md text-on-surface-variant">Browse through dozens of hostels using filters for price, distance, and amenities.</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center font-headline-md mb-6 relative z-10">2</div>
+<h3 class="font-label-md text-lg mb-2">Book a Tour</h3>
+<p class="font-body-md text-on-surface-variant">Schedule a virtual or physical visit with one click to see your future room.</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center font-headline-md mb-6 relative z-10">3</div>
+<h3 class="font-label-md text-lg mb-2">Move In</h3>
+<p class="font-body-md text-on-surface-variant">Complete your secure payment through Nestly and get ready for a new beginning!</p>
+</div>
+</div>
+</div>
+</section>
+<!-- High-Impact Landlord CTA -->
+<section class="py-stack-lg px-container-margin max-w-screen-xl mx-auto mb-stack-lg">
+<div class="bg-primary-container rounded-[40px] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
+<!-- Decorative circle -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+<div class="w-full md:w-1/2 z-10">
+<h2 class="font-headline-xl text-headline-xl text-white mb-stack-sm">Own a property near Kibabii?</h2>
+<p class="font-body-lg text-white/80 mb-stack-md">
+                    Join hundreds of landlords who trust Nestly to manage their student rentals. We handle the discovery, vetting, and booking process for you.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-white text-primary px-8 py-4 rounded-full font-label-md hover:bg-opacity-90 active:scale-95 transition-all shadow-xl">
+                        List Your Property
+                    </button>
+<button class="border border-white/30 text-white px-8 py-4 rounded-full font-label-md hover:bg-white/10 transition-all">
+                        Learn More
+                    </button>
+</div>
+</div>
+<div class="w-full md:w-1/2 z-10">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 text-white">
+<span class="material-symbols-outlined text-4xl mb-4" data-icon="groups">groups</span>
+<h4 class="text-3xl font-headline-md">2.5k+</h4>
+<p class="font-caption text-white/70">Monthly Students</p>
+</div>
+<div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 text-white translate-y-8">
+<span class="material-symbols-outlined text-4xl mb-4" data-icon="speed">speed</span>
+<h4 class="text-3xl font-headline-md">15%</h4>
+<p class="font-caption text-white/70">Higher Occupancy</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Area -->
+<footer class="bg-on-surface text-white py-12">
+<div class="max-w-screen-xl mx-auto px-container-margin grid md:grid-cols-4 gap-12">
+<div class="space-y-6">
+<h3 class="text-2xl font-black tracking-tighter">Nestly</h3>
+<p class="text-surface-variant font-body-md">Empowering the Kibabii student community with safe, vibrant, and effortless living arrangements.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-all" href="#"><span class="material-symbols-outlined text-sm" data-icon="facebook">social_leaderboard</span></a>
+<a class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-all" href="#"><span class="material-symbols-outlined text-sm" data-icon="share">share</span></a>
+<a class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-all" href="#"><span class="material-symbols-outlined text-sm" data-icon="alternate_email">alternate_email</span></a>
+</div>
+</div>
+<div>
+<h4 class="font-headline-md text-lg mb-6">Quick Links</h4>
+<ul class="space-y-4 font-body-md text-surface-variant">
+<li><a class="hover:text-white" href="#">Search Hostels</a></li>
+<li><a class="hover:text-white" href="#">Recent Listings</a></li>
+<li><a class="hover:text-white" href="#">Landlord Portal</a></li>
+<li><a class="hover:text-white" href="#">Safety Guidelines</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline-md text-lg mb-6">Support</h4>
+<ul class="space-y-4 font-body-md text-surface-variant">
+<li><a class="hover:text-white" href="#">Help Center</a></li>
+<li><a class="hover:text-white" href="#">Booking Terms</a></li>
+<li><a class="hover:text-white" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-white" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline-md text-lg mb-6">Newsletter</h4>
+<p class="text-surface-variant font-body-md mb-4">Get the latest availability alerts directly in your inbox.</p>
+<div class="flex bg-white/10 rounded-xl overflow-hidden border border-white/20 p-1">
+<input class="bg-transparent border-none focus:ring-0 w-full px-3 text-white" placeholder="Email address" type="email"/>
+<button class="bg-primary px-4 py-2 rounded-lg font-label-md">Join</button>
+</div>
+</div>
+</div>
+<div class="max-w-screen-xl mx-auto px-container-margin mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-surface-variant font-caption">© 2024 Nestly Student Accommodation. All rights reserved.</p>
+<div class="flex gap-6 text-surface-variant font-caption">
+<span>Made for Kibabii University</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="favorite" data-weight="fill">favorite</span> Bungoma, KE
+                </div>
+</div>
+</div>
+</footer>
+<!-- Mobile Navigation Shell (Hidden on Desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl z-50 border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(37,99,235,0.04)]">
+<a class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-2xl px-5 py-1.5 transition-all duration-300 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-plus-jakarta-sans text-[10px] font-semibold tracking-tight">Profile</span>
+</a>
+</nav>
+</body></html>

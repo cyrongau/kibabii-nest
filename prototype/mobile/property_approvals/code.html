@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Property Verification | Kibabii Nest</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#003ea8",
+                    "error": "#ba1a1a",
+                    "tertiary": "#784b00",
+                    "primary-container": "#2563eb",
+                    "tertiary-container": "#996100",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "secondary": "#006c49",
+                    "inverse-surface": "#213145",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-dim": "#cbdbf5",
+                    "surface-bright": "#f8f9ff",
+                    "surface": "#f8f9ff",
+                    "background": "#f8f9ff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#eeefff",
+                    "on-background": "#0b1c30",
+                    "surface-variant": "#d3e4fe",
+                    "outline-variant": "#c3c6d7",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-secondary-fixed": "#002113",
+                    "outline": "#737686",
+                    "on-tertiary-container": "#ffeedd",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-tint": "#0053db",
+                    "secondary-fixed": "#6ffbbe",
+                    "error-container": "#ffdad6",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#6cf8bb",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed": "#00174b",
+                    "surface-container-highest": "#d3e4fe",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#dce9ff",
+                    "on-secondary-container": "#00714d",
+                    "surface-container": "#e5eeff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-surface-variant": "#434655",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "primary": "#004ac6",
+                    "on-surface": "#0b1c30",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "48px",
+                    "stack-md": "24px",
+                    "gutter": "16px",
+                    "container-margin": "20px",
+                    "base": "8px",
+                    "stack-sm": "12px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8f9ff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm shadow-blue-500/5 fixed top-0 w-full z-50 h-16 flex justify-between items-center px-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
+<img alt="Landlord profile picture" class="w-full h-full object-cover" data-alt="A professional headshot of a male property administrator in his late 30s. He is smiling warmly, wearing a clean white shirt against a soft-focus office background. The lighting is bright and airy, following a modern high-key aesthetic with vibrant blue accents that match the Kibabii Nest brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlY0B7DJ4K0wrWQKDIel457UeI2fQ1mBmtSgLdcM9EljQlaSt840fTvyajpRFP4tHZpZyLQvJ2BYjLQSNLKRpdKy8nSPqcAkXmlozc19465pa-5-l_7dJOR_VQ6Y-EZRY5WI1idKXzGphYD3lsYeJS3uYEQrbk5f7TgROs1dPbFbLXn3vV9nZ2XLYx_urN07bBNTS6BM5O1Kaf89Y7OxeNzsbvX424px4Y6Lzcn-RF2pt8c-j1Erbdsl_9EXnDqt20kDccnrc-Ink"/>
+</div>
+<h1 class="font-plus-jakarta-sans font-bold text-lg text-blue-600 dark:text-blue-400">Property Manager</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-500 hover:bg-slate-100 p-2 rounded-full transition-all">notifications</button>
+</div>
+</header>
+<main class="pt-24 px-container-margin max-w-5xl mx-auto">
+<!-- Dashboard Header -->
+<section class="mb-stack-md">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-background">Verification Queue</h2>
+<p class="font-body-md text-on-surface-variant mt-1">Reviewing 24 pending hostel submissions for academic session 2024/25.</p>
+</div>
+<div class="flex gap-3">
+<span class="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[20px]">filter_list</span>
+<span class="text-label-md font-label-md">Filter Status</span>
+</span>
+</div>
+</div>
+</section>
+<!-- Stats Bento-ish Row -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-md">
+<div class="bg-primary-container text-on-primary-container p-6 rounded-xl shadow-lg flex flex-col justify-between">
+<span class="material-symbols-outlined text-3xl mb-4" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+<div>
+<div class="text-headline-md font-headline-md">08</div>
+<div class="text-label-md opacity-90 uppercase tracking-wider">Urgent Pending</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.04)] border border-blue-50 flex flex-col justify-between">
+<span class="material-symbols-outlined text-3xl text-secondary mb-4">verified_user</span>
+<div>
+<div class="text-headline-md font-headline-md text-on-background">142</div>
+<div class="text-label-md text-on-surface-variant uppercase tracking-wider">Verified Hosts</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.04)] border border-blue-50 flex flex-col justify-between">
+<span class="material-symbols-outlined text-3xl text-tertiary mb-4">history</span>
+<div>
+<div class="text-headline-md font-headline-md text-on-background">4.2 Days</div>
+<div class="text-label-md text-on-surface-variant uppercase tracking-wider">Avg. Review Time</div>
+</div>
+</div>
+</section>
+<!-- Urgent/Old Section Warning -->
+<div class="mb-stack-sm flex items-center gap-2 px-4 py-3 bg-error-container text-on-error-container rounded-xl border border-error/10">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+<span class="text-label-md font-label-md">3 requests have been pending for over 7 days. Action required.</span>
+</div>
+<!-- Property List Content -->
+<div class="space-y-4">
+<!-- Property Card 1 (Urgent/Old) -->
+<div class="bg-white rounded-xl p-4 flex flex-col md:flex-row gap-5 shadow-[0_4px_12px_rgba(37,99,235,0.04)] border-l-4 border-l-error relative group transition-all hover:scale-[1.01]">
+<div class="w-full md:w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Property Thumbnail" class="w-full h-full object-cover" data-alt="A bright and airy modern hostel room near Kibabii University. The room features a clean minimalist design with light wood bunk beds, large windows letting in natural sunlight, and vibrant green desk plants. The overall atmosphere is energetic and organized, perfect for a high-end student living platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACfb20bQB-aWzji9WxOw-Dqq-bU6axoFuRHK8wyB2QI4VhRYVd_yUw3ped0CRP1sr94tQiejSu9aQAnMKqUGtAk-46kMEgpzRpF0_0VyVV_wscMhMYfsRm-w8PeSe4Bh6tV8kQy7aa4_T8C_Y55AaanWM1LOpLbQEGYKXiYPIiC5lZLJJRyMsJEN7Y3iWWBVb6zYD8mKC85DnQLW-4pxRDK3inLrWZbdEb8JVKvs-vsy4_gFTQLJoZERWrylV95qrfweNUz4c3tCE"/>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-background leading-tight">Emerald Heights Residence</h3>
+<div class="flex items-center gap-2 mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="text-body-md font-body-md">Johnathan Kibet (Owner)</span>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-end">
+<span class="px-3 py-1 bg-error-container text-on-error-container text-caption font-caption rounded-full">9 Days Pending</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-3">
+<span class="inline-flex items-center gap-1 text-caption font-caption text-secondary">
+<span class="material-symbols-outlined text-[16px]">wifi</span> Fiber Internet
+                        </span>
+<span class="inline-flex items-center gap-1 text-caption font-caption text-secondary">
+<span class="material-symbols-outlined text-[16px]">security</span> 24/7 Guard
+                        </span>
+</div>
+</div>
+<div class="flex items-center md:pl-5 border-l border-slate-100">
+<button class="w-full md:w-auto px-6 py-3 bg-primary text-white font-label-md text-label-md rounded-xl hover:bg-on-primary-fixed-variant transition-colors active:scale-95">Review Now</button>
+</div>
+</div>
+<!-- Property Card 2 -->
+<div class="bg-white rounded-xl p-4 flex flex-col md:flex-row gap-5 shadow-[0_4px_12px_rgba(37,99,235,0.04)] border border-blue-50 relative group transition-all hover:scale-[1.01]">
+<div class="w-full md:w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Property Thumbnail" class="w-full h-full object-cover" data-alt="A stylishly decorated apartment suite with modern furniture. The space is illuminated by warm evening light, showing off sleek surfaces and high-quality finishes. The aesthetic is clean and institutional yet inviting, utilizing a palette of soft greys and electric azure accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyHnbXiwDX05QyX7QxzoMRblXwEk3SLeEYI3xNW5tfrLPaL8nUGpEYRw97jAn7okBMMdx59TKOdB9cLgqsS9kGriuSqrBecqaNA1y3t3s0repfst5gkDZnpZJ8YuoVJyVKIgcU0f8gI4SB1my88kaAV464XrhNc10A_Vzin_0-spaCRBnt0IpK_3qebUF5mozSYap75HA7ATGcVCqCXm39LZyddujy7vP2LGGiCWhw_u0vtt1igRK8VaCbVoXWsWkudzx8Yx4QTBo"/>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-background leading-tight">SkyView Studios</h3>
+<div class="flex items-center gap-2 mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">business</span>
+<span class="text-body-md font-body-md">Grand Management Ltd.</span>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-end">
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-caption font-caption rounded-full">2 Days Pending</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-3">
+<span class="inline-flex items-center gap-1 text-caption font-caption text-secondary">
+<span class="material-symbols-outlined text-[16px]">local_parking</span> Parking Space
+                        </span>
+<span class="inline-flex items-center gap-1 text-caption font-caption text-secondary">
+<span class="material-symbols-outlined text-[16px]">fitness_center</span> Fitness Area
+                        </span>
+</div>
+</div>
+<div class="flex items-center md:pl-5 border-l border-slate-100">
+<button class="w-full md:w-auto px-6 py-3 bg-primary text-white font-label-md text-label-md rounded-xl hover:bg-on-primary-fixed-variant transition-colors active:scale-95">Review Now</button>
+</div>
+</div>
+<!-- Property Card 3 (Urgent) -->
+<div class="bg-white rounded-xl p-4 flex flex-col md:flex-row gap-5 shadow-[0_4px_12px_rgba(37,99,235,0.04)] border-l-4 border-l-primary relative group transition-all hover:scale-[1.01]">
+<div class="w-full md:w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Property Thumbnail" class="w-full h-full object-cover" data-alt="A clean, student-centric hostel bathroom and shared facility area. The image emphasizes cleanliness and modern hygiene standards with white tiling and chrome fixtures. The lighting is bright and sterile but presented in an optimistic, high-quality photograph style consistent with trust-building UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd2Wl-CtTHFHpTj-KU7NlJ9mcLLmVaEqVgNx6pWpJKc5fpQYC-NwemB0Z_w8KOq5iwRI7ZK8XG1tN29pGJkzs5AH3aabYbSzizkOA6w8cLI0AE2sAQqoUmitlue3AabkGubFG33HlSD8RT1cwOTxeHMyI0-UqbIsbHt3YsIFCDcRUDp3eBPrVsUsCpIorUqj9Gf_UJxAWaEx4hmeuGb5OJu0AEiZIIHOi523KYfdx4mOXZ0xUjrU-kKcaNMLnfgnKNP7USWyq6dho"/>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-background leading-tight">Unity Student Hive</h3>
+<div class="flex items-center gap-2 mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="text-body-md font-body-md">Sarah Wekesa (Owner)</span>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-end">
+<span class="px-3 py-1 bg-primary-container text-white text-caption font-caption rounded-full">New Submission</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-3">
+<span class="inline-flex items-center gap-1 text-caption font-caption text-secondary">
+<span class="material-symbols-outlined text-[16px]">water_drop</span> 24h Water
+                        </span>
+<span class="inline-flex items-center gap-1 text-caption font-caption text-secondary">
+<span class="material-symbols-outlined text-[16px]">electric_bolt</span> Backup Generator
+                        </span>
+</div>
+</div>
+<div class="flex items-center md:pl-5 border-l border-slate-100">
+<button class="w-full md:w-auto px-6 py-3 bg-primary text-white font-label-md text-label-md rounded-xl hover:bg-on-primary-fixed-variant transition-colors active:scale-95">Review Now</button>
+</div>
+</div>
+<!-- Empty State / Load More -->
+<div class="py-8 flex justify-center">
+<button class="px-8 py-2 border-2 border-primary text-primary font-label-md text-label-md rounded-full hover:bg-primary/5 transition-colors">
+                    Load More Submissions
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_12px_rgba(37,99,235,0.04)] z-50 rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">apartment</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Properties</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">event_available</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-blue-500 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-plus-jakarta-sans text-[11px] font-semibold">Profile</span>
+</a>
+</nav>
+</body></html>
