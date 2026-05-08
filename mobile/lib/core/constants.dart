@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiConstants {
   // Use 10.0.2.2 for Android Emulator, localhost for iOS Simulator
@@ -23,8 +24,21 @@ class ApiConstants {
 
   static String get host => usePhysicalIp ? physicalDeviceIp : devHost;
   
-  static String get baseUrl => 'http://$host:3000';
-  static String get socketUrl => 'http://$host:3000';
+  static String get baseUrl {
+    final envUrl = dotenv.env['API_URL'];
+    if (envUrl != null && envUrl.isNotEmpty) {
+      return envUrl;
+    }
+    return 'http://$host:3000';
+  }
+
+  static String get socketUrl {
+    final envUrl = dotenv.env['API_URL'];
+    if (envUrl != null && envUrl.isNotEmpty) {
+      return envUrl;
+    }
+    return 'http://$host:3000';
+  }
 
   // Timeouts
   static const Duration defaultTimeout = Duration(seconds: 15);

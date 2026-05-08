@@ -2,8 +2,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function fixUrls() {
-  const oldHost = 'localhost:9000';
-  const newHost = '192.168.0.207:9000';
+  const oldHost = '192.168.0.207:9000';
+  const newHost = 'api.kibabii.generexcom.com/s3';
 
   console.log(`Searching for URLs containing "${oldHost}"...`);
 

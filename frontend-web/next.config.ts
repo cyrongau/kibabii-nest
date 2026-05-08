@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'http',
-        hostname: '192.168.0.207',
+        hostname: 'localhost',
       },
       {
         protocol: 'https',
