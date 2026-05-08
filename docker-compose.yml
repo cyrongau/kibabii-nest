@@ -42,7 +42,7 @@ services:
     depends_on:
       - backend
     environment:
-      NEXT_PUBLIC_API_URL: https://api.yourdomain.com
+      NEXT_PUBLIC_API_URL: https://api.kibabii.generexcom.com
     ports:
       - "3000:3000"
 
