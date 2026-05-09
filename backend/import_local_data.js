@@ -133,12 +133,12 @@ async function main() {
   }
   
   console.log('Running URL fix script...');
-  const oldHosts = ['192.168.0.207:9000', 'localhost:9000', '127.0.0.1:9000'];
+  const oldHosts = ['192.168.0.207:9000', 'localhost:9000', '127.0.0.1:9000', 'localhost:3000'];
   const newBase = 'https://api.kibabii.generexcom.com/s3';
 
   // Helper to fix a single URL
   const fixUrl = (url) => {
-    if (!url) return url;
+    if (!url || typeof url !== 'string') return url;
     let newUrl = url;
     for (const host of oldHosts) {
       if (newUrl.includes(host)) {
@@ -152,7 +152,7 @@ async function main() {
   // Fix Properties
   const properties = await prisma.property.findMany();
   for (const prop of properties) {
-    const newImages = prop.images.map(fixUrl);
+    const newImages = (prop.images || []).map(fixUrl);
     const newTemplate = fixUrl(prop.agreementTemplateUrl);
     
     await prisma.property.update({
@@ -162,8 +162,8 @@ async function main() {
         agreementTemplateUrl: newTemplate
       }
     });
-    console.log(`✅ Fixed URLs for property: ${prop.name}`);
   }
+  console.log(`✅ Fixed URLs for ${properties.length} properties`);
 
   // Fix User Avatars
   const users = await prisma.user.findMany();
@@ -174,8 +174,23 @@ async function main() {
         where: { id: user.id },
         data: { avatar: newAvatar }
       });
-      console.log(`✅ Fixed avatar for user: ${user.email}`);
     }
+  }
+  console.log(`✅ Fixed avatars for ${users.length} users`);
+
+  // Fix Marketplace Items
+  try {
+    const items = await prisma.marketplaceItem.findMany();
+    for (const item of items) {
+      const newImages = (item.images || []).map(fixUrl);
+      await prisma.marketplaceItem.update({
+        where: { id: item.id },
+        data: { images: newImages }
+      });
+    }
+    console.log(`✅ Fixed URLs for ${items.length} marketplace items`);
+  } catch (e) {
+    console.log('Skipping marketplace items (table may not exist yet)');
   }
 
   console.log('Migration and URL fixing complete!');
