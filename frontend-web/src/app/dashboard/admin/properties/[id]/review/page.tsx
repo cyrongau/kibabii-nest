@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { 
   ArrowLeft, CheckCircle2, XCircle, MapPin, Image as ImageIcon, Video, 
   ShieldCheck, Loader2, Home, User, Mail, Phone, Calendar, Info, FileText,
-  Save, Plus, Zap, Droplets, Wifi, Trash2, Shield, Brush
+  Save, Plus, Zap, Droplets, Wifi, Trash2, Shield, Brush, Package
 } from 'lucide-react';
 import { useNotifications } from '@/context/NotificationContext';
 import { usePropertyTaxonomy } from '@/hooks/use-property-taxonomy';
