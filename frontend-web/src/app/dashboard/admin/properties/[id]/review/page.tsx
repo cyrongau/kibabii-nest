@@ -8,7 +8,7 @@ import {
   Save, Plus, Zap, Droplets, Wifi, Trash2, Shield, Brush
 } from 'lucide-react';
 import { useNotifications } from '@/context/NotificationContext';
-import { usePropertyTaxonomy } from '@/hooks/usePropertyTaxonomy';
+import { usePropertyTaxonomy } from '@/hooks/use-property-taxonomy';
 
 const getPublicUrl = (path: string) => {
   if (!path) return '';
