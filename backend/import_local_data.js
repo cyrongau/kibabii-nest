@@ -116,7 +116,7 @@ async function main() {
   console.log('Migrating users...');
   for (const user of data.users) {
     await prisma.user.upsert({
-      where: { id: user.id },
+      where: { email: user.email },
       update: user,
       create: user
     });
