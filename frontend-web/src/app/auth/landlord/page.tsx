@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Building2, Mail, Lock, User, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useNotifications } from '@/context/NotificationContext';
 
@@ -15,13 +16,16 @@ export default function LandlordAuthPage() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
+  const searchParams = useSearchParams();
+  const mode = searchParams.get('mode');
+
   React.useEffect(() => {
-    // Check if we should start in register mode
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('mode') === 'register') {
+    if (mode === 'register') {
       setIsLogin(false);
+    } else {
+      setIsLogin(true);
     }
-  }, []);
+  }, [mode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

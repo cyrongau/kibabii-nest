@@ -7,7 +7,10 @@ export class TaxonomyController {
 
   @Get('categories')
   async getCategories() {
-    return this.prisma.category.findMany({ orderBy: { name: 'asc' } });
+    return this.prisma.category.findMany({ 
+      include: { _count: { select: { properties: true } } },
+      orderBy: { name: 'asc' } 
+    });
   }
 
   @Post('categories')
@@ -22,7 +25,16 @@ export class TaxonomyController {
 
   @Get('types')
   async getTypes() {
-    return this.prisma.propertyType.findMany({ orderBy: { name: 'asc' } });
+    const types = await this.prisma.propertyType.findMany({ 
+      include: { _count: { select: { propertyUnits: true } } },
+      orderBy: { name: 'asc' } 
+    });
+    return types.map(t => ({
+      ...t,
+      _count: {
+        units: t._count.propertyUnits
+      }
+    }));
   }
 
   @Post('types')

@@ -12,16 +12,29 @@ export class PropertiesService {
   async create(data: any) {
     let categoryId = data.categoryId || null;
     if (!categoryId && data.category) {
-      const cat = await this.prisma.category.findUnique({ where: { name: data.category } });
-      categoryId = cat?.id || null;
+      const categoryName = typeof data.category === 'string' ? data.category : data.category.name;
+      const cat = await this.prisma.category.upsert({
+        where: { name: categoryName },
+        update: {},
+        create: { name: categoryName }
+      });
+      categoryId = cat.id;
     }
 
     const resolvedUnits = await Promise.all((data.units || []).map(async (u: any) => {
       let typeId = u.typeId;
-      if (!typeId && u.type) {
-        const pt = await this.prisma.propertyType.findUnique({ where: { name: u.type } });
-        typeId = pt?.id || null;
+      const typeName = u.type?.name || u.type;
+      
+      if (!typeId && typeName) {
+        // Automatically upsert the property type by name
+        const pt = await this.prisma.propertyType.upsert({
+          where: { name: typeName },
+          update: {},
+          create: { name: typeName }
+        });
+        typeId = pt.id;
       }
+      
       return {
         typeId,
         price: Number(u.price),
@@ -77,10 +90,15 @@ export class PropertiesService {
   async update(id: string, data: any) {
     let categoryId = data.categoryId;
     if (!categoryId && data.category) {
-      const cat = await this.prisma.category.findFirst({ 
-        where: { name: { equals: data.category?.name || data.category, mode: 'insensitive' } } 
-      });
-      categoryId = cat?.id;
+      const categoryName = data.category?.name || data.category;
+      if (typeof categoryName === 'string') {
+        const cat = await this.prisma.category.upsert({
+          where: { name: categoryName },
+          update: {},
+          create: { name: categoryName }
+        });
+        categoryId = cat.id;
+      }
     }
 
     console.log(`[DEBUG] Updating property ${id}`);
@@ -124,14 +142,12 @@ export class PropertiesService {
           let typeId = u.typeId;
           const typeName = u.type?.name || u.type;
           if (!typeId && typeName) {
-            const pt = await this.prisma.propertyType.findFirst({ 
-              where: { name: { equals: typeName, mode: 'insensitive' } } 
+            const pt = await this.prisma.propertyType.upsert({
+              where: { name: typeName },
+              update: {},
+              create: { name: typeName }
             });
-            typeId = pt?.id;
-            if (!typeId) {
-              const defaultType = await this.prisma.propertyType.findFirst();
-              typeId = defaultType?.id;
-            }
+            typeId = pt.id;
           }
           return {
             id: u.id && !u.id?.toString().startsWith('temp-') ? u.id : undefined,

@@ -90,7 +90,7 @@ export default function Home() {
         <div className="hidden md:flex gap-10 text-sm font-bold text-muted-foreground">
           <a href="/" className="hover:text-primary transition-colors">Home</a>
           <a href="/support" className="hover:text-primary transition-colors">Support</a>
-          {!user && <a href="/auth/landlord" className="text-primary hover:opacity-80 transition-opacity">Landlord Onboarding</a>}
+          {!user && <a href="/auth/landlord?mode=register" className="text-primary hover:opacity-80 transition-opacity">Landlord Onboarding</a>}
           {user && (
             <a 
               href={user.role === 'ADMIN' ? '/dashboard/admin' : user.role === 'LANDLORD' ? '/dashboard/landlord' : '/dashboard/student'} 
@@ -107,7 +107,7 @@ export default function Home() {
               {!user ? (
                 <>
                   <a href="/auth/login" className="px-5 py-2.5 text-sm font-bold text-primary hover:bg-muted rounded-xl transition-all">Sign In</a>
-                  <a href="/auth/landlord" className="px-6 py-2.5 text-sm font-bold text-white bg-primary rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] transition-all">Join as Landlord</a>
+                  <a href="/auth/landlord?mode=register" className="px-6 py-2.5 text-sm font-bold text-white bg-primary rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] transition-all">Join as Landlord</a>
                 </>
               ) : (
                 <div className="flex items-center gap-4">
@@ -164,8 +164,8 @@ export default function Home() {
                  <ArrowRight size={18} />
                </button>
                <a 
-                 href="/auth/landlord" 
-                 onClick={(e) => handleCtaClick(e, '/auth/landlord')}
+                 href="/auth/landlord?mode=register" 
+                 onClick={(e) => handleCtaClick(e, '/auth/landlord?mode=register')}
                  className="bg-card text-foreground border border-border-subtle px-10 py-4 rounded-2xl font-bold hover:bg-muted transition-all text-center"
                >
                  Become a Landlord
@@ -438,8 +438,8 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <a 
-                href="/auth/landlord" 
-                onClick={(e) => handleCtaClick(e, '/auth/landlord')}
+                href="/auth/landlord?mode=register" 
+                onClick={(e) => handleCtaClick(e, '/auth/landlord?mode=register')}
                 className="bg-white text-primary px-10 py-5 rounded-2xl font-black shadow-xl shadow-primary/20 hover:bg-slate-50 hover:scale-[1.02] transition-all"
               >
                 List Your Property
@@ -494,7 +494,7 @@ export default function Home() {
           <div>
             <h4 className="font-black mb-8 text-lg">Platform</h4>
             <ul className="space-y-4 text-slate-400 font-bold text-sm">
-              <li><a href="/auth/landlord" className="hover:text-primary transition-colors">List Property</a></li>
+              <li><a href="/auth/landlord?mode=register" className="hover:text-primary transition-colors">List Property</a></li>
               <li><a href="/auth/login" className="hover:text-primary transition-colors">Host Dashboard</a></li>
               <li><a href="/support" className="hover:text-primary transition-colors">Safety Guidelines</a></li>
               <li><a href="/support" className="hover:text-primary transition-colors">Help Center</a></li>

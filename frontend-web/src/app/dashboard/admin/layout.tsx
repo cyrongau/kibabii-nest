@@ -16,7 +16,8 @@ import {
   Megaphone,
   CalendarCheck,
   Search,
-  LifeBuoy
+  LifeBuoy,
+  Tag
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -132,6 +133,13 @@ export default function AdminLayout({
             label="Properties" 
             href="/dashboard/admin/properties"
             active={pathname.includes('/properties')} 
+            isCollapsed={isCollapsed}
+          />
+          <AdminNavItem 
+            icon={<Tag size={20} />} 
+            label="Property Taxonomy" 
+            href="/dashboard/admin/taxonomy"
+            active={pathname.includes('/taxonomy')} 
             isCollapsed={isCollapsed}
           />
           <AdminNavItem 
