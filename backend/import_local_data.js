@@ -133,31 +133,48 @@ async function main() {
   }
   
   console.log('Running URL fix script...');
-  const oldHosts = ['192.168.0.207:9000', 'localhost:3000', '127.0.0.1:3000'];
+  const oldHosts = ['192.168.0.207:9000', 'localhost:9000', '127.0.0.1:9000'];
   const newBase = 'https://api.kibabii.generexcom.com/s3';
+
+  // Helper to fix a single URL
+  const fixUrl = (url) => {
+    if (!url) return url;
+    let newUrl = url;
+    for (const host of oldHosts) {
+      if (newUrl.includes(host)) {
+        newUrl = newUrl.replace(new RegExp(`https?://${host}`, 'g'), newBase);
+        newUrl = newUrl.replace(new RegExp(host, 'g'), newBase.replace('https://', ''));
+      }
+    }
+    return newUrl;
+  };
 
   // Fix Properties
   const properties = await prisma.property.findMany();
   for (const prop of properties) {
-    let updated = false;
-    const newImages = prop.images.map(img => {
-      let newImg = img;
-      for (const host of oldHosts) {
-        if (newImg.includes(host)) {
-          newImg = newImg.replace(new RegExp(`https?://${host}`, 'g'), newBase);
-          newImg = newImg.replace(new RegExp(host, 'g'), newBase.replace('https://', ''));
-          updated = true;
-        }
+    const newImages = prop.images.map(fixUrl);
+    const newTemplate = fixUrl(prop.agreementTemplateUrl);
+    
+    await prisma.property.update({
+      where: { id: prop.id },
+      data: { 
+        images: newImages,
+        agreementTemplateUrl: newTemplate
       }
-      return newImg;
     });
+    console.log(`✅ Fixed URLs for property: ${prop.name}`);
+  }
 
-    if (updated) {
-      await prisma.property.update({
-        where: { id: prop.id },
-        data: { images: newImages }
+  // Fix User Avatars
+  const users = await prisma.user.findMany();
+  for (const user of users) {
+    if (user.avatar) {
+      const newAvatar = fixUrl(user.avatar);
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { avatar: newAvatar }
       });
-      console.log(`✅ Fixed URLs for property: ${prop.name}`);
+      console.log(`✅ Fixed avatar for user: ${user.email}`);
     }
   }
 
