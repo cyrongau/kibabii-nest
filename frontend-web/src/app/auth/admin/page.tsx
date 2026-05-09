@@ -31,6 +31,17 @@ export default function AdminLoginPage() {
 
       if (response.ok) {
         const data = await response.json();
+        
+        // Strictly allow only ADMINs
+        if (data.user?.role !== 'ADMIN') {
+          showAlert({
+            title: 'Unauthorized',
+            message: 'This portal is restricted to system administrators only.',
+            type: 'error'
+          });
+          return;
+        }
+
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('user', JSON.stringify(data.user));
         router.push('/dashboard/admin');
@@ -39,7 +50,7 @@ export default function AdminLoginPage() {
         showAlert({
           title: 'Access Denied',
           message: data.message || 'Invalid admin credentials or unauthorized access.',
-          type: 'danger'
+          type: 'error'
         });
       }
     } catch (error) {
