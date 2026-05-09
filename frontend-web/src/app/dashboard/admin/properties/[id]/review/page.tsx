@@ -27,27 +27,13 @@ export default function PropertyReviewPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isEditingUnits, setIsEditingUnits] = useState(false);
   const [isEditingUtilities, setIsEditingUtilities] = useState(false);
-  const [propertyTypes, setPropertyTypes] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
+  const { propertyTypes, categories } = usePropertyTaxonomy();
 
   useEffect(() => {
     fetchProperty();
-    fetchTaxonomy();
   }, [id]);
 
-  const fetchTaxonomy = async () => {
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000";
-      const [typesRes, catsRes] = await Promise.all([
-        fetch(`${baseUrl}/taxonomy/types`),
-        fetch(`${baseUrl}/taxonomy/categories`)
-      ]);
-      if (typesRes.ok) setPropertyTypes(await typesRes.json());
-      if (catsRes.ok) setCategories(await catsRes.json());
-    } catch (error) {
-      console.warn('Failed to fetch taxonomy:', error);
-    }
-  };
+
 
   const fetchProperty = async () => {
     try {
