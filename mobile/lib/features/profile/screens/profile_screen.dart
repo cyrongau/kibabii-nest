@@ -648,7 +648,21 @@ class _AccountDetails extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => context.push('/saved-properties'),
+              icon: const Icon(LucideIcons.heart, size: 18),
+              label: const Text('Saved Properties', style: TextStyle(fontWeight: FontWeight.bold)),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                side: BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1)),
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(

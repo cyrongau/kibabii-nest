@@ -33,10 +33,16 @@ import '../features/management/screens/property_edit_screen.dart';
 import '../features/management/screens/settings_screen.dart';
 import '../features/management/screens/wallet_screen.dart';
 
+import '../features/discovery/screens/saved_properties_screen.dart';
+
 class AppRouter {
   static final router = GoRouter(
     initialLocation: '/onboarding',
     routes: [
+      GoRoute(
+        path: '/saved-properties',
+        builder: (context, state) => const SavedPropertiesScreen(),
+      ),
       GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingScreen(),

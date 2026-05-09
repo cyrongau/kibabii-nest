@@ -99,6 +99,12 @@ export class PaymentsController {
     return this.paymentsService.processOverduePayments();
   }
 
+  @Post('manual')
+  @UseGuards(JwtAuthGuard)
+  async createManualPayment(@Request() req: any, @Body() data: any) {
+    return this.paymentsService.createManualPayment(req.user.userId, data);
+  }
+
   @Get('history')
   @UseGuards(JwtAuthGuard)
   async getHistory(@Request() req: any) {

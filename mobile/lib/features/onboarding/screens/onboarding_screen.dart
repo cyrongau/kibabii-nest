@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:ui';
+import '../../services/auth_service.dart';
+import '../../core/widgets/app_modals.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -13,6 +15,37 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  final AuthService _authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    // Add a small delay for smooth transition
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
+
+    final token = await _authService.getToken();
+    final user = await _authService.getUser();
+
+    if (token != null && user != null) {
+      debugPrint("OnboardingScreen: Found active session for user: ${user['email']}");
+      final role = user['role']?.toString().toUpperCase();
+      
+      if (mounted) {
+        if (role == 'ADMIN') {
+          context.go('/admin');
+        } else if (role == 'LANDLORD') {
+          context.go('/landlord-dashboard');
+        } else {
+          context.go('/');
+        }
+      }
+    }
+  }
 
   final List<OnboardingData> _pages = [
     OnboardingData(

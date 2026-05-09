@@ -4,7 +4,9 @@ import '../../../services/api_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../services/payment_service.dart';
+import '../../../core/widgets/app_modals.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String price;
@@ -41,13 +43,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _smsController = TextEditingController();
   bool _isProcessing = false;
-  String _selectedMethod = 'mpesa'; // mpesa, bank, manual
-  int _selectedMonths = 1; // 1, 3, 6, 12
+  String _selectedMethod = 'mpesa'; // mpesa, wallet, manual
+  int _selectedMonths = 1;
   String? _checkoutRequestId;
   Timer? _pollingTimer;
   Timer? _countdownTimer;
   int _countdownSeconds = 60;
   double _walletBalance = 0.0;
+  XFile? _receiptImage;
+  final ImagePicker _picker = ImagePicker();
   Map<String, dynamic>? _userProfile;
 
   @override
@@ -99,155 +103,187 @@ class _PaymentScreenState extends State<PaymentScreen> {
     super.dispose();
   }
 
+  Future<void> _pickImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1200,
+        maxHeight: 1200,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        setState(() {
+          _receiptImage = image;
+        });
+      }
+    } catch (e) {
+      AppModals.showError(
+        context: context,
+        title: 'Error',
+        message: 'Failed to pick image: $e',
+      );
+    }
+  }
+
+  Future<void> _scanImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1200,
+        maxHeight: 1200,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        setState(() {
+          _receiptImage = image;
+        });
+      }
+    } catch (e) {
+      AppModals.showError(
+        context: context,
+        title: 'Error',
+        message: 'Failed to open camera: $e',
+      );
+    }
+  }
+
   void _processPayment() async {
     if (_selectedMethod == 'mpesa' && _phoneController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your phone number')),
-      );
+      AppModals.showError(context: context, title: 'Input Required', message: 'Please enter your phone number');
       return;
     }
 
-    if (_selectedMethod == 'manual' && _smsController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please paste the payment SMS or receipt details')),
-      );
+    if (_selectedMethod == 'manual' && _smsController.text.isEmpty && _receiptImage == null) {
+      AppModals.showError(context: context, title: 'Input Required', message: 'Please provide a receipt image or paste the SMS proof');
       return;
     }
 
     setState(() => _isProcessing = true);
-    
-    // 1. Create the booking/payment in the backend
-    final double rent = double.tryParse(widget.price.replaceAll(',', '')) ?? 0.0;
-    final double serviceFee = widget.isTenancyPayment ? 0.0 : (double.tryParse(widget.extraCharges?['serviceFee']?.toString() ?? '') ?? 150.0);
-    final double securityDeposit = widget.isTenancyPayment ? 0.0 : (double.tryParse(widget.extraCharges?['securityDeposit']?.toString() ?? '') ?? 0.0);
-    final double discountPct = widget.isTenancyPayment ? 0.0 : (double.tryParse(widget.extraCharges?['upfrontDiscountPct']?.toString() ?? '0') ?? 0.0);
-    
-    double subtotal = (rent * _selectedMonths);
-    if (!widget.isTenancyPayment && _selectedMonths > 1) {
-      subtotal = subtotal * (1 - (discountPct / 100));
-    }
-    final double totalAmount = subtotal + serviceFee + securityDeposit;
 
     try {
-      Map<String, dynamic>? booking;
-      
-      if (widget.isTenancyPayment) {
-        // For rent payments, we might already have a payment record or need to create one
-        // For now, we assume we create a 'rent' booking/payment
-        booking = await _apiService.post('/payments/initiate-rent', {
-          'tenancyId': widget.tenancyId,
-          'amount': totalAmount,
-          'monthCount': _selectedMonths,
-        });
-      } else {
-        booking = await _apiService.createBooking(
-          propertyUnitId: widget.propertyUnitId,
-          amount: totalAmount,
-          months: _selectedMonths,
-        );
-      }
-
-      if (booking == null) {
-        if (mounted) {
-          setState(() => _isProcessing = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(widget.isTenancyPayment ? 'Failed to initiate rent payment.' : 'Failed to create booking. Please ensure the property has available units.')),
-          );
-        }
-        return;
-      }
-
-      // 2. Handle M-Pesa STK Push
-      if (_selectedMethod == 'mpesa') {
-        final res = await _paymentService.initiateMpesa(
-          paymentId: booking['id'],
-          phoneNumber: _phoneController.text.trim(),
-        );
-
-        if (res != null && res['success'] == true) {
-          _checkoutRequestId = res['checkoutRequestID'];
-          _startPolling(booking);
-        } else {
-          if (mounted) {
-            setState(() => _isProcessing = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(res?['message'] ?? 'Failed to initiate M-Pesa payment')),
-            );
-          }
-        }
-        return;
-      }
-
-      // 2b. Handle Wallet Payment
       if (_selectedMethod == 'wallet') {
-        try {
-          final res = await _paymentService.payWithWallet(booking['id']);
-          if (mounted && res != null && res['success'] == true) {
-            setState(() => _isProcessing = false);
-            context.push('/booking-confirmation', extra: {
-              'price': totalAmount,
-              'method': 'wallet',
-              'isPending': false,
-              'bookingId': booking['id'],
-              'propertyName': widget.propertyName,
-              'unitType': widget.unitName ?? widget.extraCharges?['unitType'] ?? 'Standard Unit',
-            });
-          } else {
-            if (mounted) {
-              setState(() => _isProcessing = false);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(res?['message'] ?? 'Wallet payment failed. Please check your balance.')),
-              );
-            }
-          }
-        } catch (e) {
+        final paymentId = await _getOrCreatePayment();
+        if (paymentId == null) throw Exception('Failed to initialize payment');
+
+        final response = await _paymentService.payWithWallet(paymentId);
+        if (response != null && response['success'] == true) {
           if (mounted) {
-            setState(() => _isProcessing = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Wallet payment error: $e')),
+            AppModals.showSuccess(
+              context: context,
+              title: 'Payment Successful',
+              message: 'Your payment has been processed from your wallet.',
+              onConfirm: () => context.go('/dashboard'),
             );
           }
-        }
-        return;
-      }
-
-      // 3. Handle Manual/Bank (Log transaction)
-      final success = await _paymentService.captureManualPayment(
-        bookingId: booking['id'] ?? 'NEST-AUTO',
-        amount: totalAmount.toString(),
-        method: _selectedMethod,
-        reference: _selectedMethod == 'bank' ? 'BANK_TRANS' : 'MANUAL_SCAN',
-        rawData: _selectedMethod == 'manual' ? _smsController.text : null,
-      );
-
-      if (mounted) {
-        setState(() => _isProcessing = false);
-        if (success) {
-          context.push('/booking-confirmation', extra: {
-            'price': totalAmount,
-            'method': _selectedMethod,
-            'isPending': true,
-            'bookingId': booking['id'],
-            'propertyName': widget.propertyName,
-            'unitType': widget.unitName ?? widget.extraCharges?['unitType'] ?? 'Standard Unit',
-          });
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to submit payment proof. Please try again.')),
+          throw Exception(response?['message'] ?? 'Wallet payment failed');
+        }
+      } else if (_selectedMethod == 'manual') {
+        // Show processing modal for AI scanning
+        if (mounted) {
+          AppModals.showLoading(
+            context: context,
+            title: 'Scanning Proof',
+            message: 'Our AI is extracting details from your receipt. Please wait...',
           );
+        }
+
+        String? fileUrl;
+        if (_receiptImage != null) {
+          try {
+            fileUrl = await _apiService.uploadImage(File(_receiptImage!.path), folder: 'receipts');
+          } catch (e) {
+            if (mounted) Navigator.of(context).pop(); // Dismiss loading
+            throw Exception('Failed to upload receipt image: $e');
+          }
+        }
+
+        final bookingId = await _getOrCreateBooking();
+        if (bookingId == null) {
+          if (mounted) Navigator.of(context).pop();
+          throw Exception('Failed to create booking or initialize payment');
+        }
+
+        final success = await _paymentService.captureManualPayment(
+          bookingId: bookingId,
+          amount: widget.price.replaceAll(RegExp(r'[^0-9.]'), ''),
+          method: 'MANUAL',
+          reference: 'MANUAL-${DateTime.now().millisecondsSinceEpoch}',
+          rawData: _smsController.text,
+          fileUrl: fileUrl,
+        );
+
+        if (mounted) {
+          Navigator.of(context).pop(); // Dismiss loading modal
+          
+          if (success) {
+            AppModals.showSuccess(
+              context: context,
+              title: 'Proof Submitted',
+              message: 'Your payment proof has been submitted. Please wait for the landlord to verify it.',
+              onConfirm: () => context.go('/dashboard'),
+            );
+          } else {
+            throw Exception('Failed to submit payment proof. Please try again or contact support.');
+          }
+        }
+      } else {
+        // M-Pesa logic
+        final paymentId = await _getOrCreatePayment();
+        if (paymentId == null) throw Exception('Failed to initialize payment');
+
+        final response = await _paymentService.initiateMpesa(
+          paymentId: paymentId,
+          phoneNumber: _phoneController.text,
+        );
+
+        if (response != null && response['success'] == true) {
+          setState(() {
+            _checkoutRequestId = response['checkoutRequestID'];
+          });
+          _startPolling();
+          _startCountdown();
+        } else {
+          throw Exception(response?['message'] ?? 'Failed to initiate M-Pesa');
         }
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isProcessing = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: $e')),
+        AppModals.showError(
+          context: context,
+          title: 'Payment Error',
+          message: e.toString().replaceAll('Exception: ', ''),
         );
       }
+    } finally {
+      if (mounted) setState(() => _isProcessing = false);
     }
   }
 
-  void _startPolling(dynamic booking) {
+  Future<String?> _getOrCreateBooking() async {
+    if (widget.isTenancyPayment) {
+       // For tenancy payments, we need to find the pending payment ID
+       final history = await _paymentService.getPaymentHistory();
+       final currentPayment = history.firstWhere(
+         (p) => p['tenancyId'] == widget.tenancyId && p['status'] == 'PENDING',
+         orElse: () => <String, dynamic>{},
+       );
+       return currentPayment['id']?.toString();
+    }
+
+    final bookingRes = await _apiService.createBooking(
+      propertyUnitId: widget.propertyUnitId,
+      amount: double.tryParse(widget.price.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0,
+      months: _selectedMonths,
+    );
+    return bookingRes?['id']?.toString();
+  }
+
+  Future<String?> _getOrCreatePayment() async {
+    return await _getOrCreateBooking();
+  }
+
+  void _startCountdown() {
     _countdownSeconds = 60;
     _countdownTimer?.cancel();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -261,29 +297,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
         });
       }
     });
+  }
 
+  void _startPolling() {
     int attempts = 0;
     _pollingTimer?.cancel();
     _pollingTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       attempts++;
-      if (attempts > 20) { // Timeout after 60 seconds
+      if (attempts > 20) {
         timer.cancel();
         _countdownTimer?.cancel();
-        if (mounted) {
-          setState(() => _isProcessing = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Payment timeout. We will verify once the callback is received.')),
-          );
-          // Still go to confirmation but marked as pending
-          context.push('/booking-confirmation', extra: {
-            'price': booking['amount'],
-            'method': 'mpesa',
-            'isPending': true,
-            'bookingId': booking['id'],
-            'propertyName': widget.propertyName,
-            'unitType': widget.unitName ?? widget.extraCharges?['unitType'] ?? 'Standard Unit',
-          });
-        }
+        if (mounted) setState(() => _isProcessing = false);
         return;
       }
 
@@ -294,22 +318,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
           _countdownTimer?.cancel();
           if (mounted) {
             setState(() => _isProcessing = false);
-            context.push('/booking-confirmation', extra: {
-              'price': booking['amount'],
-              'method': 'mpesa',
-              'isPending': false,
-              'bookingId': booking['id'],
-              'propertyName': widget.propertyName,
-              'unitType': widget.unitName ?? widget.extraCharges?['unitType'] ?? 'Standard Unit',
-            });
-          }
-        } else if (status != null && status['status'] == 'FAILED') {
-          timer.cancel();
-          _countdownTimer?.cancel();
-          if (mounted) {
-            setState(() => _isProcessing = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(status['message'] ?? 'M-Pesa payment failed')),
+            AppModals.showSuccess(
+              context: context,
+              title: 'Payment Received',
+              message: 'Your payment was successful.',
+              onConfirm: () => context.go('/dashboard'),
             );
           }
         }
@@ -373,15 +386,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               const SizedBox(height: 12),
               _buildPaymentMethod(
-                id: 'bank',
-                title: 'Direct Bank Transfer',
-                subtitle: 'Transfer to landlord account',
-                icon: LucideIcons.landmark,
-                color: const Color(0xFF3B82F6),
-                colorScheme: colorScheme,
-              ),
-              const SizedBox(height: 16),
-              _buildPaymentMethod(
                 id: 'manual',
                 title: 'SMS / Receipt Scan',
                 subtitle: 'Upload proof of payment',
@@ -391,8 +395,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               const SizedBox(height: 40),
               if (_selectedMethod == 'mpesa') _buildMpesaInput(colorScheme),
-              if (_selectedMethod == 'bank') _buildBankDetails(colorScheme),
-              if (_selectedMethod == 'manual') _buildManualInput(colorScheme),
+              if (_selectedMethod == 'manual') ..._buildManualInputList(),
               const SizedBox(height: 40),
               _buildPayButton(colorScheme),
               const SizedBox(height: 24),
@@ -499,13 +502,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Widget _buildOrderSummary(ColorScheme colorScheme, bool isDark) {
     final double rent = double.tryParse(widget.price.replaceAll(',', '')) ?? 0.0;
-    final double serviceFee = double.tryParse(widget.extraCharges?['serviceFee']?.toString() ?? '') ?? 150.0;
-    final double securityDeposit = double.tryParse(widget.extraCharges?['securityDeposit']?.toString() ?? '') ?? 0.0;
-    final double discountPct = double.tryParse(widget.extraCharges?['upfrontDiscountPct']?.toString() ?? '0') ?? 0.0;
+    final double serviceFee = widget.isTenancyPayment ? 0.0 : (double.tryParse(widget.extraCharges?['serviceFee']?.toString() ?? '') ?? 150.0);
+    final double securityDeposit = widget.isTenancyPayment ? 0.0 : (double.tryParse(widget.extraCharges?['securityDeposit']?.toString() ?? '') ?? 0.0);
+    final double discountPct = widget.isTenancyPayment ? 0.0 : (double.tryParse(widget.extraCharges?['upfrontDiscountPct']?.toString() ?? '0') ?? 0.0);
     
     double subtotal = (rent * _selectedMonths);
     double discountAmount = 0;
-    if (_selectedMonths > 1 && discountPct > 0) {
+    if (!widget.isTenancyPayment && _selectedMonths > 1 && discountPct > 0) {
       discountAmount = subtotal * (discountPct / 100);
       subtotal = subtotal - discountAmount;
     }
@@ -538,14 +541,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ],
             ),
           ],
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Service Fee', style: GoogleFonts.outfit(color: colorScheme.onSurface.withOpacity(0.5), fontWeight: FontWeight.w500)),
-              Text('Ksh ${serviceFee.toStringAsFixed(0)}', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
-            ],
-          ),
+          if (!widget.isTenancyPayment) ...[
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Service Fee', style: GoogleFonts.outfit(color: colorScheme.onSurface.withOpacity(0.5), fontWeight: FontWeight.w500)),
+                Text('Ksh ${serviceFee.toStringAsFixed(0)}', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
+              ],
+            ),
+          ],
           if (securityDeposit > 0) ...[
             const SizedBox(height: 12),
             Row(
@@ -650,82 +655,117 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildBankDetails(ColorScheme colorScheme) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: colorScheme.primary.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: colorScheme.primary.withOpacity(0.1)),
+  List<Widget> _buildManualInputList() {
+    final colorScheme = Theme.of(context).colorScheme;
+    return [
+      Text(
+        'Upload Receipt or Paste SMS',
+        style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.onSurface),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      const SizedBox(height: 16),
+      Row(
         children: [
-          Text('Landlord Bank Details', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
-          const SizedBox(height: 12),
-          _buildDetailRow('Bank', 'Co-operative Bank', colorScheme),
-          _buildDetailRow('Acc Name', 'Mary Jane (Heights Annex)', colorScheme),
-          _buildDetailRow('Acc Number', '01123456789000', colorScheme),
-          Divider(height: 24, color: colorScheme.onSurface.withOpacity(0.05)),
-          Text(
-            'Transfer the exact amount then paste the transaction code below or upload the receipt.',
-            style: GoogleFonts.outfit(fontSize: 12, color: colorScheme.onSurface.withOpacity(0.5)),
-          ),
-          const SizedBox(height: 12),
-          _buildManualInput(colorScheme),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value, ColorScheme colorScheme) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: GoogleFonts.outfit(fontSize: 13, color: colorScheme.onSurface.withOpacity(0.5))),
-          Text(value, style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildManualInput(ColorScheme colorScheme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: colorScheme.onSurface.withOpacity(0.1)),
-          ),
-          child: TextField(
-            controller: _smsController,
-            maxLines: 3,
-            style: GoogleFonts.outfit(fontSize: 14, color: colorScheme.onSurface),
-            decoration: InputDecoration(
-              hintText: 'Paste M-Pesa SMS or Transaction ID here...',
-              hintStyle: GoogleFonts.outfit(color: colorScheme.onSurface.withOpacity(0.3)),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.all(20),
+          Expanded(
+            child: _buildScanButton(
+              icon: LucideIcons.camera,
+              label: 'Take Photo',
+              onTap: _scanImage,
+              colorScheme: colorScheme,
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        OutlinedButton.icon(
-          onPressed: () {}, // Scan feature
-          icon: const Icon(LucideIcons.camera, size: 18),
-          label: const Text('Scan Receipt'),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: colorScheme.primary,
-            side: BorderSide(color: colorScheme.primary),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildScanButton(
+              icon: LucideIcons.image,
+              label: 'Gallery',
+              onTap: _pickImage,
+              colorScheme: colorScheme,
+            ),
+          ),
+        ],
+      ),
+      if (_receiptImage != null) ...[
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+          ),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  File(_receiptImage!.path),
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  'Receipt Captured Successfully',
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 13, color: colorScheme.primary),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(LucideIcons.x, size: 20),
+                onPressed: () => setState(() => _receiptImage = null),
+                color: colorScheme.error,
+              ),
+            ],
           ),
         ),
       ],
+      const SizedBox(height: 20),
+      Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: colorScheme.onSurface.withOpacity(0.1)),
+        ),
+        child: TextField(
+          controller: _smsController,
+          maxLines: 4,
+          style: GoogleFonts.outfit(fontSize: 14, color: colorScheme.onSurface),
+          decoration: InputDecoration(
+            hintText: 'Paste the M-Pesa SMS or Transaction ID details here (Optional if receipt is uploaded)',
+            hintStyle: GoogleFonts.outfit(color: colorScheme.onSurface.withOpacity(0.3)),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.all(20),
+          ),
+        ),
+      ),
+      const SizedBox(height: 12),
+      Text(
+        '* Manual payments take up to 24 hours to be verified by the landlord.',
+        style: GoogleFonts.outfit(fontSize: 11, color: colorScheme.onSurface.withOpacity(0.4), fontStyle: FontStyle.italic),
+      ),
+    ];
+  }
+
+  Widget _buildScanButton({required IconData icon, required String label, required VoidCallback onTap, required ColorScheme colorScheme}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: colorScheme.onSurface.withOpacity(0.1)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: colorScheme.primary, size: 28),
+            const SizedBox(height: 8),
+            Text(label, style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 13, color: colorScheme.onSurface)),
+          ],
+        ),
+      ),
     );
   }
 
@@ -778,5 +818,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
       ),
     );
-    }
+  }
 }
+

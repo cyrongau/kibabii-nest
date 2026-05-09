@@ -1023,11 +1023,16 @@ class ApiService {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return jsonDecode(response.body);
       }
-      print('API GET Error [$endpoint]: ${response.statusCode} ${response.body}');
-      return null;
+      
+      final errorBody = jsonDecode(response.body);
+      final message = errorBody['message'] ?? 'An error occurred';
+      throw Exception(message is List ? message.join(', ') : message);
     } catch (e) {
+      if (e is Exception && !e.toString().contains('Exception:')) {
+         rethrow;
+      }
       print('API GET Exception [$endpoint]: $e');
-      return null;
+      rethrow;
     }
   }
 
@@ -1044,11 +1049,16 @@ class ApiService {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return jsonDecode(response.body);
       }
-      print('API POST Error [$endpoint]: ${response.statusCode} ${response.body}');
-      return null;
+
+      final errorBody = jsonDecode(response.body);
+      final message = errorBody['message'] ?? 'An error occurred';
+      throw Exception(message is List ? message.join(', ') : message);
     } catch (e) {
+      if (e is Exception && !e.toString().contains('Exception:')) {
+         rethrow;
+      }
       print('API POST Exception [$endpoint]: $e');
-      return null;
+      rethrow;
     }
   }
 }

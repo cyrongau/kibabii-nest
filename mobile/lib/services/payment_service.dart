@@ -9,6 +9,7 @@ class PaymentService {
     required String method,
     required String reference,
     String? rawData,
+    String? fileUrl,
   }) async {
     try {
       final response = await _apiService.post('/payments/manual', {
@@ -17,6 +18,7 @@ class PaymentService {
         'method': method,
         'reference': reference,
         'rawData': rawData,
+        'fileUrl': fileUrl,
       });
       return response != null;
     } catch (e) {

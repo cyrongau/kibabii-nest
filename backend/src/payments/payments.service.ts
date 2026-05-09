@@ -107,9 +107,28 @@ export class PaymentsService {
       aiData = await this.scanReceiptWithAI(data.fileUrl, data.rawText);
     }
 
-    const receipt = await this.prisma.paymentReceipt.create({
-      data: {
+    // Validate amount if extracted by AI
+    const totalDue = payment.amountDue - (payment.discountAmount || 0) + (payment.penaltyAmount || 0);
+    if (aiData.amount !== null && aiData.amount < totalDue) {
+      this.logger.warn(`Insufficient payment proof: extracted Ksh ${aiData.amount}, expected Ksh ${totalDue}`);
+      throw new BadRequestException('Amount paid not sufficient');
+    }
+
+    const receipt = await this.prisma.paymentReceipt.upsert({
+      where: { paymentId },
+      create: {
         paymentId,
+        fileUrl: data.fileUrl || '',
+        rawText: data.rawText,
+        aiTransactionId: aiData.transactionId,
+        aiAmount: aiData.amount,
+        aiDate: aiData.date,
+        aiSenderName: aiData.senderName,
+        aiSenderPhone: aiData.senderPhone,
+        aiConfidence: aiData.confidence,
+        aiRawResponse: aiData.rawResponse,
+      },
+      update: {
         fileUrl: data.fileUrl || '',
         rawText: data.rawText,
         aiTransactionId: aiData.transactionId,
@@ -129,6 +148,35 @@ export class PaymentsService {
     });
 
     return receipt;
+  }
+
+  /**
+   * High-level creation of manual payment (from mobile)
+   */
+  async createManualPayment(userId: string, data: any) {
+    const { bookingId, amount, method, reference, rawData, fileUrl, paymentId: providedPaymentId } = data;
+    
+    let paymentId = providedPaymentId;
+
+    if (!paymentId && bookingId) {
+      const existing = await this.prisma.payment.findUnique({ where: { bookingId } });
+      if (existing) {
+        paymentId = existing.id;
+      } else {
+        const p = await this.prisma.payment.create({
+          data: {
+            bookingId,
+            amountDue: parseFloat(amount) || 0,
+            status: PaymentRecordStatus.PENDING,
+          }
+        });
+        paymentId = p.id;
+      }
+    }
+
+    if (!paymentId) throw new BadRequestException('Payment ID or Booking ID required');
+
+    return this.submitReceipt(paymentId, { fileUrl, rawText: rawData });
   }
 
   /**
@@ -533,7 +581,7 @@ export class PaymentsService {
 
       return {
         transactionId: parsed?.transactionId || null,
-        amount: parsed?.amount || null,
+        amount: (parsed?.amount !== undefined && parsed?.amount !== null) ? Number(parsed.amount) : null,
         date: parsed?.date || null,
         senderName: parsed?.senderName || null,
         senderPhone: parsed?.senderPhone || null,

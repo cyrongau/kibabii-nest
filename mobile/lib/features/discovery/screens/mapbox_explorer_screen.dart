@@ -9,6 +9,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../services/api_service.dart';
 import '../widgets/hostel_card.dart';
+import '../../../core/widgets/app_modals.dart';
 
 class MapboxExplorerScreen extends StatefulWidget {
   final double? targetLat;
@@ -118,8 +119,10 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
           _properties = props;
         });
         if (props.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("No properties found nearby. Check your backend/IP.")),
+          AppModals.showInfo(
+            context: context,
+            title: 'No Properties',
+            message: 'There are no properties listed in this area yet.',
           );
         }
       }
@@ -179,11 +182,13 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
             geometry: mbx.Point(coordinates: pos).toJson(),
             textField: "${prop['name']}\nKsh ${prop['price']}",
             textColor: Colors.white.value,
-            textHaloColor: Colors.blue.value,
-            textHaloWidth: 2.0,
-            textSize: 11.0,
+            textHaloColor: const Color(0xFF3B82F6).value,
+            textHaloWidth: 2.5,
+            textSize: 12.0,
             textOffset: [0, -2.5],
             symbolSortKey: 10.0,
+            iconImage: "marker-15",
+            iconSize: 1.0,
           ),
         );
 
@@ -370,8 +375,10 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
                   if (match != null) {
                     _selectProperty(match);
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("No property found matching '$value'")),
+                    AppModals.showError(
+                      context: context,
+                      title: 'Not Found',
+                      message: 'We couldn\'t find any property matching "$value" in this area.',
                     );
                   }
                 },
@@ -486,9 +493,42 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
     final lng = double.tryParse(_selectedProperty['lng']?.toString() ?? '');
     
     if (lat == null || lng == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error: Property location is missing")),
+      AppModals.showError(
+        context: context,
+        title: 'Location Error',
+        message: 'The selected property location is missing.',
       );
+      return;
+    }
+
+    // 1. Check permissions first
+    var status = await Permission.location.request();
+    if (status.isDenied) {
+      if (mounted) {
+        AppModals.showError(
+          context: context,
+          title: 'Permission Denied',
+          message: 'Location permission is required for turn-by-turn navigation.',
+        );
+      }
+      return;
+    }
+
+    if (status.isPermanentlyDenied) {
+      openAppSettings();
+      return;
+    }
+
+    // 2. Check if location services are enabled
+    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isLocationEnabled) {
+      if (mounted) {
+        AppModals.showError(
+          context: context,
+          title: 'Location Disabled',
+          message: 'Please enable your device\'s location services to start navigation.',
+        );
+      }
       return;
     }
 
@@ -521,13 +561,19 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
           simulateRoute: false,
           language: "en",
           units: VoiceUnits.metric,
+          voiceInstructionsEnabled: true,
+          bannerInstructionsEnabled: true,
         ),
       );
     } catch (e) {
       debugPrint("MapboxExplorerScreen: Navigation Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Navigation failed: $e")),
-      );
+      if (mounted) {
+        AppModals.showError(
+          context: context,
+          title: 'Navigation Failed',
+          message: 'Could not start navigation. This might be due to an incompatible device or missing Google Play Services.',
+        );
+      }
     }
   }
 }

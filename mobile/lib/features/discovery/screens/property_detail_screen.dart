@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
 import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
 import '../widgets/hostel_card.dart';
@@ -93,9 +95,42 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     final lng = widget.longitude;
     
     if (lat == null || lng == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error: Property location is missing")),
+      AppModals.showError(
+        context: context,
+        title: 'Location Error',
+        message: 'The property location is missing.',
       );
+      return;
+    }
+
+    // 1. Check permissions first
+    var status = await Permission.location.request();
+    if (status.isDenied) {
+      if (mounted) {
+        AppModals.showError(
+          context: context,
+          title: 'Permission Denied',
+          message: 'Location permission is required for turn-by-turn navigation.',
+        );
+      }
+      return;
+    }
+
+    if (status.isPermanentlyDenied) {
+      openAppSettings();
+      return;
+    }
+
+    // 2. Check if location services are enabled
+    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isLocationEnabled) {
+      if (mounted) {
+        AppModals.showError(
+          context: context,
+          title: 'Location Disabled',
+          message: 'Please enable your device\'s location services to start navigation.',
+        );
+      }
       return;
     }
 
@@ -125,12 +160,18 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
           simulateRoute: false,
           language: "en",
           units: VoiceUnits.metric,
+          voiceInstructionsEnabled: true,
+          bannerInstructionsEnabled: true,
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Navigation failed: $e")),
-      );
+      if (mounted) {
+        AppModals.showError(
+          context: context,
+          title: 'Navigation Failed',
+          message: 'Could not start navigation. This might be due to an incompatible device or missing Google Play Services.',
+        );
+      }
     }
   }
 
@@ -148,21 +189,20 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     final status = await _apiService.toggleFavorite(widget.id);
     if (mounted) {
       setState(() => _isFavorited = status);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(status ? 'Added to favorites' : 'Removed from favorites'),
-          duration: const Duration(seconds: 1),
-        ),
+      AppModals.showInfo(
+        context: context,
+        title: status ? 'Added to Favorites' : 'Removed',
+        message: status 
+          ? '${widget.name} has been added to your favorites list.'
+          : '${widget.name} has been removed from your favorites.',
       );
     }
   }
   void _scheduleTour() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Tour request sent! The landlord will contact you to confirm a time.'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        action: SnackBarAction(label: 'Got it', textColor: Colors.white, onPressed: () {}),
-      ),
+    AppModals.showSuccess(
+      context: context,
+      title: 'Tour Scheduled',
+      message: 'Your request has been sent! The landlord will contact you shortly to confirm a suitable time.',
     );
   }
 
@@ -1170,8 +1210,10 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                       Navigator.pop(context);
                       _loadData();
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Failed to submit review. You must have a confirmed booking.')),
+                      AppModals.showError(
+                        context: context,
+                        title: 'Submission Failed',
+                        message: 'You must have a confirmed booking at this property to leave a review.',
                       );
                     }
                   },
