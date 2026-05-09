@@ -36,6 +36,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/fix_db_urls.js ./fix_db_urls.js
+COPY --from=builder /app/import_local_data.js ./import_local_data.js
 
 # Create uploads directory
 RUN mkdir -p uploads
