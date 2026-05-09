@@ -47,7 +47,7 @@ export default function TaxonomyManager() {
       const data = await res.json();
       setItems(data);
     } catch (err) {
-      showToast('Could not load taxonomy data', 'danger');
+      showToast('Could not load taxonomy data', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -73,10 +73,10 @@ export default function TaxonomyManager() {
         fetchItems();
       } else {
         const error = await res.json();
-        showToast(error.message || 'Failed to save item', 'danger');
+        showToast(error.message || 'Failed to save item', 'error');
       }
     } catch (err) {
-      showToast('Connection error', 'danger');
+      showToast('Connection error', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -97,7 +97,7 @@ export default function TaxonomyManager() {
         showToast('Cannot delete item in use', 'warning');
       }
     } catch (err) {
-      showToast('Failed to delete', 'danger');
+      showToast('Failed to delete', 'error');
     }
   };
 
