@@ -27,13 +27,21 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${plusJakartaSans.variable} antialiased`}>
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_WEB_CLIENT_ID || ""}>
+        {process.env.NEXT_PUBLIC_GOOGLE_WEB_CLIENT_ID ? (
+          <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_WEB_CLIENT_ID}>
+            <ThemeProvider>
+              <NotificationProvider>
+                {children}
+              </NotificationProvider>
+            </ThemeProvider>
+          </GoogleOAuthProvider>
+        ) : (
           <ThemeProvider>
             <NotificationProvider>
               {children}
             </NotificationProvider>
           </ThemeProvider>
-        </GoogleOAuthProvider>
+        )}
       </body>
     </html>
   );

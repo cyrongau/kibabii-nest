@@ -15,6 +15,14 @@ export default function LandlordAuthPage() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
+  React.useEffect(() => {
+    // Check if we should start in register mode
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('mode') === 'register') {
+      setIsLogin(false);
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
