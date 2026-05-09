@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, Mail, Lock, User, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { Building2, Mail, Lock, User, ArrowRight, Loader2, CheckCircle2, Smartphone, Download, X } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useNotifications } from '@/context/NotificationContext';
@@ -15,6 +15,7 @@ function LandlordAuthContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [showMobileModal, setShowMobileModal] = useState(false);
 
   const searchParams = useSearchParams();
   const mode = searchParams.get('mode');
@@ -46,6 +47,13 @@ function LandlordAuthContent() {
 
       if (response.ok) {
         const data = await response.json();
+        
+        // Strictly deny student/tenant login on web
+        if (data.user?.role === 'STUDENT' || data.user?.role === 'TENANT') {
+          setShowMobileModal(true);
+          return;
+        }
+
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('user', JSON.stringify(data.user));
         router.push('/dashboard/landlord');
@@ -53,7 +61,7 @@ function LandlordAuthContent() {
         showAlert({
           title: 'Authentication Failed',
           message: 'Please check your email and password. Ensure you are registered as a landlord.',
-          type: 'danger'
+          type: 'error'
         });
       }
     } catch (error) {
@@ -128,6 +136,19 @@ function LandlordAuthContent() {
                 {isLogin ? 'Access your dashboard' : 'Start listing your properties today'}
               </p>
             </header>
+
+            {/* Mobile App Warning Card */}
+            <div className="mb-8 p-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 rounded-3xl flex items-start gap-4">
+              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-600/20">
+                <Smartphone className="text-white" size={20} />
+              </div>
+              <div>
+                <h4 className="text-sm font-black text-blue-900 dark:text-blue-100 uppercase tracking-wider mb-1">Student Portal</h4>
+                <p className="text-xs text-blue-700 dark:text-blue-300 font-bold leading-relaxed">
+                  Students and tenants should access registration and authentication exclusively via the mobile app.
+                </p>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {!isLogin && (
@@ -209,13 +230,57 @@ function LandlordAuthContent() {
             </footer>
           </div>
 
-          <div className="mt-8 flex justify-center gap-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            <a href="#" className="hover:text-slate-600">Privacy Policy</a>
-            <a href="#" className="hover:text-slate-600">Terms of Service</a>
-            <a href="#" className="hover:text-slate-600">Contact Support</a>
+      </div>
+
+      {/* Mobile App Redirect Modal */}
+      {showMobileModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setShowMobileModal(false)} />
+          <div className="bg-white dark:bg-slate-950 w-full max-w-lg rounded-[3rem] shadow-2xl relative overflow-hidden animate-in zoom-in-95 fade-in duration-300">
+            <button 
+              onClick={() => setShowMobileModal(false)}
+              className="absolute top-8 right-8 p-3 bg-slate-50 dark:bg-slate-900 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <X size={20} />
+            </button>
+            
+            <div className="p-12 text-center">
+              <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <Smartphone size={40} />
+              </div>
+              
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-4 uppercase italic">Mobile Required</h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-10">
+                To provide the best student housing experience, including real-time maps and secure digital contracts, the Student Portal is exclusively available on our mobile application.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Download Now</div>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all group active:scale-95 shadow-xl">
+                    <Download size={20} />
+                    <div className="text-left">
+                      <div className="text-[10px] opacity-60 leading-none uppercase">Available on</div>
+                      <div className="text-lg leading-tight font-black">App Store</div>
+                    </div>
+                  </button>
+                  <button className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all group active:scale-95 shadow-xl">
+                    <Smartphone size={20} />
+                    <div className="text-left">
+                      <div className="text-[10px] opacity-60 leading-none uppercase">Get it on</div>
+                      <div className="text-lg leading-tight font-black">Google Play</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-slate-50 dark:bg-slate-900/50 p-6 text-center border-t border-slate-100 dark:border-slate-800">
+              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Kibabii Nest Ecosystem</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
