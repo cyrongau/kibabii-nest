@@ -24,7 +24,7 @@ interface AlertOptions {
   message: string;
   confirmText?: string;
   cancelText?: string;
-  type?: 'info' | 'danger' | 'warning';
+  type?: 'info' | 'danger' | 'warning' | 'error';
   onConfirm?: () => void;
   onCancel?: () => void;
 }

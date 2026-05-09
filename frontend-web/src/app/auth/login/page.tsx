@@ -44,7 +44,7 @@ export default function AuthLoginRedirect() {
         showAlert({
           title: 'Access Denied',
           message: data.message || 'Invalid credentials or unauthorized access.',
-          type: 'error'
+          type: 'danger'
         });
       }
     } catch (error) {

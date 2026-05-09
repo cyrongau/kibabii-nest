@@ -34,10 +34,7 @@ export default function AdminLoginPage() {
         
         // Strictly allow only ADMINs
         if (data.user?.role !== 'ADMIN') {
-          showAlert({
-            title: 'Unauthorized',
-            message: 'This portal is restricted to system administrators only.',
-            type: 'error'
+            type: 'danger'
           });
           return;
         }
@@ -50,7 +47,7 @@ export default function AdminLoginPage() {
         showAlert({
           title: 'Access Denied',
           message: data.message || 'Invalid admin credentials or unauthorized access.',
-          type: 'error'
+          type: 'danger'
         });
       }
     } catch (error) {
