@@ -10,16 +10,24 @@ export class NotificationsService implements OnModuleInit {
   constructor(private prisma: PrismaService) {}
 
   async onModuleInit() {
-    // Initialize Firebase Admin if credentials exist
+    // 1. Ensure default config exists
     try {
-      const config = await this.prisma.systemConfig.findUnique({ where: { id: 'default' } });
+      let config = await this.prisma.systemConfig.findUnique({ where: { id: 'default' } });
+      if (!config) {
+        config = await this.prisma.systemConfig.create({
+          data: { id: 'default' }
+        });
+        console.log('✅ Default system configuration created');
+      }
+
+      // 2. Initialize Firebase Admin if credentials exist
       if (config?.firebaseConfig && admin.apps.length === 0) {
         admin.initializeApp({
           credential: admin.credential.cert(config.firebaseConfig as any),
         });
       }
     } catch (error) {
-      console.warn('Firebase initialization skipped: No config found');
+      console.warn('System initialization warning:', error.message);
     }
   }
 

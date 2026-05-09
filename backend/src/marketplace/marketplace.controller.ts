@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Body, UseGuards, Request, Patch, Param, Query, Delete } from '@nestjs/common';
 import { MarketplaceService } from './marketplace.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 
 @Controller('marketplace')
 export class MarketplaceController {
@@ -44,5 +46,20 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard)
   async deleteItem(@Request() req, @Param('id') id: string) {
     return this.marketplaceService.deleteItem(req.user.userId, id);
+  }
+
+  // Admin Endpoints
+  @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  async getAllAdmin(@Query() filters: any) {
+    return this.marketplaceService.findAllAdmin(filters);
+  }
+
+  @Patch('admin/:id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  async updateStatus(@Param('id') id: string, @Body() data: { status: string; rejectionReason?: string }) {
+    return this.marketplaceService.updateStatus(id, data.status, data.rejectionReason);
   }
 }

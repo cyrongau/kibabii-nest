@@ -137,10 +137,36 @@ export class UsersService {
   }
 
   async verifyLandlord(id: string, verified: boolean) {
-    return this.prisma.user.update({
-      where: { id },
-      data: { isVerifiedLandlord: verified },
-      select: { id: true, name: true, email: true, isVerifiedLandlord: true },
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.update({
+        where: { id },
+        data: { isVerifiedLandlord: verified },
+        select: { id: true, name: true, email: true, isVerifiedLandlord: true },
+      });
+
+      // Synchronize with LandlordKyc if it exists
+      const kyc = await tx.landlordKyc.findUnique({ where: { userId: id } });
+      if (kyc) {
+        await tx.landlordKyc.update({
+          where: { id: kyc.id },
+          data: { status: verified ? 'APPROVED' : 'REJECTED' }
+        });
+      } else if (verified) {
+        // If verified manually but no KYC record, create a dummy one to show up in the lists if needed
+        // but it's better to just fetch users in the KYC list.
+        // For now, let's just create one so they show up in the "APPROVED" tab of the KYC page.
+        await tx.landlordKyc.create({
+          data: {
+            userId: id,
+            idDocumentUrl: '',
+            ownershipProofUrl: '',
+            status: 'APPROVED',
+            aiAnalysis: { note: 'Manually verified via admin terminal' }
+          }
+        });
+      }
+
+      return user;
     });
   }
 

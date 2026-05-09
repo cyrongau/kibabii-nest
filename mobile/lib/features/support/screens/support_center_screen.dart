@@ -114,6 +114,15 @@ class SupportCenterScreen extends StatelessWidget {
                     Colors.orange,
                     () => _showGuide(context, 'safety', colorScheme),
                   ),
+                  const SizedBox(height: 12),
+                  _buildGuideCard(
+                    context,
+                    LucideIcons.layers,
+                    'Property Classifications',
+                    'Learn the difference between Hostels, Apartments, and more.',
+                    const Color(0xFF8B5CF6),
+                    () => _showGuide(context, 'classification', colorScheme),
+                  ),
                 ],
               ),
             ),
@@ -304,7 +313,8 @@ class SupportCenterScreen extends StatelessWidget {
       steps = [
         {'title': 'Browse Properties', 'desc': 'Explore hostels on the discovery home screen. Use filters to narrow down by category or price.'},
         {'title': 'Select your Unit', 'desc': 'Open a property to see available units (Single, Bedsitter, etc.). Check amenities and distance to campus.'},
-        {'title': 'Submit Booking', 'desc': 'Click "Book Now", choose your move-in date and duration, then submit your request.'},
+        {'title': 'Schedule a Physical Tour', 'desc': 'Before paying, we highly recommend using the "Navigate" button to find the property and the "Schedule Tour" button to view it physically.'},
+        {'title': 'Submit Booking', 'desc': 'Once satisfied, click "Book Now", choose your move-in date and duration, then submit your request.'},
         {'title': 'Wait for Approval', 'desc': 'The landlord will review your booking. You will be notified via chat or notifications once approved.'},
         {'title': 'Complete Payment', 'desc': 'After approval, go to "My Tenancy" to pay your rent and deposit via M-Pesa to confirm your room.'},
       ];
@@ -315,6 +325,15 @@ class SupportCenterScreen extends StatelessWidget {
         {'title': 'Safety First', 'desc': 'Never send money to a seller before seeing the item. Always meet in public places like campus security zones.'},
         {'title': 'Buying Items', 'desc': 'Browse items by category. Use the "In-App Chat" or "Call" button to contact the seller directly.'},
         {'title': 'Selling Tips', 'desc': 'Describe your item honestly. Mention any flaws and why you are selling. Honest sellers build better trust.'},
+      ];
+    } else if (type == 'classification') {
+      title = 'Property Classifications';
+      steps = [
+        {'title': 'Hostels', 'desc': 'Specifically designed for students. Usually feature Single, Double, or Bedsitter units with shared or private amenities.'},
+        {'title': 'Bedsitters', 'desc': 'A single room that combines the bedroom, living area, and kitchenette. Private bathroom is usually attached.'},
+        {'title': 'Single Rooms', 'desc': 'A single bedroom with shared kitchen and bathroom facilities. The most affordable option for students.'},
+        {'title': 'Apartments', 'desc': 'Multi-room residential units (1-bedroom, 2-bedroom). Best for students sharing or those wanting more space.'},
+        {'title': 'Rental Houses', 'desc': 'Standalone houses or cottages. Offers more privacy but may be further from campus.'},
       ];
     } else {
       title = 'Safety & Verification';

@@ -67,27 +67,78 @@ export class KycService {
     this.logger.log(`Fetching all KYC with filters: ${JSON.stringify(filters)}`);
     const { status, search, userId } = filters;
     
-    const where: any = {};
-    if (status) where.status = status;
-    if (userId) where.userId = userId;
+    // 1. Build where clause
+    const where: any = {
+      role: 'LANDLORD',
+      id: userId || undefined,
+    };
+
     if (search) {
-      where.user = {
-        OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { email: { contains: search, mode: 'insensitive' } }
-        ]
-      };
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } }
+      ];
     }
 
-    const records = await this.prisma.landlordKyc.findMany({
+    // 2. Add status-specific filtering
+    if (status?.toString() === 'APPROVED') {
+      where.AND = [
+        {
+          OR: [
+            { kyc: { status: 'APPROVED' as any } },
+            { isVerifiedLandlord: true }
+          ]
+        }
+      ];
+    } else if (status) {
+      where.kyc = { status: status as any };
+    }
+
+    const users = await this.prisma.user.findMany({
       where,
-      include: {
-        user: { select: { name: true, email: true, phone: true } }
-      },
-      orderBy: { updatedAt: 'desc' }
+      include: { kyc: true },
+      orderBy: { createdAt: 'desc' },
     });
-    this.logger.log(`Found ${records.length} KYC records for status ${status}`);
-    return records;
+
+    this.logger.log(`[KycService] Found ${users.length} users for filter: ${JSON.stringify(where)}`);
+
+    return users.map(user => {
+      // If there's no KYC record but they are verified, synthesize a record
+      if (!user.kyc && user.isVerifiedLandlord) {
+        return {
+          id: `synth-${user.id}`,
+          userId: user.id,
+          status: 'APPROVED',
+          idDocumentUrl: '',
+          ownershipProofUrl: '',
+          createdAt: user.createdAt,
+          updatedAt: user.createdAt,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            avatar: user.avatar
+          }
+        };
+      }
+      
+      // Return the actual KYC record with user details
+      if (user.kyc) {
+        return {
+          ...user.kyc,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            avatar: user.avatar
+          }
+        };
+      }
+
+      return null;
+    }).filter(Boolean);
   }
 
   async verifyKyc(id: string, approved: boolean, reason?: string) {

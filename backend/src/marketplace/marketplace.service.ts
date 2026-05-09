@@ -86,4 +86,52 @@ export class MarketplaceService {
       data,
     });
   }
+
+  async findAllAdmin(filters: { status?: string; search?: string; page?: number; limit?: number; sellerId?: string } = {}) {
+    const { status, search, page = 1, limit = 25, sellerId } = filters;
+
+    const where: any = {};
+    if (status) where.status = status;
+    if (sellerId) where.sellerId = sellerId;
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { seller: { name: { contains: search, mode: 'insensitive' } } },
+      ];
+    }
+
+    const [items, total] = await Promise.all([
+      this.prisma.marketplaceItem.findMany({
+        where,
+        include: { 
+          seller: { 
+            select: { 
+              id: true, 
+              name: true, 
+              email: true, 
+              phone: true, 
+              avatar: true,
+              createdAt: true,
+              isVerifiedLandlord: true,
+              _count: { select: { marketplaceItems: true } }
+            } 
+          } 
+        },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: (page - 1) * limit,
+      }),
+      this.prisma.marketplaceItem.count({ where }),
+    ]);
+
+    return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
+  }
+
+  async updateStatus(id: string, status: any, rejectionReason?: string) {
+    return this.prisma.marketplaceItem.update({
+      where: { id },
+      data: { status, rejectionReason },
+    });
+  }
 }

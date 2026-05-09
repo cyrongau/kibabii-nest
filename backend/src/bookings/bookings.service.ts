@@ -18,6 +18,25 @@ export class BookingsService {
       include: { property: true, type: true }
     });
     if (!propertyUnit) throw new NotFoundException('Property Unit not found');
+    
+    // Check capacity: Active Tenancies + Pending Bookings
+    const activeTenancies = await this.prisma.tenancy.count({
+      where: {
+        propertyUnitId,
+        status: { in: ['ACTIVE', 'NOTICE_GIVEN', 'BREAK_HOLD'] }
+      }
+    });
+
+    const pendingBookings = await this.prisma.booking.count({
+      where: {
+        propertyUnitId,
+        status: 'PENDING'
+      }
+    });
+
+    if (activeTenancies + pendingBookings >= propertyUnit.totalUnits) {
+      throw new BadRequestException(`This ${propertyUnit.type?.name || 'unit'} is currently full (Capacity: ${propertyUnit.totalUnits}). Please try another unit type or property.`);
+    }
 
     const booking = await this.prisma.booking.create({
       data: {
@@ -96,6 +115,20 @@ export class BookingsService {
 
     // 2. Perform all updates in a transaction
     const result = await this.prisma.$transaction(async (tx) => {
+      // Re-verify capacity before approving
+      if (status === BookingStatus.APPROVED) {
+        const activeTenancies = await tx.tenancy.count({
+          where: {
+            propertyUnitId: booking.propertyUnitId,
+            status: { in: ['ACTIVE', 'NOTICE_GIVEN', 'BREAK_HOLD'] }
+          }
+        });
+
+        if (activeTenancies >= booking.propertyUnit.totalUnits) {
+          throw new BadRequestException('Cannot approve booking: Unit type is full.');
+        }
+      }
+
       // Update booking status
       const updatedBooking = await tx.booking.update({
         where: { id },

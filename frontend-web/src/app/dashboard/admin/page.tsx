@@ -31,7 +31,7 @@ import { useSearchParams } from 'next/navigation';
 
 export default function AdminDashboard() {
   return (
-    <React.Suspense fallback={<div className="p-12 flex flex-col items-center justify-center min-h-screen gap-4"><Loader2 className="animate-spin text-primary" size={48} /><div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">Initializing dashboard...</div></div>}>
+    <React.Suspense fallback={<div className="p-12 flex flex-col items-center justify-center min-h-screen gap-4"><Loader2 className="animate-spin text-primary" size={48} /><div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">Loading admin overview...</div></div>}>
       <AdminDashboardContent />
     </React.Suspense>
   );
@@ -65,7 +65,7 @@ function AdminDashboardContent() {
     return (
       <div className="p-12 min-h-screen flex flex-col items-center justify-center gap-6 text-muted-foreground/40 font-black">
         <Loader2 className="animate-spin text-primary" size={48} />
-        <span className="text-[10px] font-black uppercase tracking-[0.25em] italic">Aggregating platform data...</span>
+        <span className="text-[10px] font-black uppercase tracking-[0.25em] italic">Loading platform data...</span>
       </div>
     );
   }
@@ -162,10 +162,10 @@ function AdminDashboardContent() {
                  <ShieldCheck className="text-emerald-500" size={24} />
                </div>
                <div className="space-y-10">
-                  <HealthBar label="Core Performance" value={98} icon={<Cpu size={14} />} color="bg-emerald-500" />
-                  <HealthBar label="M-Pesa Gateway Sync" value={100} icon={<TrendingUp size={14} />} color="bg-emerald-500" />
-                  <HealthBar label="Notification Engine" value={92} icon={<Bell size={14} />} color="bg-primary" />
-                  <HealthBar label="S3 Asset Storage" value={85} icon={<Database size={14} />} color="bg-orange-500" />
+                  <HealthBar label="System Speed" value={98} icon={<Cpu size={14} />} color="bg-emerald-500" />
+                  <HealthBar label="Payment Connectivity" value={100} icon={<TrendingUp size={14} />} color="bg-emerald-500" />
+                  <HealthBar label="Alert System" value={92} icon={<Bell size={14} />} color="bg-primary" />
+                  <HealthBar label="File Storage" value={85} icon={<Database size={14} />} color="bg-orange-500" />
                </div>
 
                <div className="mt-16 pt-8 border-t border-border-subtle flex items-center justify-between">
@@ -184,7 +184,7 @@ function AdminDashboardContent() {
         <section className="card-premium p-10 lg:p-14 border-border-subtle shadow-soft-2xl animate-in fade-in zoom-in-95 duration-500">
            <div className="mb-12 space-y-2">
              <h2 className="text-3xl font-black text-foreground tracking-tighter">Property Approvals</h2>
-             <p className="text-muted-foreground font-medium max-w-xl leading-relaxed text-sm">Vetting and verifying new student housing listings before global transmission.</p>
+             <p className="text-muted-foreground font-medium max-w-xl leading-relaxed text-sm">Reviewing and verifying new property listings before they are published.</p>
            </div>
 
            <div className="overflow-x-auto scrollbar-hide">

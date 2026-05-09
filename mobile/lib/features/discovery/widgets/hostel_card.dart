@@ -20,6 +20,7 @@ class HostelCard extends StatefulWidget {
   final double? longitude;
   final List<dynamic>? units;
   final Map<String, dynamic>? extraCharges;
+  final bool isFull;
 
   const HostelCard({
     super.key,
@@ -36,6 +37,7 @@ class HostelCard extends StatefulWidget {
     this.longitude,
     this.units,
     this.extraCharges,
+    this.isFull = false,
   });
 
   @override
@@ -181,6 +183,36 @@ class _HostelCardState extends State<HostelCard> {
                     'VERIFIED',
                     style: GoogleFonts.outfit(
                       color: const Color(0xFF065F46),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        if (widget.isFull)
+          Positioned(
+            top: widget.isVerified ? 50 : 12,
+            left: 12,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.95),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(LucideIcons.alertCircle, color: Colors.white, size: 14),
+                  const SizedBox(width: 4),
+                  Text(
+                    'FULL',
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 0.5,

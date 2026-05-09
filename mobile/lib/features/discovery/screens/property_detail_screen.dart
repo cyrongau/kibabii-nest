@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
-import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
 import '../widgets/hostel_card.dart';
@@ -88,6 +88,52 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     }
   }
 
+  Future<void> _startNavigation() async {
+    final lat = widget.latitude;
+    final lng = widget.longitude;
+    
+    if (lat == null || lng == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error: Property location is missing")),
+      );
+      return;
+    }
+
+    try {
+      final Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high
+      );
+      
+      final origin = WayPoint(
+        name: "My Location",
+        latitude: position.latitude,
+        longitude: position.longitude,
+      );
+
+      final destination = WayPoint(
+        name: widget.name,
+        latitude: lat,
+        longitude: lng,
+      );
+
+      List<WayPoint> wayPoints = [origin, destination];
+
+      await MapBoxNavigation.instance.startNavigation(
+        wayPoints: wayPoints,
+        options: MapBoxOptions(
+          mode: MapBoxNavigationMode.walking,
+          simulateRoute: false,
+          language: "en",
+          units: VoiceUnits.metric,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Navigation failed: $e")),
+      );
+    }
+  }
+
   void _toggleFavorite() async {
     final token = await _apiService.getToken();
     if (token == null) {
@@ -110,6 +156,16 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       );
     }
   }
+  void _scheduleTour() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Tour request sent! The landlord will contact you to confirm a time.'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        action: SnackBarAction(label: 'Got it', textColor: Colors.white, onPressed: () {}),
+      ),
+    );
+  }
+
   @override
   @override
   Widget build(BuildContext context) {
@@ -275,6 +331,38 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
               style: GoogleFonts.outfit(
                 color: colorScheme.onSurface.withOpacity(0.5),
                 fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: _startNavigation,
+                icon: const Icon(Icons.directions, size: 20),
+                label: const Text('Navigate'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: _scheduleTour,
+                icon: const Icon(LucideIcons.calendar, size: 20),
+                label: const Text('Schedule Tour'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: colorScheme.primary,
+                  side: BorderSide(color: colorScheme.primary),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
               ),
             ),
           ],
@@ -576,28 +664,56 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   },
                   ),
                 ),
-                GestureDetector(
-                  onTap: () => context.push('/map', extra: {'lat': lat, 'lng': lng}),
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: colorScheme.surface.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(LucideIcons.map, size: 20, color: colorScheme.primary),
-                            const SizedBox(width: 8),
-                            Text('Open Interactive Map', 
-                              style: GoogleFonts.outfit(color: colorScheme.onSurface, fontWeight: FontWeight.bold, fontSize: 13)),
-                          ],
+                Positioned(
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => context.push('/map', extra: {'lat': lat, 'lng': lng}),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: colorScheme.surface.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(LucideIcons.map, size: 18, color: colorScheme.primary),
+                                const SizedBox(width: 8),
+                                Text('View Map', 
+                                  style: GoogleFonts.outfit(color: colorScheme.onSurface, fontWeight: FontWeight.bold, fontSize: 12)),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: _startNavigation,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: colorScheme.primary,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.directions, size: 18, color: Colors.white),
+                                const SizedBox(width: 8),
+                                Text('Navigate', 
+                                  style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

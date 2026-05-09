@@ -340,6 +340,7 @@ class _DiscoverContentState extends State<_DiscoverContent> {
             rating: prop['avgRating']?.toString() ?? 'New', 
             amenities: const ['Wifi', 'Security'], 
             isVerified: prop['verified'] ?? true,
+            isFull: prop['isFullyOccupied'] ?? false,
             image: (prop['images'] != null && prop['images'].isNotEmpty) 
               ? prop['images'][0] 
               : 'hostel_1.png',

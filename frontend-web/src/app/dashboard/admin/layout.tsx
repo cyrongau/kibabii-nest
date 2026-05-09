@@ -115,7 +115,7 @@ export default function AdminLayout({
           </div>
           {!isCollapsed && (
             <div className="text-xl font-black text-foreground dark:text-white tracking-tighter truncate animate-in fade-in slide-in-from-left-2 duration-300">
-              Kibabii Nest <span className="text-primary italic block text-[10px] -mt-1 uppercase tracking-widest font-black opacity-80">Admin Portal</span>
+              Kibabii Nest <span className="text-primary italic block text-[10px] -mt-1 uppercase tracking-widest font-black opacity-80">Management Console</span>
             </div>
           )}
         </div>
@@ -144,7 +144,7 @@ export default function AdminLayout({
           />
           <AdminNavItem 
             icon={<ShieldCheck size={20} />} 
-            label="KYC Verifications" 
+            label="Identity Verification" 
             href="/dashboard/admin/kyc"
             active={pathname.includes('/kyc')} 
             isCollapsed={isCollapsed}
@@ -158,7 +158,7 @@ export default function AdminLayout({
           />
           <AdminNavItem 
             icon={<Banknote size={20} />} 
-            label="Finance Overwatch" 
+            label="Finance & Payments" 
             href="/dashboard/admin/finance"
             active={pathname.includes('/finance')} 
             isCollapsed={isCollapsed}
@@ -200,7 +200,7 @@ export default function AdminLayout({
           />
           <AdminNavItem 
             icon={<LifeBuoy size={20} />} 
-            label="Support Inbox" 
+            label="Support & Help" 
             href="/dashboard/admin/support"
             active={pathname.includes('/support')} 
             isCollapsed={isCollapsed}
@@ -237,8 +237,8 @@ export default function AdminLayout({
                   className="flex items-center gap-4 pl-6 border-l border-border hover:opacity-80 transition-all outline-none"
                 >
                   <div className="text-right hidden sm:block mr-2">
-                    <div className="text-[13px] font-black text-foreground tracking-tight leading-tight">{user?.name || 'Kibabii Nest Admin'}</div>
-                    <div className="text-[10px] font-bold text-primary uppercase tracking-widest mt-0.5">{user?.role === 'ADMIN' ? 'Platform Overseer' : 'Admin'}</div>
+                    <div className="text-[13px] font-black text-foreground tracking-tight leading-tight">{user?.name || 'Admin'}</div>
+                    <div className="text-[10px] font-bold text-primary uppercase tracking-widest mt-0.5">{user?.role === 'ADMIN' ? 'System Administrator' : 'Staff'}</div>
                   </div>
                   <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center text-foreground font-black text-xs border border-border shadow-sm overflow-hidden transition-transform active:scale-95">
                     {user?.avatar ? (

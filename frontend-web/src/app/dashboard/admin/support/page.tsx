@@ -13,7 +13,8 @@ import {
   Send,
   MoreVertical,
   LifeBuoy,
-  Loader2
+  Loader2,
+  BookOpen
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -113,11 +114,11 @@ export default function AdminSupportPage() {
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shadow-soft-sm border border-primary/20">
                   <LifeBuoy size={24} />
                 </div>
-                Support Matrix
+                Support Center
               </h1>
               <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.25em] mt-1.5 flex items-center gap-3 italic">
                 <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-                Intelligence Inbox
+                Support Inbox
               </p>
             </div>
             <div className="px-4 py-1.5 rounded-full badge-tint badge-red text-[9px] font-black uppercase tracking-widest shadow-soft-sm border border-white/5">
@@ -128,7 +129,7 @@ export default function AdminSupportPage() {
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-muted-foreground/30 group-focus-within:text-primary transition-colors" size={20} />
             <input 
               type="text" 
-              placeholder="Search registry logs..." 
+              placeholder="Search records..." 
               className="w-full pl-16 pr-6 py-4.5 bg-background/50 border border-transparent focus:border-primary/20 rounded-[1.75rem] text-[11px] font-black uppercase tracking-[0.15em] text-foreground placeholder:text-muted-foreground/20 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft-sm"
             />
           </div>
@@ -138,7 +139,7 @@ export default function AdminSupportPage() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center h-full gap-6 text-muted-foreground/30 font-black animate-in fade-in duration-1000">
               <Loader2 className="animate-spin text-primary" size={48} />
-              <span className="text-[9px] uppercase tracking-[0.3em] italic">Scanning transmission nodes...</span>
+              <span className="text-[9px] uppercase tracking-[0.3em] italic">Loading support tickets...</span>
             </div>
           ) : Array.isArray(tickets) && tickets.length > 0 ? (
             tickets.map((ticket) => (
@@ -263,7 +264,7 @@ export default function AdminSupportPage() {
                     type="text" 
                     value={reply}
                     onChange={(e) => setReply(e.target.value)}
-                    placeholder="Synchronize response parameters..."
+                    placeholder="Type your message..."
                     className="w-full pl-16 pr-6 py-6 bg-background/50 border border-transparent focus:border-primary/20 rounded-[2rem] text-sm font-bold text-foreground placeholder:text-muted-foreground/20 focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft-sm"
                   />
                 </div>
@@ -276,19 +277,61 @@ export default function AdminSupportPage() {
                 </button>
               </div>
             </div>
-          </>
+          </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground/20 space-y-10 animate-in fade-in zoom-in duration-1000 relative z-10">
-            <div className="w-32 h-32 rounded-[3.5rem] bg-primary/5 border-2 border-dashed border-border-subtle flex items-center justify-center text-primary/10 shadow-inner group">
+          <div className="h-full flex flex-col items-center justify-center p-12 space-y-12 animate-in fade-in zoom-in duration-1000">
+            <div className="w-32 h-32 bg-primary/10 rounded-[2.5rem] flex items-center justify-center text-primary group hover:scale-110 hover:rotate-3 transition-all duration-700 shadow-soft-2xl border border-primary/20">
               <MessageSquare size={64} className="group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700" />
             </div>
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-black text-foreground tracking-tighter">Awaiting Signal Selection</h2>
-              <p className="text-sm font-black text-muted-foreground/40 uppercase tracking-[0.25em] max-w-sm mx-auto leading-relaxed">Select a support ledger entry from the matrix to initiate secure communication protocols.</p>
+              <h2 className="text-3xl font-black text-foreground tracking-tighter">Select a Ticket</h2>
+              <p className="text-sm font-black text-muted-foreground/40 uppercase tracking-[0.25em] max-w-sm mx-auto leading-relaxed">Select a support ticket from the list to start a conversation.</p>
+            </div>
+
+            {/* Classification Guidelines Card */}
+            <div className="mt-16 w-full max-w-2xl bg-card/50 border border-border-subtle rounded-[2.5rem] p-10 shadow-soft-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full translate-x-24 -translate-y-24 blur-3xl"></div>
+              <div className="flex items-center gap-5 mb-8 relative z-10">
+                <div className="p-4 bg-primary/10 rounded-2xl">
+                  <BookOpen className="text-primary" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-foreground tracking-tight">Property Classifications</h3>
+                  <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mt-1 italic">Standardized Guidelines</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                <ClassificationItem 
+                  title="Hostels" 
+                  desc="Dedicated student living. Single/Double rooms with shared amenities." 
+                />
+                <ClassificationItem 
+                  title="Bedsitters" 
+                  desc="Self-contained single room with private kitchen/bath." 
+                />
+                <ClassificationItem 
+                  title="Single Rooms" 
+                  desc="Private bedroom, shared kitchen/bath. Affordable option." 
+                />
+                <ClassificationItem 
+                  title="Apartments" 
+                  desc="Residential units (1-3BR). Higher tier, more space." 
+                />
+              </div>
             </div>
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function ClassificationItem({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="p-5 rounded-2xl bg-muted/20 border border-border-subtle hover:border-primary/20 transition-all group/item">
+      <h4 className="text-sm font-black text-foreground group-hover/item:text-primary transition-colors">{title}</h4>
+      <p className="text-[11px] text-muted-foreground/60 mt-1.5 leading-relaxed font-bold">{desc}</p>
     </div>
   );
 }

@@ -79,16 +79,33 @@ export default function AdminSettings() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notifications/config`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          // No config yet, use defaults
+          return;
+        }
+        throw new Error(`Failed to load: ${response.status}`);
+      }
+
       const data = await response.json();
       if (data) {
+        let firebaseStr = '';
+        if (data.firebaseConfig) {
+          firebaseStr = typeof data.firebaseConfig === 'string' 
+            ? data.firebaseConfig 
+            : JSON.stringify(data.firebaseConfig, null, 2);
+        }
+
         setConfig({
           ...config,
           ...data,
-          firebaseConfig: data.firebaseConfig ? JSON.stringify(data.firebaseConfig, null, 2) : ''
+          firebaseConfig: firebaseStr
         });
       }
     } catch (error) {
-      showToast('Failed to load system configuration', 'error');
+      console.error('Settings load error:', error);
+      showToast('Failed to load system configuration. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -160,21 +177,21 @@ export default function AdminSettings() {
   return (
     <div className="p-8 lg:p-12 max-w-7xl mx-auto space-y-12 bg-background min-h-screen">
       <header className="space-y-2">
-        <h1 className="text-4xl font-black text-foreground tracking-tighter">Command Center</h1>
-        <p className="text-muted-foreground font-medium max-w-2xl leading-relaxed text-sm lg:text-base">Configure global platform protocols, synchronize neural notification engines, and define visual brand identity.</p>
+        <h1 className="text-4xl font-black text-foreground tracking-tighter">System Settings</h1>
+        <p className="text-muted-foreground font-medium max-w-2xl leading-relaxed text-sm lg:text-base">Manage your platform configuration, notification settings, and brand identity.</p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16">
         {/* Sidebar Nav for Settings */}
         <aside className="space-y-4">
-          <div className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] ml-4 mb-6">Configuration Modules</div>
+          <div className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] ml-4 mb-6">Settings Modules</div>
           <div className="space-y-2">
             <SettingsTab icon={<Smartphone size={18} />} label="Messaging & SMS" active={activeTab === 'messaging'} onClick={() => setActiveTab('messaging')} />
             <SettingsTab icon={<Mail size={18} />} label="Email & SMTP" active={activeTab === 'smtp'} onClick={() => setActiveTab('smtp')} />
             <SettingsTab icon={<Palette size={18} />} label="Branding & Identity" active={activeTab === 'branding'} onClick={() => setActiveTab('branding')} />
-            <SettingsTab icon={<Moon size={18} />} label="Visual Preference" active={activeTab === 'theme'} onClick={() => setActiveTab('theme')} />
-            <SettingsTab icon={<LinkIcon size={18} />} label="External Networks" active={activeTab === 'social'} onClick={() => setActiveTab('social')} />
-            <SettingsTab icon={<Shield size={18} />} label="Payments & Ledger" active={activeTab === 'payments'} onClick={() => setActiveTab('payments')} />
+            <SettingsTab icon={<Moon size={18} />} label="Appearance" active={activeTab === 'theme'} onClick={() => setActiveTab('theme')} />
+            <SettingsTab icon={<LinkIcon size={18} />} label="Social Media" active={activeTab === 'social'} onClick={() => setActiveTab('social')} />
+            <SettingsTab icon={<Shield size={18} />} label="Payments & Billing" active={activeTab === 'payments'} onClick={() => setActiveTab('payments')} />
           </div>
         </aside>
 
@@ -183,7 +200,7 @@ export default function AdminSettings() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center p-32 gap-6 text-muted-foreground/40 font-bold">
               <Loader2 className="animate-spin text-primary" size={48} />
-              <span className="text-[10px] font-black uppercase tracking-widest italic">Synchronizing registry...</span>
+              <span className="text-[10px] font-black uppercase tracking-widest italic">Loading configuration...</span>
             </div>
           ) : (
             <section className="card-premium shadow-soft-xl overflow-hidden border-border-subtle animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -197,14 +214,14 @@ export default function AdminSettings() {
                         <MessageSquare size={28} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black text-foreground tracking-tight">SMS Transmission Protocol</h3>
+                        <h3 className="text-2xl font-black text-foreground tracking-tight">SMS Settings</h3>
                         <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Configure automated mobile outreach services</p>
                       </div>
                     </div>
 
                     <div className="space-y-10">
                       <div className="space-y-6">
-                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.2em] ml-1">Active Gateway</label>
+                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.2em] ml-1">SMS Provider</label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <button 
                             onClick={() => setConfig(prev => ({ ...prev, smsProvider: 'FIREBASE' }))} 
@@ -215,7 +232,7 @@ export default function AdminSettings() {
                             </div>
                             <div>
                               <div className="text-base font-black text-foreground tracking-tight">Firebase Cloud</div>
-                              <div className="text-xs font-medium text-muted-foreground mt-1">Primary real-time engine for push & SMS logs.</div>
+                              <div className="text-xs font-medium text-muted-foreground mt-1">Recommended for real-time push notifications & SMS.</div>
                             </div>
                           </button>
                           
@@ -228,7 +245,7 @@ export default function AdminSettings() {
                             </div>
                             <div>
                               <div className="text-base font-black text-foreground tracking-tight">Twilio Global</div>
-                              <div className="text-xs font-medium text-muted-foreground mt-1">Secondary enterprise carrier for high-priority delivery.</div>
+                              <div className="text-xs font-medium text-muted-foreground mt-1">Enterprise-grade carrier for global SMS delivery.</div>
                             </div>
                           </button>
                         </div>
@@ -237,15 +254,15 @@ export default function AdminSettings() {
                       {config.smsProvider === 'TWILIO' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-muted/30 rounded-[2.5rem] border border-border-subtle animate-in zoom-in-95 duration-300">
                           <div className="space-y-3">
-                            <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Twilio SID Signature</label>
+                            <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Twilio Account SID</label>
                             <input value={config.twilioSid} onChange={e => setConfig(prev => ({ ...prev, twilioSid: e.target.value }))} placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxx" className="w-full px-6 py-4.5 bg-background border border-transparent focus:border-primary/20 rounded-2xl text-[11px] font-black uppercase tracking-widest text-foreground focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft-sm" />
                           </div>
                           <div className="space-y-3">
-                            <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Auth Token Credential</label>
+                            <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Auth Token</label>
                             <input type="password" value={config.twilioAuthToken} onChange={e => setConfig(prev => ({ ...prev, twilioAuthToken: e.target.value }))} placeholder="••••••••••••••••••••" className="w-full px-6 py-4.5 bg-background border border-transparent focus:border-primary/20 rounded-2xl text-[11px] font-black uppercase tracking-widest text-foreground focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft-sm" />
                           </div>
                           <div className="space-y-3 md:col-span-2">
-                            <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Assigned Virtual Number</label>
+                            <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Twilio Phone Number</label>
                             <input value={config.twilioPhoneNumber} onChange={e => setConfig(prev => ({ ...prev, twilioPhoneNumber: e.target.value }))} placeholder="+1234567890" className="w-full px-6 py-4.5 bg-background border border-transparent focus:border-primary/20 rounded-2xl text-[11px] font-black uppercase tracking-widest text-foreground focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft-sm" />
                           </div>
                         </div>
@@ -253,7 +270,7 @@ export default function AdminSettings() {
 
                       <div className="space-y-4 pt-10 border-t border-border-subtle">
                         <div className="flex items-center justify-between">
-                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Firebase Core Admin JSON (Secure)</label>
+                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Firebase Service Account Key (JSON)</label>
                         </div>
                         <textarea rows={8} value={config.firebaseConfig} onChange={e => setConfig(prev => ({ ...prev, firebaseConfig: e.target.value }))} placeholder='{ "type": "service_account", ... }' className="w-full px-8 py-6 bg-muted/40 border border-border-subtle rounded-[2rem] text-[11px] font-mono font-bold text-foreground focus:outline-none focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all resize-none scrollbar-hide shadow-soft-sm" />
                       </div>
@@ -269,47 +286,47 @@ export default function AdminSettings() {
                         <Mail size={28} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black text-foreground tracking-tight">Email SMTP Matrix</h3>
-                        <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Registry of transactional mailing infrastructure</p>
+                        <h3 className="text-2xl font-black text-foreground tracking-tight">Email Settings (SMTP)</h3>
+                        <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Configure the outbound mail server for notifications</p>
                       </div>
                     </div>
 
                     <div className="space-y-8">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
-                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">SMTP Host URL</label>
+                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">SMTP Host</label>
                           <input value={config.smtpHost} onChange={e => setConfig(prev => ({ ...prev, smtpHost: e.target.value }))} placeholder="smtp.yourserver.com" className="w-full px-6 py-4.5 bg-muted/20 border border-border-subtle rounded-2xl text-[11px] font-black text-foreground focus:outline-none focus:border-primary transition-all shadow-soft-sm" />
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Communication Port</label>
+                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">SMTP Port</label>
                           <input type="number" value={config.smtpPort} onChange={e => setConfig(prev => ({ ...prev, smtpPort: parseInt(e.target.value) || 0 }))} placeholder="587" className="w-full px-6 py-4.5 bg-muted/20 border border-border-subtle rounded-2xl text-[11px] font-black text-foreground focus:outline-none focus:border-primary transition-all shadow-soft-sm" />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
-                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Master User Signature</label>
+                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">SMTP Username</label>
                           <input value={config.smtpUser} onChange={e => setConfig(prev => ({ ...prev, smtpUser: e.target.value }))} placeholder="admin@domain.com" className="w-full px-6 py-4.5 bg-muted/20 border border-border-subtle rounded-2xl text-[11px] font-black text-foreground focus:outline-none focus:border-primary transition-all shadow-soft-sm" />
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Encrypted Access Token</label>
+                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">SMTP Password</label>
                           <input type="password" value={config.smtpPass} onChange={e => setConfig(prev => ({ ...prev, smtpPass: e.target.value }))} placeholder="••••••••••••••••" className="w-full px-6 py-4.5 bg-muted/20 border border-border-subtle rounded-2xl text-[11px] font-black text-foreground focus:outline-none focus:border-primary transition-all shadow-soft-sm" />
                         </div>
                       </div>
 
                       <div className="flex items-center gap-4 bg-primary/5 p-6 rounded-[1.5rem] border border-primary/10 group cursor-pointer transition-all hover:bg-primary/10">
                         <input type="checkbox" id="smtpSecure" checked={config.smtpSecure} onChange={e => setConfig(prev => ({ ...prev, smtpSecure: e.target.checked }))} className="w-6 h-6 rounded-lg text-primary focus:ring-primary border-primary/20 bg-background cursor-pointer" />
-                        <label htmlFor="smtpSecure" className="text-xs font-black text-foreground/80 cursor-pointer uppercase tracking-widest select-none">Enforce SSL/TLS Protocol Cryptography</label>
+                        <label htmlFor="smtpSecure" className="text-xs font-black text-foreground/80 cursor-pointer uppercase tracking-widest select-none">Use Secure Connection (SSL/TLS)</label>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-border-subtle">
                         <div className="space-y-3">
-                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Outbound Entity Email</label>
+                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Sender Email</label>
                           <input value={config.smtpFromEmail} onChange={e => setConfig(prev => ({ ...prev, smtpFromEmail: e.target.value }))} placeholder="noreply@domain.com" className="w-full px-6 py-4.5 bg-muted/20 border border-border-subtle rounded-2xl text-[11px] font-black text-foreground focus:outline-none focus:border-primary transition-all shadow-soft-sm" />
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Public Sender Signature</label>
-                          <input value={config.smtpFromName} onChange={e => setConfig(prev => ({ ...prev, smtpFromName: e.target.value }))} placeholder="Kibabii Nest Ledger" className="w-full px-6 py-4.5 bg-muted/20 border border-border-subtle rounded-2xl text-[11px] font-black text-foreground focus:outline-none focus:border-primary transition-all shadow-soft-sm" />
+                          <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Sender Name</label>
+                          <input value={config.smtpFromName} onChange={e => setConfig(prev => ({ ...prev, smtpFromName: e.target.value }))} placeholder="Kibabii Nest" className="w-full px-6 py-4.5 bg-muted/20 border border-border-subtle rounded-2xl text-[11px] font-black text-foreground focus:outline-none focus:border-primary transition-all shadow-soft-sm" />
                         </div>
                       </div>
 
@@ -330,7 +347,7 @@ export default function AdminSettings() {
                           className="w-full md:w-auto bg-primary text-white px-10 py-4.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-70"
                         >
                           {isTestingEmail ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
-                          Dispatch Test Signal
+                          Send Test Email
                         </button>
                       </div>
                     </div>
@@ -345,19 +362,19 @@ export default function AdminSettings() {
                         <Palette size={28} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black text-foreground tracking-tight">Visual Identity Suite</h3>
+                        <h3 className="text-2xl font-black text-foreground tracking-tight">Branding & Identity</h3>
                         <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Configure platform aesthetics and brand assets</p>
                       </div>
                     </div>
 
                     <div className="space-y-10">
                       <div className="space-y-3">
-                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Platform Entity Name</label>
+                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Site Name</label>
                         <input value={config.brandName} onChange={e => setConfig(prev => ({ ...prev, brandName: e.target.value }))} placeholder="e.g. Kibabii Nest" className="w-full px-8 py-5 bg-muted/20 border border-border-subtle rounded-[1.5rem] text-lg font-black text-foreground focus:outline-none focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all shadow-soft-sm" />
                       </div>
 
                       <div className="space-y-4">
-                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Symbolic Brand Asset (Logo)</label>
+                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Logo</label>
                         <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
                           <div className="flex-1 w-full relative">
                             <input value={config.brandLogoUrl} onChange={e => setConfig(prev => ({ ...prev, brandLogoUrl: e.target.value }))} placeholder="https://external-resource.com/logo.png" className="w-full px-8 py-5 bg-muted/20 border border-border-subtle rounded-[1.5rem] text-[11px] font-black uppercase tracking-widest text-foreground focus:outline-none focus:border-primary/20 transition-all shadow-soft-sm" />
@@ -384,9 +401,9 @@ export default function AdminSettings() {
                                   if (!response.ok) throw new Error('Upload failed');
                                   const data = await response.json();
                                   setConfig(prev => ({ ...prev, brandLogoUrl: data.url }));
-                                  showToast('Neural asset synchronized', 'success');
+                                  showToast('Logo updated successfully', 'success');
                                 } catch (error) {
-                                  showToast('Asset synchronization failed', 'error');
+                                  showToast('Failed to upload logo', 'error');
                                 }
                               }}
                             />
@@ -394,7 +411,7 @@ export default function AdminSettings() {
                               htmlFor="logo-upload"
                               className="flex-1 md:flex-none px-8 py-5 bg-card border border-border-subtle rounded-2xl text-[10px] font-black uppercase tracking-widest text-foreground hover:bg-muted cursor-pointer transition-all shadow-soft-sm whitespace-nowrap text-center"
                             >
-                              Synchronize Local Asset
+                              Upload Logo
                             </label>
 
                             {config.brandLogoUrl && (
@@ -407,7 +424,7 @@ export default function AdminSettings() {
                       </div>
 
                       <div className="space-y-4 pt-10 border-t border-border-subtle">
-                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Dominant Chromatic Token (Primary)</label>
+                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">Primary Brand Color</label>
                         <div className="flex gap-6 items-center">
                           <div className="relative group">
                             <input type="color" value={config.brandPrimaryColor} onChange={e => setConfig(prev => ({ ...prev, brandPrimaryColor: e.target.value }))} className="w-20 h-20 p-2 bg-muted/40 border border-border-subtle rounded-[1.5rem] cursor-pointer shadow-soft-sm group-hover:scale-105 transition-transform" />
@@ -430,33 +447,33 @@ export default function AdminSettings() {
                         <Palette size={28} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black text-foreground tracking-tight">Neural Interface Modes</h3>
-                        <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Select your preferred cognitive visualization style</p>
+                        <h3 className="text-2xl font-black text-foreground tracking-tight">Dashboard Theme</h3>
+                        <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Select your preferred dashboard visualization style</p>
                       </div>
                     </div>
 
                     <div className="space-y-10">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <ThemeButton 
+                         <ThemeButton 
                           active={theme === 'light'} 
                           onClick={() => setTheme('light')} 
                           icon={<Sun size={28} />} 
-                          label="Solaris Mode" 
-                          desc="High luminosity visualization" 
+                          label="Light Mode" 
+                          desc="Clean and bright interface" 
                         />
                         <ThemeButton 
                           active={theme === 'dark'} 
                           onClick={() => setTheme('dark')} 
                           icon={<Moon size={28} />} 
-                          label="Nebula Mode" 
-                          desc="Low-fatigue administrative UI" 
+                          label="Dark Mode" 
+                          desc="Easier on the eyes" 
                         />
                         <ThemeButton 
                           active={theme === 'system'} 
                           onClick={() => setTheme('system')} 
                           icon={<Monitor size={28} />} 
-                          label="Neural Sync" 
-                          desc="Automatic device calibration" 
+                          label="System Default" 
+                          desc="Match your device settings" 
                         />
                       </div>
                     </div>
@@ -471,18 +488,18 @@ export default function AdminSettings() {
                         <LinkIcon size={28} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black text-foreground tracking-tight">External Data Nodes</h3>
-                        <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Connect global social networking credentials</p>
+                        <h3 className="text-2xl font-black text-foreground tracking-tight">Social Media Links</h3>
+                        <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Connect your platform's social media accounts</p>
                       </div>
                     </div>
 
                     <div className="space-y-8">
                       {[
-                        { id: 'socialFacebook', label: 'Meta Network (Facebook)', icon: <Globe size={18} /> },
-                        { id: 'socialInstagram', label: 'Instagram Protocol', icon: <Palette size={18} /> },
-                        { id: 'socialTwitter', label: 'X Surveillance Feed', icon: <Database size={18} /> },
-                        { id: 'socialYoutube', label: 'Broadcast Node (YouTube)', icon: <Smartphone size={18} /> },
-                        { id: 'socialTiktok', label: 'TikTok Dynamic Matrix', icon: <MessageSquare size={18} /> },
+                        { id: 'socialFacebook', label: 'Facebook Page', icon: <Globe size={18} /> },
+                        { id: 'socialInstagram', label: 'Instagram Profile', icon: <Palette size={18} /> },
+                        { id: 'socialTwitter', label: 'X (Twitter) Profile', icon: <Database size={18} /> },
+                        { id: 'socialYoutube', label: 'YouTube Channel', icon: <Smartphone size={18} /> },
+                        { id: 'socialTiktok', label: 'TikTok Profile', icon: <MessageSquare size={18} /> },
                       ].map(social => (
                         <div key={social.id} className="space-y-3">
                           <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">{social.label}</label>
@@ -511,8 +528,8 @@ export default function AdminSettings() {
                         <Shield size={28} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black text-foreground tracking-tight">Financial Infrastructure</h3>
-                        <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Configure M-Pesa Lipa Na M-Pesa API credentials</p>
+                        <h3 className="text-2xl font-black text-foreground tracking-tight">M-Pesa Integration</h3>
+                        <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mt-1">Configure M-Pesa API credentials for payments</p>
                       </div>
                     </div>
 
@@ -562,7 +579,7 @@ export default function AdminSettings() {
                       </div>
 
                       <div className="space-y-6">
-                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.2em] ml-1">Transmission Environment</label>
+                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-[0.2em] ml-1">API Environment</label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <button 
                             type="button"
@@ -595,7 +612,7 @@ export default function AdminSettings() {
                       </div>
 
                       <div className="space-y-3 pt-6 border-t border-border-subtle">
-                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">M-Pesa Callback Endpoint (WebHook)</label>
+                        <label className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest ml-1">M-Pesa Webhook URL (Callback)</label>
                         <input 
                           value={config.mpesaCallbackUrl || ''} 
                           onChange={e => setConfig(prev => ({ ...prev, mpesaCallbackUrl: e.target.value }))} 
@@ -611,8 +628,8 @@ export default function AdminSettings() {
               {/* SAVE ACTION BAR */}
               <div className="px-10 py-10 lg:px-14 lg:py-12 bg-muted/40 border-t border-border-subtle flex justify-end items-center gap-8">
                 <div className="hidden md:flex flex-col items-end gap-1">
-                  <div className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">Protocol Checksum</div>
-                  <div className="text-[9px] font-bold text-muted-foreground/40 font-mono italic uppercase">Global registry sync required after modifications</div>
+                  <div className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">Update Information</div>
+                  <div className="text-[9px] font-bold text-muted-foreground/40 font-mono italic uppercase">System settings will be applied immediately</div>
                 </div>
                 <button 
                   onClick={handleSave}
@@ -620,7 +637,7 @@ export default function AdminSettings() {
                   className="w-full md:w-auto bg-foreground text-background px-12 py-5 rounded-[2rem] text-[11px] font-black uppercase tracking-[0.25em] shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 disabled:opacity-70 group"
                 >
                   {isSaving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} className="group-hover:rotate-12 transition-transform" />}
-                  Deploy Platform Configurations
+                  Save All Settings
                 </button>
               </div>
 

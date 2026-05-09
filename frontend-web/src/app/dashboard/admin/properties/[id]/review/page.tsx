@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useNotifications } from '@/context/NotificationContext';
 import { usePropertyTaxonomy } from '@/hooks/use-property-taxonomy';
+import Image from 'next/image';
 
 const getPublicUrl = (path: string) => {
   if (!path) return '';
@@ -32,8 +33,6 @@ export default function PropertyReviewPage() {
   useEffect(() => {
     fetchProperty();
   }, [id]);
-
-
 
   const fetchProperty = async () => {
     try {
@@ -157,35 +156,42 @@ export default function PropertyReviewPage() {
     setProperty({ ...property, units: newUnits });
   };
 
-  if (isLoading) return <div className="p-12 flex justify-center"><Loader2 className="animate-spin text-primary" size={32} /></div>;
+  if (isLoading) return (
+    <div className="min-h-screen bg-background p-12 flex flex-col items-center justify-center space-y-4">
+      <Loader2 className="animate-spin text-primary" size={48} />
+      <span className="text-xs font-black uppercase tracking-widest text-muted-foreground/40 italic">Retrieving property details...</span>
+    </div>
+  );
+
+  const landlord = property.landlord || property.owner;
 
   return (
-    <div className="p-8 lg:p-12 max-w-7xl mx-auto space-y-12">
-      <header className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button onClick={() => router.back()} className="p-3 bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-primary transition-all shadow-sm">
-            <ArrowLeft size={20} />
+    <div className="min-h-screen bg-background p-8 lg:p-12 max-w-7xl mx-auto space-y-12">
+      <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+        <div className="flex items-center gap-6">
+          <button onClick={() => router.back()} className="p-4 bg-card border border-border-subtle rounded-[1.5rem] text-muted-foreground hover:text-primary transition-all shadow-soft-xl group">
+            <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
           </button>
           <div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">Review Property</h1>
-            <p className="text-slate-500 font-medium">Detailed scrutiny for platform verification.</p>
+            <h1 className="text-4xl font-black text-foreground tracking-tighter leading-none">Review Property</h1>
+            <p className="text-muted-foreground/60 font-bold mt-2 uppercase tracking-widest text-xs">Administrative verification & configuration</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 w-full md:w-auto">
           <button 
             disabled={isProcessing || !property.verified}
             onClick={() => handleVerify(false)}
-            className="flex items-center gap-2 px-6 py-3 bg-white border border-red-100 text-red-600 rounded-2xl text-sm font-bold hover:bg-red-50 disabled:opacity-50 transition-all"
+            className="flex-1 md:flex-none flex items-center justify-center gap-3 px-8 py-4 bg-card border border-red-500/20 text-red-500 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white disabled:opacity-30 transition-all shadow-soft-lg"
           >
-            <XCircle size={18} /> Revoke Verification
+            <XCircle size={18} /> Revoke
           </button>
           <button 
             disabled={isProcessing || property.verified}
             onClick={() => handleVerify(true)}
-            className="flex items-center gap-2 px-8 py-3 bg-green-600 text-white rounded-2xl text-sm font-bold shadow-xl shadow-green-100 hover:bg-green-700 disabled:opacity-50 transition-all"
+            className="flex-1 md:flex-none flex items-center justify-center gap-3 px-10 py-4 bg-primary text-white rounded-[1.5rem] text-xs font-black uppercase tracking-widest shadow-glow hover:scale-105 active:scale-95 disabled:opacity-30 transition-all"
           >
-            <CheckCircle2 size={18} /> Approve & Verify
+            <CheckCircle2 size={18} /> Verify
           </button>
         </div>
       </header>
@@ -194,59 +200,68 @@ export default function PropertyReviewPage() {
         {/* Left Column: Details */}
         <div className="lg:col-span-2 space-y-12">
           {/* Main Info */}
-          <section className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">{property.name}</h2>
-                <div className="flex items-center gap-2 text-slate-400 font-bold">
-                  <MapPin size={16} /> {property.address}, {property.city}
+          <section className="bg-card p-10 lg:p-12 rounded-[3.5rem] border border-border-subtle shadow-soft-2xl space-y-10">
+            <div className="flex flex-col md:flex-row items-start justify-between gap-6">
+              <div className="space-y-4">
+                <h2 className="text-4xl font-black text-foreground tracking-tighter leading-tight">{property.name}</h2>
+                <div className="flex items-center gap-3 text-muted-foreground/60 font-bold text-sm bg-muted/20 px-6 py-3 rounded-full w-fit">
+                  <MapPin size={18} className="text-primary" /> {property.address}, {property.city}
                 </div>
               </div>
-              <span className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest ${property.verified ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
+              <span className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border shadow-soft-sm ${
+                property.verified 
+                  ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                  : 'bg-amber-500/10 text-amber-500 border-amber-500/20 animate-pulse'
+              }`}>
                 {property.verified ? 'Verified Listing' : 'Pending Verification'}
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <DetailBox label="Category" value={property.category?.name || 'Standard'} />
-              <DetailBox label="Price Starts At" value={`Ksh ${property.price?.toLocaleString()}`} />
-              <DetailBox label="Distance to Campus" value={`${property.distanceToCampus}m`} />
+              <DetailBox label="Base Price" value={`Ksh ${property.price?.toLocaleString()}`} />
+              <DetailBox label="Proximity" value={`${property.distanceToCampus}m to Campus`} />
             </div>
 
-            <div>
-              <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Description</h3>
-              <p className="text-slate-600 leading-relaxed font-medium">{property.description}</p>
+            <div className="bg-muted/10 p-8 lg:p-10 rounded-[2.5rem] border border-border-subtle shadow-inner">
+              <h4 className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-4">Property Bio</h4>
+              <p className="text-base font-medium leading-relaxed text-foreground/80">{property.description}</p>
             </div>
           </section>
 
           {/* Utilities & Services */}
-          <section className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
+          <section className="bg-card p-10 lg:p-12 rounded-[3.5rem] border border-border-subtle shadow-soft-2xl space-y-10">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-black text-slate-900 flex items-center gap-3">
-                <Zap className="text-yellow-500" /> Utilities & Services
-              </h3>
+              <div>
+                <h3 className="text-2xl font-black text-foreground tracking-tight flex items-center gap-4 leading-none">
+                  <div className="p-3 bg-amber-500/10 text-amber-500 rounded-2xl border border-amber-500/20 shadow-soft-sm">
+                    <Zap size={24} />
+                  </div>
+                  Utility Framework
+                </h3>
+              </div>
               <button 
                 onClick={() => setIsEditingUtilities(!isEditingUtilities)}
-                className="text-xs font-black text-primary uppercase tracking-widest hover:underline"
+                className="px-6 py-2.5 bg-muted hover:bg-muted/60 rounded-full text-[10px] font-black text-foreground uppercase tracking-widest transition-all border border-border-subtle shadow-soft-sm"
               >
-                {isEditingUtilities ? 'Cancel Editing' : 'Edit Utilities'}
+                {isEditingUtilities ? 'Discard Changes' : 'Modify Config'}
               </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { key: 'water', label: 'Water Supply', icon: Droplets, color: 'text-blue-500' },
-                { key: 'electricity', label: 'Electricity', icon: Zap, color: 'text-yellow-500' },
-                { key: 'wifi', label: 'WiFi / Internet', icon: Wifi, color: 'text-indigo-500' },
-                { key: 'garbage', label: 'Garbage Collection', icon: Trash2, color: 'text-emerald-500' },
-                { key: 'security', label: '24/7 Security', icon: Shield, color: 'text-slate-700' },
-                { key: 'cleaning', label: 'Cleaning Services', icon: Brush, color: 'text-pink-500' },
+                { key: 'water', label: 'Water Supply', icon: Droplets, color: 'text-blue-500', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/20' },
+                { key: 'electricity', label: 'Electricity', icon: Zap, color: 'text-amber-500', bgColor: 'bg-amber-500/10', borderColor: 'border-amber-500/20' },
+                { key: 'wifi', label: 'WiFi Access', icon: Wifi, color: 'text-indigo-500', bgColor: 'bg-indigo-500/10', borderColor: 'border-indigo-500/20' },
+                { key: 'garbage', label: 'Garbage', icon: Trash2, color: 'text-emerald-500', bgColor: 'bg-emerald-500/10', borderColor: 'border-emerald-500/20' },
+                { key: 'security', label: '24/7 Guards', icon: Shield, color: 'text-foreground', bgColor: 'bg-muted', borderColor: 'border-border' },
+                { key: 'cleaning', label: 'Janitorial', icon: Brush, color: 'text-pink-500', bgColor: 'bg-pink-500/10', borderColor: 'border-pink-500/20' },
               ].map((item) => {
                 const config = (property.utilityConfig as any)?.[item.key] || { included: false, details: '' };
                 return (
-                  <div key={item.key} className={`p-6 rounded-[2rem] border transition-all ${config.included ? 'bg-slate-50 border-slate-200' : 'bg-white border-slate-100 opacity-60'}`}>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`p-3 rounded-xl bg-white shadow-sm ${item.color}`}>
+                  <div key={item.key} className={`p-6 rounded-[2.5rem] border transition-all ${config.included ? 'bg-card border-border-subtle shadow-soft-lg ring-1 ring-primary/5' : 'bg-muted/20 border-transparent opacity-40 hover:opacity-100'}`}>
+                    <div className="flex items-start justify-between mb-6">
+                      <div className={`p-4 rounded-2xl shadow-soft-sm border ${item.bgColor} ${item.borderColor} ${item.color}`}>
                         <item.icon size={20} />
                       </div>
                       {isEditingUtilities ? (
@@ -257,19 +272,23 @@ export default function PropertyReviewPage() {
                             newConfig[item.key] = { ...config, included: e.target.value === 'true' };
                             setProperty({ ...property, utilityConfig: newConfig });
                           }}
-                          className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-white border border-slate-200 rounded-lg outline-none"
+                          className="text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-muted border border-border-subtle rounded-xl outline-none focus:ring-4 focus:ring-primary/10"
                         >
                           <option value="true">Included</option>
-                          <option value="false">Tenant Paid</option>
+                          <option value="false">Paid</option>
                         </select>
                       ) : (
-                        <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${config.included ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>
-                          {config.included ? 'Included' : 'Tenant Paid'}
+                        <span className={`text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border ${
+                          config.included 
+                            ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                            : 'bg-muted text-muted-foreground border-border-subtle'
+                        }`}>
+                          {config.included ? 'Free' : 'Paid'}
                         </span>
                       )}
                     </div>
-                    <div className="space-y-1">
-                      <div className="text-sm font-black text-slate-900">{item.label}</div>
+                    <div className="space-y-2">
+                      <div className="text-sm font-black text-foreground tracking-tight">{item.label}</div>
                       {isEditingUtilities ? (
                         <input 
                           type="text"
@@ -279,11 +298,11 @@ export default function PropertyReviewPage() {
                             newConfig[item.key] = { ...config, details: e.target.value };
                             setProperty({ ...property, utilityConfig: newConfig });
                           }}
-                          placeholder="e.g. Fixed rate, Token based..."
-                          className="w-full text-xs font-bold text-slate-600 bg-transparent border-b border-slate-200 focus:border-primary outline-none py-1"
+                          placeholder="Rate/Details..."
+                          className="w-full text-xs font-bold text-muted-foreground bg-muted/40 border border-border-subtle focus:border-primary rounded-xl outline-none px-4 py-2 transition-all"
                         />
                       ) : (
-                        <div className="text-xs font-bold text-slate-400 line-clamp-1">{config.details || (config.included ? 'Standard service' : 'Managed by student')}</div>
+                        <div className="text-xs font-bold text-muted-foreground/60 line-clamp-1 italic">{config.details || (config.included ? 'Platform standard' : 'Tenant responsibility')}</div>
                       )}
                     </div>
                   </div>
@@ -295,91 +314,111 @@ export default function PropertyReviewPage() {
               <button 
                 onClick={handleSaveUtilities}
                 disabled={isProcessing}
-                className="w-full bg-slate-900 text-white py-4 rounded-2xl text-sm font-black shadow-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+                className="w-full bg-primary text-white py-6 rounded-[2rem] text-xs font-black uppercase tracking-[0.2em] shadow-glow hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4"
               >
-                {isProcessing ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-                Save Utilities Configuration
+                {isProcessing ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+                Synchronize Utility Configuration
               </button>
             )}
           </section>
 
           {/* Media Review */}
-          <section className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
-             <h3 className="text-xl font-black text-slate-900 flex items-center gap-3">
-               <ImageIcon className="text-blue-500" /> Photo & Video Gallery
+          <section className="bg-card p-10 lg:p-12 rounded-[3.5rem] border border-border-subtle shadow-soft-2xl space-y-10">
+             <h3 className="text-2xl font-black text-foreground tracking-tight flex items-center gap-4 leading-none">
+                <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl border border-blue-500/20 shadow-soft-sm">
+                  <ImageIcon size={24} />
+                </div>
+                Asset Inspection
              </h3>
-             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 {property.images?.map((img: string, idx: number) => (
-                  <div key={idx} className="aspect-square bg-slate-100 rounded-3xl overflow-hidden border-2 border-slate-50">
-                    <img src={getPublicUrl(img)} alt={`Property ${idx}`} className="w-full h-full object-cover" />
+                  <div key={idx} className="aspect-square bg-muted rounded-[2.5rem] overflow-hidden border border-border-subtle shadow-soft-lg group cursor-zoom-in relative">
+                    <img src={getPublicUrl(img)} alt={`Property ${idx}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                       <span className="text-[10px] font-black text-white uppercase tracking-widest">Image #{idx + 1}</span>
+                    </div>
                   </div>
                 ))}
-                {property.images?.length === 0 && <div className="col-span-full py-12 text-center text-slate-400 font-bold">No photos uploaded</div>}
+                {property.images?.length === 0 && (
+                  <div className="col-span-full py-24 text-center bg-muted/20 rounded-[3rem] border border-dashed border-border-subtle">
+                    <ImageIcon className="mx-auto text-muted-foreground/10 mb-4" size={64} />
+                    <div className="text-xs font-black text-muted-foreground/30 uppercase tracking-widest italic">Zero visual assets uploaded</div>
+                  </div>
+                )}
              </div>
              {property.videoUrl ? (
-                <div className="mt-8">
-                  <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Video size={14} /> Property Walkthrough</h4>
-                  <div className="aspect-video bg-slate-100 rounded-[2.5rem] overflow-hidden border-2 border-slate-50">
+                <div className="space-y-6">
+                  <h4 className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] flex items-center gap-3">
+                    <div className="w-8 h-[2px] bg-primary/20 rounded-full" />
+                    Video Audit
+                    <div className="w-8 h-[2px] bg-primary/20 rounded-full" />
+                  </h4>
+                  <div className="aspect-video bg-muted rounded-[3rem] overflow-hidden border border-border-subtle shadow-soft-2xl relative group">
                      <iframe className="w-full h-full" src={property.videoUrl.replace('watch?v=', 'embed/')} />
                   </div>
                 </div>
               ) : (
-                <div className="mt-8 p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center">
-                  <Video className="mx-auto text-slate-200 mb-2" size={32} />
-                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">No video walkthrough provided</p>
+                <div className="p-8 bg-muted/10 rounded-[2.5rem] border border-border-subtle flex flex-col items-center text-center">
+                  <div className="p-4 bg-card rounded-2xl shadow-soft-sm border border-border-subtle mb-4 text-muted-foreground/20">
+                    <Video size={24} />
+                  </div>
+                  <p className="text-[10px] font-black text-muted-foreground/30 uppercase tracking-widest">Walkthrough video unavailable</p>
                 </div>
               )}
           </section>
 
           {/* Unit Types */}
-          <section className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
+          <section className="bg-card p-10 lg:p-12 rounded-[3.5rem] border border-border-subtle shadow-soft-2xl space-y-10">
              <div className="flex items-center justify-between">
-               <h3 className="text-xl font-black text-slate-900 flex items-center gap-3">
-                 <Home className="text-purple-500" /> Unit Types Management
+               <h3 className="text-2xl font-black text-foreground tracking-tight flex items-center gap-4 leading-none">
+                  <div className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl border border-purple-500/20 shadow-soft-sm">
+                    <Home size={24} />
+                  </div>
+                  Inventory Control
                </h3>
                <div className="flex items-center gap-4">
                  {isEditingUnits && (
                    <button 
                      onClick={addUnit}
-                     className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-3 py-1.5 rounded-lg hover:bg-green-100 transition-all flex items-center gap-1"
+                     className="px-5 py-2.5 bg-emerald-500 text-white rounded-full text-[9px] font-black uppercase tracking-widest shadow-glow-emerald hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
                    >
-                      <Plus size={14} /> Add Unit Type
+                      <Plus size={14} /> Add Prototype
                    </button>
                  )}
                  <button 
                    onClick={() => setIsEditingUnits(!isEditingUnits)}
-                   className="text-xs font-black text-primary uppercase tracking-widest hover:underline"
+                   className="px-6 py-2.5 bg-muted hover:bg-muted/60 rounded-full text-[10px] font-black text-foreground uppercase tracking-widest transition-all border border-border-subtle shadow-soft-sm"
                  >
-                   {isEditingUnits ? 'Cancel Editing' : 'Edit Units'}
+                   {isEditingUnits ? 'Stop Audit' : 'Manage Units'}
                  </button>
                </div>
              </div>
              
-             <div className="space-y-4">
+             <div className="space-y-6">
                {property.units && property.units.length > 0 ? (
                  property.units.map((unit: any, index: number) => (
-                    <div key={unit.id} className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 relative group/unit">
+                    <div key={unit.id} className="p-8 bg-muted/10 rounded-[2.5rem] border border-border-subtle relative group/unit hover:bg-muted/20 transition-all">
                        {isEditingUnits && (
                          <button 
                            onClick={() => removeUnit(index)}
-                           className="absolute -top-2 -right-2 w-8 h-8 bg-white text-red-500 rounded-full shadow-sm border border-slate-100 flex items-center justify-center opacity-0 group-hover/unit:opacity-100 transition-all hover:bg-red-50 z-10"
+                           className="absolute -top-3 -right-3 w-10 h-10 bg-red-500 text-white rounded-full shadow-glow-red flex items-center justify-center opacity-0 group-hover/unit:opacity-100 transition-all hover:scale-110 z-10"
                          >
-                           <XCircle size={14} />
+                           <Trash2 size={16} />
                          </button>
                        )}
                        
                        {isEditingUnits ? (
-                         <div className="space-y-6">
-                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              <div className="space-y-1">
-                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Room Type</label>
+                         <div className="space-y-8">
+                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              <div className="space-y-2">
+                                 <label className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] ml-1">Classification</label>
                                  {propertyTypes?.length > 0 ? (
                                    <select 
                                      value={unit.typeId || ''}
                                      onChange={(e) => handleUnitChange(index, 'typeId', e.target.value)}
-                                     className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                     className="w-full px-6 py-4 bg-card border border-border-subtle rounded-2xl text-sm font-black text-foreground focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                                    >
-                                     <option value="">Select Type</option>
+                                     <option value="">Select Prototype</option>
                                      {propertyTypes.map(t => (
                                        <option key={t.id} value={t.id}>{t.name}</option>
                                      ))}
@@ -393,125 +432,134 @@ export default function PropertyReviewPage() {
                                        newUnits[index] = { ...newUnits[index], type: { ...newUnits[index].type, name: e.target.value } };
                                        setProperty({ ...property, units: newUnits });
                                      }}
-                                     className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
-                                     placeholder="e.g. Bedsitter"
+                                     className="w-full px-6 py-4 bg-card border border-border-subtle rounded-2xl text-sm font-black text-foreground focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                     placeholder="e.g. Deluxe Suite"
                                    />
                                  )}
                               </div>
-                              <div className="space-y-1">
-                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Price (Ksh/Month)</label>
+                              <div className="space-y-2">
+                                 <label className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] ml-1">Rate (KES/Cycle)</label>
                                  <input 
                                    type="number" 
                                    value={unit.price}
                                    onChange={(e) => handleUnitChange(index, 'price', Number(e.target.value))}
-                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                   className="w-full px-6 py-4 bg-card border border-border-subtle rounded-2xl text-sm font-black text-foreground focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                                  />
                               </div>
-                              <div className="space-y-1">
-                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Long-stay Discount (%)</label>
+                              <div className="space-y-2">
+                                 <label className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] ml-1">Upfront Credit (%)</label>
                                  <input 
                                    type="number" 
                                    value={unit.upfrontDiscountPct || 0}
                                    onChange={(e) => handleUnitChange(index, 'upfrontDiscountPct', Number(e.target.value))}
-                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                   className="w-full px-6 py-4 bg-card border border-border-subtle rounded-2xl text-sm font-black text-foreground focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                                  />
                               </div>
                            </div>
-                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              <div className="space-y-1">
-                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Capacity (Students)</label>
+                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              <div className="space-y-2">
+                                 <label className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] ml-1">Occupancy Limit</label>
                                  <input 
                                    type="number" 
                                    value={unit.capacity}
                                    onChange={(e) => handleUnitChange(index, 'capacity', Number(e.target.value))}
-                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                   className="w-full px-6 py-4 bg-card border border-border-subtle rounded-2xl text-sm font-black text-foreground focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                                  />
                               </div>
-                              <div className="space-y-1">
-                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Total Available Units</label>
+                              <div className="space-y-2">
+                                 <label className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] ml-1">Total Unit Slots</label>
                                  <input 
                                    type="number" 
                                    value={unit.totalUnits}
                                    onChange={(e) => handleUnitChange(index, 'totalUnits', Number(e.target.value))}
-                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                   className="w-full px-6 py-4 bg-card border border-border-subtle rounded-2xl text-sm font-black text-foreground focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                                  />
                               </div>
-                              <div className="space-y-1">
-                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Room Labels (Comma Sep)</label>
+                              <div className="space-y-2">
+                                 <label className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] ml-1">Slot Identifiers</label>
                                  <input 
                                    type="text" 
                                    value={unit.unitNames?.join(', ') || ''}
                                    onChange={(e) => handleUnitChange(index, 'unitNames', e.target.value.split(',').map(s => s.trim()))}
-                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
-                                   placeholder="e.g. 1A, 1B"
+                                   className="w-full px-6 py-4 bg-card border border-border-subtle rounded-2xl text-sm font-black text-foreground focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                   placeholder="e.g. A01, A02, B05"
                                  />
                               </div>
                            </div>
                          </div>
                        ) : (
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-lg font-black text-slate-900">{unit.type?.name || 'Unit'}</div>
-                            <div className="text-xs font-bold text-slate-400 mt-1 uppercase flex items-center gap-2">
-                              Capacity: {unit.capacity} Students · Total Units: {unit.totalUnits}
-                              {unit.upfrontDiscountPct > 0 && (
-                                <span className="ml-2 bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] lowercase">
-                                  {unit.upfrontDiscountPct}% long-stay discount
-                                </span>
+                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                          <div className="space-y-4">
+                            <div className="text-xl font-black text-foreground tracking-tight">{unit.type?.name || 'Standard Unit'}</div>
+                            <div className="flex flex-wrap items-center gap-3">
+                               <div className="px-4 py-1.5 bg-card border border-border-subtle rounded-full text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                  <User size={12} /> {unit.capacity} Students
+                               </div>
+                               <div className="px-4 py-1.5 bg-card border border-border-subtle rounded-full text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                  <Package size={12} /> {unit.totalUnits} Total Slots
+                               </div>
+                               {unit.upfrontDiscountPct > 0 && (
+                                <div className="px-4 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[9px] font-black uppercase tracking-widest text-emerald-500">
+                                  {unit.upfrontDiscountPct}% Long-stay Perk
+                                </div>
                               )}
                             </div>
                             {unit.unitNames?.length > 0 && (
-                              <div className="mt-3 flex flex-wrap gap-1.5">
+                              <div className="flex flex-wrap gap-2 pt-2">
                                 {unit.unitNames.map((name: string, i: number) => (
-                                  <span key={i} className="px-2 py-0.5 bg-white border border-slate-200 rounded-md text-[10px] font-bold text-slate-600">
+                                  <span key={i} className="px-3 py-1 bg-primary/5 border border-primary/10 rounded-lg text-[8px] font-black text-primary uppercase tracking-widest">
                                     {name}
                                   </span>
                                 ))}
                               </div>
                             )}
                           </div>
-                          <div className="text-right">
-                            <div className="text-xl font-black text-primary">Ksh {unit.price?.toLocaleString()}</div>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Per Month</div>
+                          <div className="text-left md:text-right shrink-0">
+                            <div className="text-3xl font-black text-primary tracking-tighter leading-none">
+                               <span className="text-sm font-bold opacity-30 mr-1">KES</span>
+                               {unit.price?.toLocaleString()}
+                            </div>
+                            <div className="text-[9px] font-black text-muted-foreground/30 uppercase tracking-[0.2em] mt-2">Billing Cycle / Monthly</div>
                           </div>
                         </div>
                       )}
-                   </div>
-                 ))
+                    </div>
+                  ))
                ) : (
-                 <div className="p-12 bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200 text-center">
-                    <Home className="mx-auto text-slate-300 mb-4" size={40} />
-                    <p className="text-slate-500 font-bold tracking-tight">No unit types defined for this property.</p>
-                    <p className="text-slate-400 text-xs mt-1 mb-6">Units must be added before students can book.</p>
+                 <div className="py-24 bg-muted/10 rounded-[3.5rem] border border-dashed border-border-subtle text-center flex flex-col items-center">
+                    <div className="p-6 bg-card rounded-[2rem] shadow-soft-xl border border-border-subtle mb-6 text-muted-foreground/20">
+                       <Home size={48} />
+                    </div>
+                    <p className="text-lg font-black text-foreground tracking-tight">Empty Inventory Registry</p>
+                    <p className="text-sm font-bold text-muted-foreground/40 uppercase tracking-widest mt-2 max-w-xs">Define unit types to enable platform bookings and revenue generation.</p>
                     {isEditingUnits && (
                       <button 
                         onClick={addUnit}
-                        className="bg-white border border-slate-200 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-900 hover:bg-slate-100 transition-all inline-flex items-center gap-2"
+                        className="mt-8 bg-primary text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest shadow-glow hover:scale-105 transition-all flex items-center gap-3"
                       >
-                        <Plus size={14} /> Add First Unit
+                        <Plus size={18} /> Initialize Unit Type
                       </button>
                     )}
                  </div>
                )}
                
                {isEditingUnits && property.units?.length > 0 && (
-                 <button 
-                   onClick={handleSaveUnits}
-                   disabled={isProcessing}
-                   className="w-full bg-slate-900 text-white py-4 rounded-2xl text-sm font-black shadow-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
-                 >
-                   {isProcessing ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-                   Save Unit Configurations
-                  </button>
-                )}
-                {isEditingUnits && property.units?.length > 0 && (
-                  <button 
-                    onClick={addUnit}
-                    className="w-full py-4 border-2 border-dashed border-slate-200 rounded-[2rem] text-slate-400 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all flex items-center justify-center gap-2 font-black text-xs uppercase tracking-widest mt-4"
-                  >
-                    <Plus size={16} /> Add Another Unit Type
-                  </button>
-
+                 <div className="flex flex-col gap-4 mt-8">
+                    <button 
+                      onClick={handleSaveUnits}
+                      disabled={isProcessing}
+                      className="w-full bg-primary text-white py-6 rounded-[2rem] text-xs font-black uppercase tracking-[0.2em] shadow-glow hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4"
+                    >
+                      {isProcessing ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+                      Commit Unit Specifications
+                    </button>
+                    <button 
+                      onClick={addUnit}
+                      className="w-full py-6 border border-dashed border-border-subtle rounded-[2rem] text-muted-foreground hover:text-primary hover:border-primary hover:bg-primary/5 transition-all flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-widest"
+                    >
+                      <Plus size={16} /> Append Unit Variation
+                    </button>
+                 </div>
                )}
              </div>
           </section>
@@ -520,67 +568,79 @@ export default function PropertyReviewPage() {
         {/* Right Column: Landlord & Compliance */}
         <div className="space-y-12">
            {/* Landlord Info */}
-           <section className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
-             <h3 className="text-xl font-black text-slate-900 flex items-center gap-3">
-               <User className="text-blue-500" /> Landlord Details
-             </h3>
-             <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-[2rem] border border-slate-100">
-                <div className="w-16 h-16 bg-white rounded-2xl overflow-hidden border-2 border-white shadow-sm">
-                  <img src={`https://ui-avatars.com/api/?name=${property.landlord?.name}&background=random`} className="w-full h-full object-cover" />
+           <section className="bg-card p-10 rounded-[3.5rem] border border-border-subtle shadow-soft-2xl space-y-8 sticky top-8">
+             <h3 className="text-2xl font-black text-foreground tracking-tight flex items-center gap-4">
+                <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl border border-blue-500/20 shadow-soft-sm">
+                  <User size={24} />
                 </div>
-                <div>
-                  <div className="text-lg font-black text-slate-900">{property.landlord?.name}</div>
-                  <div className="text-xs font-bold text-green-500 flex items-center gap-1">
-                    <ShieldCheck size={12} /> Verified Landlord
+                Landlord Auth
+             </h3>
+             
+             <div className="p-8 bg-muted/10 rounded-[3rem] border border-border-subtle text-center space-y-6 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                
+                <div className="w-32 h-32 mx-auto bg-card rounded-[3rem] overflow-hidden border-4 border-card shadow-soft-2xl relative z-10">
+                  {landlord?.avatar ? (
+                    <img src={getPublicUrl(landlord.avatar)} alt={landlord?.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(landlord?.name || 'User')}&background=random&size=256&bold=true`} className="w-full h-full object-cover" alt="" />
+                  )}
+                </div>
+                
+                <div className="relative z-10">
+                  <div className="text-2xl font-black text-foreground tracking-tighter leading-none">{landlord?.name}</div>
+                  <div className="inline-flex mt-4 items-center gap-2 px-4 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[9px] font-black uppercase tracking-widest text-emerald-500">
+                    <ShieldCheck size={12} /> Identity Verified
                   </div>
                 </div>
              </div>
+
              <div className="space-y-4 px-2">
-                <ContactItem icon={<Mail size={16} />} value={property.landlord?.email} />
-                <ContactItem icon={<Phone size={16} />} value={property.landlord?.phone || 'No phone provided'} />
+                <ContactItem icon={<Mail size={18} />} value={landlord?.email} label="E-Mail Address" />
+                <ContactItem icon={<Phone size={18} />} value={landlord?.phone || 'Private Registry'} label="Direct Phone Line" />
              </div>
-           </section>
 
-           {/* Agreement Template */}
-           <section className="bg-gradient-to-br from-slate-900 to-indigo-950 p-10 rounded-[3rem] shadow-xl text-white space-y-6">
-              <h3 className="text-xl font-black flex items-center gap-3">
-                <FileText className="text-indigo-400" /> Agreement Template
-              </h3>
-              <p className="text-indigo-200 text-sm font-medium leading-relaxed">
-                Review the tenancy agreement template that students will sign upon booking approval.
-              </p>
-              {property.agreementTemplateUrl ? (
-                <a 
-                  href={property.agreementTemplateUrl} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="block w-full bg-white text-slate-900 py-4 rounded-2xl text-center text-sm font-black hover:bg-indigo-50 transition-colors"
-                >
-                  View Full Agreement PDF
-                </a>
-              ) : (
-                <div className="p-4 bg-white/5 border border-white/10 rounded-2xl text-center text-sm font-bold text-red-300">
-                  No agreement template uploaded!
-                </div>
-              )}
-           </section>
+             {/* Agreement Template */}
+             <div className="pt-8 space-y-6 border-t border-border-subtle">
+                <h4 className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] flex items-center gap-3">
+                  <FileText size={14} className="text-primary" /> Compliance
+                </h4>
+                {property.agreementTemplateUrl ? (
+                  <a 
+                    href={getPublicUrl(property.agreementTemplateUrl)} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center justify-between p-6 bg-muted/10 border border-border-subtle rounded-3xl hover:bg-muted/30 transition-all group"
+                  >
+                    <div>
+                       <div className="text-xs font-black text-foreground uppercase tracking-tight">Tenancy Agreement</div>
+                       <div className="text-[9px] font-bold text-muted-foreground/60 mt-1 uppercase tracking-widest">Digital Template PDF</div>
+                    </div>
+                    <ArrowRight size={18} className="text-muted-foreground/20 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                  </a>
+                ) : (
+                  <div className="p-6 bg-red-500/5 border border-red-500/10 rounded-3xl text-center">
+                    <div className="text-[9px] font-black text-red-500 uppercase tracking-widest leading-none mb-1">Warning: Missing Documentation</div>
+                    <div className="text-[8px] font-bold text-red-500/60 uppercase tracking-widest">Agreement template not found</div>
+                  </div>
+                )}
+             </div>
 
-           {/* Submission Meta */}
-           <section className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-6">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-400 uppercase tracking-widest">Submitted On</span>
-                  <span className="font-black text-slate-900">{new Date(property.createdAt).toLocaleDateString()}</span>
+             {/* Metadata */}
+             <div className="pt-8 space-y-4 border-t border-border-subtle">
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="font-black text-muted-foreground/40 uppercase tracking-widest">Entry Date</span>
+                  <span className="font-bold text-foreground">{new Date(property.createdAt).toLocaleDateString()}</span>
                 </div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-400 uppercase tracking-widest">Last Updated</span>
-                  <span className="font-black text-slate-900">{new Date(property.updatedAt).toLocaleDateString()}</span>
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="font-black text-muted-foreground/40 uppercase tracking-widest">Last Sync</span>
+                  <span className="font-bold text-foreground">{new Date(property.updatedAt).toLocaleDateString()}</span>
                 </div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-400 uppercase tracking-widest">Property ID</span>
-                  <span className="font-mono text-slate-400 text-[10px]">{id}</span>
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="font-black text-muted-foreground/40 uppercase tracking-widest">System Hash</span>
+                  <span className="font-mono text-muted-foreground/40 uppercase text-[8px]">{id?.toString().substring(0, 16)}...</span>
                 </div>
-              </div>
+             </div>
            </section>
         </div>
       </div>
@@ -590,18 +650,39 @@ export default function PropertyReviewPage() {
 
 function DetailBox({ label, value }: { label: string, value: string }) {
   return (
-    <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100/50">
-      <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{label}</div>
-      <div className="text-sm font-black text-slate-900">{value}</div>
+    <div className="p-8 bg-muted/20 rounded-[2.5rem] border border-border-subtle shadow-inner group hover:bg-muted/30 transition-all">
+      <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-2 leading-none">{label}</div>
+      <div className="text-base font-black text-foreground tracking-tight">{value}</div>
     </div>
   );
 }
 
-function ContactItem({ icon, value }: { icon: React.ReactNode, value: string }) {
+function ContactItem({ icon, value, label }: { icon: React.ReactNode, value: string, label: string }) {
   return (
-    <div className="flex items-center gap-3 text-sm font-semibold text-slate-600">
-      <div className="text-slate-300">{icon}</div>
-      {value}
+    <div className="flex items-center gap-5 p-4 rounded-2xl hover:bg-muted/20 transition-all group">
+      <div className="text-muted-foreground/20 group-hover:text-primary transition-colors">{icon}</div>
+      <div>
+         <div className="text-[8px] font-black text-muted-foreground/30 uppercase tracking-[0.2em] leading-none mb-1">{label}</div>
+         <div className="text-sm font-bold text-foreground tracking-tight">{value}</div>
+      </div>
     </div>
+  );
+}
+
+function ArrowRight({ size, className }: { size?: number, className?: string }) {
+  return (
+    <svg 
+      width={size || 24} 
+      height={size || 24} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="3" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      className={className}
+    >
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
   );
 }

@@ -240,7 +240,7 @@ export class PropertiesService {
         units: {
           include: {
             type: true,
-            bookings: { where: { status: 'APPROVED' } },
+            bookings: { where: { status: { in: ['APPROVED', 'PENDING'] } } },
             tenancies: {
               where: { status: { in: ['ACTIVE', 'NOTICE_GIVEN', 'BREAK_HOLD'] } },
               include: { vacationNotice: true }
@@ -256,7 +256,8 @@ export class PropertiesService {
     return properties.map(prop => {
       const unitsWithOccupancy = prop.units.map(u => {
         const activeTenancies = u.tenancies.filter(t => t.status !== 'VACATED');
-        const occupiedCount = activeTenancies.length;
+        const pendingBookings = u.bookings.filter(b => b.status === 'PENDING');
+        const occupiedCount = activeTenancies.length + pendingBookings.length;
         const isFull = occupiedCount >= u.totalUnits;
 
         // Vacation countdown: find tenancies with active notices
@@ -306,23 +307,35 @@ export class PropertiesService {
     const property = await this.prisma.property.findUnique({
       where: { id },
       include: { 
-        landlord: { select: { name: true, email: true, phone: true } }, 
+        landlord: { select: { name: true, email: true, phone: true, avatar: true } }, 
         reviews: true,
         category: true,
         units: {
-          include: { type: true, bookings: { where: { status: 'APPROVED' } } }
+          include: { 
+            type: true, 
+            bookings: { where: { status: { in: ['APPROVED', 'PENDING'] } } },
+            tenancies: {
+              where: { status: { in: ['ACTIVE', 'NOTICE_GIVEN', 'BREAK_HOLD'] } }
+            }
+          }
         }
       },
     });
     
     if (!property) throw new NotFoundException('Property not found');
 
-    const unitsWithOccupancy = property.units.map(u => ({
-      ...u,
-      occupiedCount: u.bookings.length,
-      isFull: u.bookings.length >= u.totalUnits,
-      hasDiscount: u.upfrontDiscountPct > 0
-    }));
+    const unitsWithOccupancy = property.units.map(u => {
+      const activeTenancies = (u as any).tenancies || [];
+      const pendingBookings = u.bookings.filter(b => b.status === 'PENDING');
+      const occupiedCount = activeTenancies.length + pendingBookings.length;
+      return {
+        ...u,
+        tenancies: undefined,
+        occupiedCount,
+        isFull: occupiedCount >= u.totalUnits,
+        hasDiscount: u.upfrontDiscountPct > 0
+      };
+    });
     const isFullyOccupied = unitsWithOccupancy.length > 0 && unitsWithOccupancy.every(u => u.isFull);
     const hasDiscount = unitsWithOccupancy.some(u => u.hasDiscount);
     const maxDiscount = Math.max(0, ...unitsWithOccupancy.map(u => u.upfrontDiscountPct || 0));
@@ -384,7 +397,10 @@ export class PropertiesService {
         units: { 
           include: { 
             type: true,
-            bookings: { where: { status: 'APPROVED' } }
+            bookings: { where: { status: { in: ['APPROVED', 'PENDING'] } } },
+            tenancies: {
+              where: { status: { in: ['ACTIVE', 'NOTICE_GIVEN', 'BREAK_HOLD'] } }
+            }
           } 
         },
       },
@@ -392,12 +408,18 @@ export class PropertiesService {
     });
 
     return properties.map(prop => {
-      const unitsWithOccupancy = prop.units.map(u => ({
-        ...u,
-        occupiedCount: u.bookings.length,
-        isFull: u.bookings.length >= u.totalUnits,
-        hasDiscount: u.upfrontDiscountPct > 0
-      }));
+      const unitsWithOccupancy = prop.units.map(u => {
+        const activeTenancies = (u as any).tenancies || [];
+        const pendingBookings = u.bookings.filter(b => b.status === 'PENDING');
+        const occupiedCount = activeTenancies.length + pendingBookings.length;
+        return {
+          ...u,
+          tenancies: undefined,
+          occupiedCount,
+          isFull: occupiedCount >= u.totalUnits,
+          hasDiscount: u.upfrontDiscountPct > 0
+        };
+      });
       const isFullyOccupied = unitsWithOccupancy.length > 0 && unitsWithOccupancy.every(u => u.isFull);
       const hasDiscount = unitsWithOccupancy.some(u => u.hasDiscount);
       const maxDiscount = Math.max(0, ...unitsWithOccupancy.map(u => u.upfrontDiscountPct || 0));

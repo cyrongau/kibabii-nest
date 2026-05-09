@@ -27,6 +27,7 @@ import {
   Eye,
   FileCheck
 } from 'lucide-react';
+import imageCompression from 'browser-image-compression';
 import { useNotifications } from '@/context/NotificationContext';
 import SystemAgreementTemplate from '@/components/SystemAgreementTemplate';
 
@@ -181,19 +182,35 @@ export default function NewPropertyPage() {
     if (!file) return;
 
     setIsLoading(true);
-    const data = new FormData();
-    data.append('file', file);
-
+    
     try {
+      // Image Compression Options
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+      };
+
+      showToast('Optimizing image...', 'info');
+      const compressedFile = await imageCompression(file, options);
+      
+      const data = new FormData();
+      data.append('file', compressedFile, compressedFile.name);
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/uploads/image`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
         body: data,
       });
+      
+      if (!response.ok) throw new Error('Upload failed');
+      
       const result = await response.json();
       setFormData(prev => ({ ...prev, images: [...prev.images, result.url] }));
+      showToast('Image uploaded successfully', 'success');
     } catch (error) {
-      showToast('Image upload failed', 'error');
+      console.error('Image compression/upload error:', error);
+      showToast('Image upload failed. Please try a smaller image.', 'error');
     } finally {
       setIsLoading(false);
     }

@@ -158,7 +158,7 @@ export default function SupportPage() {
         </div>
 
         {/* Guides Section */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-card p-8 rounded-[40px] shadow-xl border border-border-subtle transition-all hover:scale-[1.02]">
             <div className="w-14 h-14 bg-primary/5 text-primary rounded-2xl flex items-center justify-center mb-6">
               <CheckCircle2 size={28} />
@@ -201,27 +201,25 @@ export default function SupportPage() {
             </ul>
           </div>
 
-          <div className="bg-card p-8 rounded-[40px] shadow-xl border border-border-subtle transition-all hover:scale-[1.02] flex flex-col justify-between">
-            <div>
-              <div className="w-14 h-14 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center mb-6">
-                <ShieldCheck size={28} />
-              </div>
-              <h3 className="text-xl font-black text-foreground mb-4">Tenancy & Rules</h3>
-              <ul className="space-y-3 mb-8">
-                {[
-                  '30-day digital vacation notice',
-                  'Security deposit refund policy',
-                  'Residency rules & quiet hours',
-                  'Submit maintenance via support',
-                  'View full digital agreement'
-                ].map((step, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-muted-foreground font-medium">
-                    <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-black text-muted-foreground/40 shrink-0">{i+1}</div>
-                    {step}
-                  </li>
-                ))}
-              </ul>
+          <div className="bg-card p-8 rounded-[40px] shadow-xl border border-border-subtle transition-all hover:scale-[1.02]">
+            <div className="w-14 h-14 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center mb-6">
+              <ShieldCheck size={28} />
             </div>
+            <h3 className="text-xl font-black text-foreground mb-4">Tenancy & Rules</h3>
+            <ul className="space-y-3 mb-8">
+              {[
+                '30-day digital vacation notice',
+                'Security deposit refund policy',
+                'Residency rules & quiet hours',
+                'Submit maintenance via support',
+                'View full digital agreement'
+              ].map((step, i) => (
+                <li key={i} className="flex items-center gap-3 text-sm text-muted-foreground font-medium">
+                  <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-black text-muted-foreground/40 shrink-0">{i+1}</div>
+                  {step}
+                </li>
+              ))}
+            </ul>
             <Link 
               href="/support/tenancy-rules"
               className="w-full py-4 bg-muted hover:bg-primary/10 text-foreground hover:text-primary rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
@@ -229,6 +227,47 @@ export default function SupportPage() {
               Full Rules & Obligations
               <ChevronRight size={16} />
             </Link>
+          </div>
+
+          {/* New Landlord Classification Guide */}
+          <div className="bg-card p-8 rounded-[40px] shadow-xl border border-border-subtle transition-all hover:scale-[1.02] border-primary/20">
+            <div className="w-14 h-14 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center mb-6">
+              <LifeBuoy size={28} />
+            </div>
+            <h3 className="text-xl font-black text-foreground mb-2">Unit Classification</h3>
+            <p className="text-xs text-muted-foreground font-bold mb-6 uppercase tracking-widest">Guide for Landlords</p>
+            
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-black text-foreground flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-amber-500" />
+                  Dormitories
+                </h4>
+                <p className="text-[13px] text-muted-foreground leading-relaxed pl-4 border-l-2 border-muted ml-1">
+                  Communal living spaces with shared bathrooms and kitchens. Ideal for large-scale student housing.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-black text-foreground flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-amber-500" />
+                  Studios (Bedsitters)
+                </h4>
+                <p className="text-[13px] text-muted-foreground leading-relaxed pl-4 border-l-2 border-muted ml-1">
+                  Single open-plan room combining living, sleeping, and kitchenette with a private bathroom.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-black text-foreground flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-amber-500" />
+                  Apartments
+                </h4>
+                <p className="text-[13px] text-muted-foreground leading-relaxed pl-4 border-l-2 border-muted ml-1">
+                  Self-contained units with one or more separate bedrooms distinct from the living area.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
