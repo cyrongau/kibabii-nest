@@ -155,8 +155,6 @@ export default function AuthLoginRedirect() {
           </div>
         </div>
       )}
-        </div>
-      )}
 
       {/* Login Overlay */}
       {showLoginOverlay && (

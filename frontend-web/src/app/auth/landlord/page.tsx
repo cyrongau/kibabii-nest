@@ -228,8 +228,12 @@ function LandlordAuthContent() {
                 {isLogin ? "Don't have an account? Join now" : "Already have an account? Sign in"}
               </button>
             </footer>
+          <div className="mt-8 flex justify-center gap-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            <a href="#" className="hover:text-slate-600">Privacy Policy</a>
+            <a href="#" className="hover:text-slate-600">Terms of Service</a>
+            <a href="#" className="hover:text-slate-600">Contact Support</a>
           </div>
-
+        </div>
       </div>
 
       {/* Mobile App Redirect Modal */}
