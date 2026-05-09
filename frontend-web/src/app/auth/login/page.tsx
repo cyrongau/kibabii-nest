@@ -48,7 +48,7 @@ export default function AuthLoginRedirect() {
         });
       }
     } catch (error) {
-      showAlert({ title: 'Connection Error', message: 'Failed to reach server.', type: 'warning' });
+      showAlert({ title: 'Connection Error', message: 'Failed to reach server.', type: 'danger' });
     } finally {
       setIsLoading(false);
     }
@@ -131,18 +131,22 @@ export default function AuthLoginRedirect() {
               <div className="space-y-4">
                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Available Now On</div>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button className="flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all group active:scale-95">
-                    <Download size={20} />
+                  <button className="flex items-center gap-4 bg-slate-900 text-white px-8 py-4 rounded-3xl font-bold hover:bg-slate-800 transition-all group active:scale-95 shadow-xl shadow-slate-200">
+                    <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+                      <Download size={24} />
+                    </div>
                     <div className="text-left">
-                      <div className="text-[10px] opacity-60 leading-none">Download on</div>
-                      <div className="text-lg leading-tight">App Store</div>
+                      <div className="text-[10px] font-black uppercase opacity-60 leading-none mb-1">Download on the</div>
+                      <div className="text-xl font-black leading-tight tracking-tight">App Store</div>
                     </div>
                   </button>
-                  <button className="flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all group active:scale-95">
-                    <Smartphone size={20} />
+                  <button className="flex items-center gap-4 bg-slate-900 text-white px-8 py-4 rounded-3xl font-bold hover:bg-slate-800 transition-all group active:scale-95 shadow-xl shadow-slate-200">
+                    <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+                      <Smartphone size={24} />
+                    </div>
                     <div className="text-left">
-                      <div className="text-[10px] opacity-60 leading-none">Get it on</div>
-                      <div className="text-lg leading-tight">Google Play</div>
+                      <div className="text-[10px] font-black uppercase opacity-60 leading-none mb-1">Get it on</div>
+                      <div className="text-xl font-black leading-tight tracking-tight">Google Play</div>
                     </div>
                   </button>
                 </div>

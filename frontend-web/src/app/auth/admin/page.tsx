@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
       showAlert({
         title: 'Login Error',
         message: 'An error occurred during login. Please verify the backend connection.',
-        type: 'warning'
+        type: 'danger'
       });
     } finally {
       setIsLoading(false);

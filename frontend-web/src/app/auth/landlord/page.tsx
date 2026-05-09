@@ -61,7 +61,7 @@ function LandlordAuthContent() {
         showAlert({
           title: 'Authentication Failed',
           message: 'Please check your email and password. Ensure you are registered as a landlord.',
-          type: 'error'
+          type: 'danger'
         });
       }
     } catch (error) {
@@ -69,7 +69,7 @@ function LandlordAuthContent() {
       showAlert({
         title: 'Connection Error',
         message: 'Could not reach the authentication server. Please check your internet connection.',
-        type: 'warning'
+        type: 'danger'
       });
     } finally {
       setIsLoading(false);
@@ -82,7 +82,7 @@ function LandlordAuthContent() {
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-blue-600 dark:bg-blue-950 p-16 text-white relative overflow-hidden">
         {/* Subtle Background Image */}
         <div 
-          className="absolute inset-0 opacity-10 bg-cover bg-center mix-blend-overlay"
+          className="absolute inset-0 opacity-30 bg-cover bg-center mix-blend-overlay"
           style={{ backgroundImage: 'url("/images/landlord_auth_bg.png")' }}
         />
         
@@ -257,18 +257,22 @@ function LandlordAuthContent() {
               <div className="space-y-4">
                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Download Now</div>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all group active:scale-95 shadow-xl">
-                    <Download size={20} />
+                  <button className="flex items-center gap-4 bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-8 py-4 rounded-3xl font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all group active:scale-95 shadow-xl shadow-slate-200 dark:shadow-none">
+                    <div className="w-10 h-10 bg-white/10 dark:bg-slate-950/10 rounded-xl flex items-center justify-center">
+                      <Download size={24} />
+                    </div>
                     <div className="text-left">
-                      <div className="text-[10px] opacity-60 leading-none uppercase">Available on</div>
-                      <div className="text-lg leading-tight font-black">App Store</div>
+                      <div className="text-[10px] font-black uppercase opacity-60 leading-none mb-1">Download on the</div>
+                      <div className="text-xl font-black leading-tight tracking-tight">App Store</div>
                     </div>
                   </button>
-                  <button className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all group active:scale-95 shadow-xl">
-                    <Smartphone size={20} />
+                  <button className="flex items-center gap-4 bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-8 py-4 rounded-3xl font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all group active:scale-95 shadow-xl shadow-slate-200 dark:shadow-none">
+                    <div className="w-10 h-10 bg-white/10 dark:bg-slate-950/10 rounded-xl flex items-center justify-center">
+                      <Smartphone size={24} />
+                    </div>
                     <div className="text-left">
-                      <div className="text-[10px] opacity-60 leading-none uppercase">Get it on</div>
-                      <div className="text-lg leading-tight font-black">Google Play</div>
+                      <div className="text-[10px] font-black uppercase opacity-60 leading-none mb-1">Get it on</div>
+                      <div className="text-xl font-black leading-tight tracking-tight">Google Play</div>
                     </div>
                   </button>
                 </div>

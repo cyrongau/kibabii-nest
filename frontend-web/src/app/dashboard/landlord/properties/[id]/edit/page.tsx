@@ -10,6 +10,14 @@ import {
 import { useNotifications } from '@/context/NotificationContext';
 import SystemAgreementTemplate from '@/components/SystemAgreementTemplate';
 
+const getPublicUrl = (path: string) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000';
+  const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
+  return `${baseUrl}/${normalizedPath}`;
+};
+
 const AMENITY_OPTIONS = [
   'WiFi', 'Hot Water', 'Security', 'Laundry', 'Gym', 
   'Study Area', 'Borehole', 'Token Meter', 'CCTV'
@@ -464,9 +472,9 @@ export default function EditPropertyPage() {
                     </h3>
                   <button 
                     type="button" onClick={addUnit}
-                    className="text-sm font-bold text-primary px-4 py-2 bg-primary/10 rounded-xl flex items-center gap-2 hover:bg-primary/20 transition-all"
+                    className="text-xs font-black text-white uppercase tracking-widest bg-primary px-6 py-3 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2"
                   >
-                    <Plus size={16} /> Add Unit Type
+                    <Plus size={18} /> Add Unit Type
                   </button>
                 </div>
                 
@@ -900,7 +908,7 @@ export default function EditPropertyPage() {
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   {formData.images.map((img, idx) => (
                     <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden group">
-                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      <img src={getPublicUrl(img)} alt="" className="w-full h-full object-cover" />
                       <button type="button" onClick={() => removeImage(idx)} className="absolute top-2 right-2 w-8 h-8 bg-card text-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50">
                         <X size={14} />
                       </button>

@@ -79,11 +79,11 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             >
               <div className="p-8">
                 <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${
-                  alert.type === 'danger' ? 'bg-red-50 text-red-500' :
+                  (alert.type === 'danger' || alert.type === 'error') ? 'bg-red-50 text-red-500' :
                   alert.type === 'warning' ? 'bg-orange-50 text-orange-500' :
                   'bg-blue-50 text-primary'
                 }`}>
-                  {alert.type === 'danger' ? <XCircle size={32} /> :
+                  {(alert.type === 'danger' || alert.type === 'error') ? <XCircle size={32} /> :
                    alert.type === 'warning' ? <AlertCircle size={32} /> :
                    <Info size={32} />}
                 </div>

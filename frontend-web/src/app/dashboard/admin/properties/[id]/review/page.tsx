@@ -8,6 +8,15 @@ import {
   Save, Plus, Zap, Droplets, Wifi, Trash2, Shield, Brush
 } from 'lucide-react';
 import { useNotifications } from '@/context/NotificationContext';
+import { usePropertyTaxonomy } from '@/hooks/usePropertyTaxonomy';
+
+const getPublicUrl = (path: string) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000';
+  const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
+  return `${baseUrl}/${normalizedPath}`;
+};
 
 export default function PropertyReviewPage() {
   const { id } = useParams();
@@ -18,11 +27,27 @@ export default function PropertyReviewPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isEditingUnits, setIsEditingUnits] = useState(false);
   const [isEditingUtilities, setIsEditingUtilities] = useState(false);
-  const [hadNoUnitsOriginally, setHadNoUnitsOriginally] = useState(false);
+  const [propertyTypes, setPropertyTypes] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     fetchProperty();
+    fetchTaxonomy();
   }, [id]);
+
+  const fetchTaxonomy = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000";
+      const [typesRes, catsRes] = await Promise.all([
+        fetch(`${baseUrl}/taxonomy/types`),
+        fetch(`${baseUrl}/taxonomy/categories`)
+      ]);
+      if (typesRes.ok) setPropertyTypes(await typesRes.json());
+      if (catsRes.ok) setCategories(await catsRes.json());
+    } catch (error) {
+      console.warn('Failed to fetch taxonomy:', error);
+    }
+  };
 
   const fetchProperty = async () => {
     try {
@@ -32,7 +57,6 @@ export default function PropertyReviewPage() {
       if (response.ok) {
         const data = await response.json();
         setProperty(data);
-        setHadNoUnitsOriginally(!data.units || data.units.length === 0);
       } else {
         showToast('Failed to load property', 'error');
         router.push('/dashboard/admin/properties');
@@ -58,7 +82,6 @@ export default function PropertyReviewPage() {
       if (response.ok) {
         showToast('Units updated successfully', 'success');
         setIsEditingUnits(false);
-        setHadNoUnitsOriginally(false);
         fetchProperty();
       } else {
         const errorData = await response.json().catch(() => ({}));
@@ -116,6 +139,36 @@ export default function PropertyReviewPage() {
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const addUnit = () => {
+    const newUnit = { 
+      id: `temp-${Date.now()}`, 
+      typeId: propertyTypes[0]?.id || '',
+      type: propertyTypes[0] || { name: 'Standard Room' }, 
+      price: 5000, 
+      capacity: 1, 
+      totalUnits: 1,
+      upfrontDiscountPct: 0,
+      unitNames: []
+    };
+    setProperty({ ...property, units: [...(property.units || []), newUnit] });
+  };
+
+  const removeUnit = (index: number) => {
+    const newUnits = property.units.filter((_: any, i: number) => i !== index);
+    setProperty({ ...property, units: newUnits });
+  };
+
+  const handleUnitChange = (index: number, field: string, value: any) => {
+    const newUnits = [...property.units];
+    if (field === 'typeId') {
+      const selectedType = propertyTypes.find(t => t.id === value);
+      newUnits[index] = { ...newUnits[index], typeId: value, type: selectedType };
+    } else {
+      newUnits[index] = { ...newUnits[index], [field]: value };
+    }
+    setProperty({ ...property, units: newUnits });
   };
 
   if (isLoading) return <div className="p-12 flex justify-center"><Loader2 className="animate-spin text-primary" size={32} /></div>;
@@ -272,7 +325,7 @@ export default function PropertyReviewPage() {
              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {property.images?.map((img: string, idx: number) => (
                   <div key={idx} className="aspect-square bg-slate-100 rounded-3xl overflow-hidden border-2 border-slate-50">
-                    <img src={img} alt={`Property ${idx}`} className="w-full h-full object-cover" />
+                    <img src={getPublicUrl(img)} alt={`Property ${idx}`} className="w-full h-full object-cover" />
                   </div>
                 ))}
                 {property.images?.length === 0 && <div className="col-span-full py-12 text-center text-slate-400 font-bold">No photos uploaded</div>}
@@ -296,26 +349,15 @@ export default function PropertyReviewPage() {
           <section className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
              <div className="flex items-center justify-between">
                <h3 className="text-xl font-black text-slate-900 flex items-center gap-3">
-                 <Home className="text-purple-500" /> Unit Configurations
+                 <Home className="text-purple-500" /> Unit Types Management
                </h3>
                <div className="flex items-center gap-4">
-                 {isEditingUnits && hadNoUnitsOriginally && (
+                 {isEditingUnits && (
                    <button 
-                     onClick={() => {
-                       const newUnit = { 
-                         id: `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, 
-                         type: { name: 'Standard Room' }, 
-                         price: 5000, 
-                         capacity: 1, 
-                         totalUnits: 1,
-                         upfrontDiscountPct: 0,
-                         unitNames: []
-                       };
-                       setProperty({ ...property, units: [...(property.units || []), newUnit] });
-                     }}
+                     onClick={addUnit}
                      className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-3 py-1.5 rounded-lg hover:bg-green-100 transition-all flex items-center gap-1"
                    >
-                     <Plus size={12} /> Add Unit
+                      <Plus size={14} /> Add Unit Type
                    </button>
                  )}
                  <button 
@@ -330,107 +372,97 @@ export default function PropertyReviewPage() {
              <div className="space-y-4">
                {property.units && property.units.length > 0 ? (
                  property.units.map((unit: any, index: number) => (
-                   <div key={unit.id} className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 relative group/unit">
-                      {isEditingUnits && hadNoUnitsOriginally && (
-                        <button 
-                          onClick={() => {
-                            const newUnits = property.units.filter((_: any, i: number) => i !== index);
-                            setProperty({ ...property, units: newUnits });
-                          }}
-                          className="absolute -top-2 -right-2 w-8 h-8 bg-white text-red-500 rounded-full shadow-sm border border-slate-100 flex items-center justify-center opacity-0 group-hover/unit:opacity-100 transition-all hover:bg-red-50"
-                        >
-                          <XCircle size={14} />
-                        </button>
-                      )}
-                      
-                      {isEditingUnits ? (
-                        <div className="space-y-6">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Room Type Name</label>
-                                <input 
-                                  type="text" 
-                                  defaultValue={unit.type?.name || ''}
-                                  onChange={(e) => {
-                                    const newUnits = [...property.units];
-                                    newUnits[index] = { ...newUnits[index], type: { ...newUnits[index].type, name: e.target.value } };
-                                    setProperty({ ...property, units: newUnits });
-                                  }}
-                                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
-                                  placeholder="e.g. Bedsitter, Single Room"
-                                />
-                             </div>
-                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Price (Ksh/Month)</label>
-                                <input 
-                                  type="number" 
-                                  defaultValue={unit.price}
-                                  onChange={(e) => {
-                                    const newUnits = [...property.units];
-                                    newUnits[index] = { ...newUnits[index], price: Number(e.target.value) };
-                                    setProperty({ ...property, units: newUnits });
-                                  }}
-                                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
-                                />
-                             </div>
-                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Long-stay Discount (%)</label>
-                                <input 
-                                  type="number" 
-                                  defaultValue={unit.upfrontDiscountPct || 0}
-                                  onChange={(e) => {
-                                    const newUnits = [...property.units];
-                                    newUnits[index] = { ...newUnits[index], upfrontDiscountPct: Number(e.target.value) };
-                                    setProperty({ ...property, units: newUnits });
-                                  }}
-                                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
-                                />
-                             </div>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Capacity (Students)</label>
-                                <input 
-                                  type="number" 
-                                  defaultValue={unit.capacity}
-                                  onChange={(e) => {
-                                    const newUnits = [...property.units];
-                                    newUnits[index] = { ...newUnits[index], capacity: Number(e.target.value) };
-                                    setProperty({ ...property, units: newUnits });
-                                  }}
-                                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
-                                />
-                             </div>
-                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Total Available Units</label>
-                                <input 
-                                  type="number" 
-                                  defaultValue={unit.totalUnits}
-                                  onChange={(e) => {
-                                    const newUnits = [...property.units];
-                                    newUnits[index] = { ...newUnits[index], totalUnits: Number(e.target.value) };
-                                    setProperty({ ...property, units: newUnits });
-                                  }}
-                                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
-                                />
-                             </div>
-                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Room Labels (Comma Sep)</label>
-                                <input 
-                                  type="text" 
-                                  defaultValue={unit.unitNames?.join(', ') || ''}
-                                  onChange={(e) => {
-                                    const newUnits = [...property.units];
-                                    newUnits[index] = { ...newUnits[index], unitNames: e.target.value.split(',').map(s => s.trim()) };
-                                    setProperty({ ...property, units: newUnits });
-                                  }}
-                                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
-                                  placeholder="e.g. 1A, 1B"
-                                />
-                             </div>
-                          </div>
-                        </div>
-                      ) : (
+                    <div key={unit.id} className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 relative group/unit">
+                       {isEditingUnits && (
+                         <button 
+                           onClick={() => removeUnit(index)}
+                           className="absolute -top-2 -right-2 w-8 h-8 bg-white text-red-500 rounded-full shadow-sm border border-slate-100 flex items-center justify-center opacity-0 group-hover/unit:opacity-100 transition-all hover:bg-red-50 z-10"
+                         >
+                           <XCircle size={14} />
+                         </button>
+                       )}
+                       
+                       {isEditingUnits ? (
+                         <div className="space-y-6">
+                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div className="space-y-1">
+                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Room Type</label>
+                                 {propertyTypes?.length > 0 ? (
+                                   <select 
+                                     value={unit.typeId || ''}
+                                     onChange={(e) => handleUnitChange(index, 'typeId', e.target.value)}
+                                     className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                   >
+                                     <option value="">Select Type</option>
+                                     {propertyTypes.map(t => (
+                                       <option key={t.id} value={t.id}>{t.name}</option>
+                                     ))}
+                                   </select>
+                                 ) : (
+                                   <input 
+                                     type="text" 
+                                     defaultValue={unit.type?.name || ''}
+                                     onChange={(e) => {
+                                       const newUnits = [...property.units];
+                                       newUnits[index] = { ...newUnits[index], type: { ...newUnits[index].type, name: e.target.value } };
+                                       setProperty({ ...property, units: newUnits });
+                                     }}
+                                     className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                     placeholder="e.g. Bedsitter"
+                                   />
+                                 )}
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Price (Ksh/Month)</label>
+                                 <input 
+                                   type="number" 
+                                   value={unit.price}
+                                   onChange={(e) => handleUnitChange(index, 'price', Number(e.target.value))}
+                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                 />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Long-stay Discount (%)</label>
+                                 <input 
+                                   type="number" 
+                                   value={unit.upfrontDiscountPct || 0}
+                                   onChange={(e) => handleUnitChange(index, 'upfrontDiscountPct', Number(e.target.value))}
+                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                 />
+                              </div>
+                           </div>
+                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div className="space-y-1">
+                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Capacity (Students)</label>
+                                 <input 
+                                   type="number" 
+                                   value={unit.capacity}
+                                   onChange={(e) => handleUnitChange(index, 'capacity', Number(e.target.value))}
+                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                 />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Total Available Units</label>
+                                 <input 
+                                   type="number" 
+                                   value={unit.totalUnits}
+                                   onChange={(e) => handleUnitChange(index, 'totalUnits', Number(e.target.value))}
+                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                 />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Room Labels (Comma Sep)</label>
+                                 <input 
+                                   type="text" 
+                                   value={unit.unitNames?.join(', ') || ''}
+                                   onChange={(e) => handleUnitChange(index, 'unitNames', e.target.value.split(',').map(s => s.trim()))}
+                                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-900"
+                                   placeholder="e.g. 1A, 1B"
+                                 />
+                              </div>
+                           </div>
+                         </div>
+                       ) : (
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="text-lg font-black text-slate-900">{unit.type?.name || 'Unit'}</div>
@@ -467,16 +499,7 @@ export default function PropertyReviewPage() {
                     <p className="text-slate-400 text-xs mt-1 mb-6">Units must be added before students can book.</p>
                     {isEditingUnits && (
                       <button 
-                        onClick={() => {
-                          const newUnit = { 
-                            id: `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, 
-                            type: { name: 'Standard Room' }, 
-                            price: 5000, 
-                            capacity: 1, 
-                            totalUnits: 1 
-                          };
-                          setProperty({ ...property, units: [newUnit] });
-                        }}
+                        onClick={addUnit}
                         className="bg-white border border-slate-200 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-900 hover:bg-slate-100 transition-all inline-flex items-center gap-2"
                       >
                         <Plus size={14} /> Add First Unit
@@ -493,7 +516,16 @@ export default function PropertyReviewPage() {
                  >
                    {isProcessing ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                    Save Unit Configurations
-                 </button>
+                  </button>
+                )}
+                {isEditingUnits && property.units?.length > 0 && (
+                  <button 
+                    onClick={addUnit}
+                    className="w-full py-4 border-2 border-dashed border-slate-200 rounded-[2rem] text-slate-400 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all flex items-center justify-center gap-2 font-black text-xs uppercase tracking-widest mt-4"
+                  >
+                    <Plus size={16} /> Add Another Unit Type
+                  </button>
+
                )}
              </div>
           </section>
