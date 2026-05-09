@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Building2, Mail, Lock, User, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useNotifications } from '@/context/NotificationContext';
 
-export default function LandlordAuthPage() {
+function LandlordAuthContent() {
   const router = useRouter();
   const { showAlert } = useNotifications();
   const [isLogin, setIsLogin] = useState(true);
@@ -217,5 +217,17 @@ export default function LandlordAuthPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LandlordAuthPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+      </div>
+    }>
+      <LandlordAuthContent />
+    </Suspense>
   );
 }
