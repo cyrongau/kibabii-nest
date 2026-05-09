@@ -81,7 +81,7 @@ export default function AdminBookingsPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3000/bookings/admin/stats', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/bookings/admin/stats`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (response.ok) {
@@ -102,7 +102,7 @@ export default function AdminBookingsPage() {
       if (search) queryParams.append('search', search);
       if (statusFilter) queryParams.append('status', statusFilter);
 
-      const response = await fetch(`http://localhost:3000/bookings/admin/all?${queryParams.toString()}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/bookings/admin/all?${queryParams.toString()}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (!response.ok) throw new Error('Failed to fetch bookings');
@@ -120,7 +120,7 @@ export default function AdminBookingsPage() {
   const handleUpdateStatus = async (bookingId: string, newStatus: string) => {
     setIsActionLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/bookings/${bookingId}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/bookings/${bookingId}/status`, {
         method: 'PATCH',
         headers: { 
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,

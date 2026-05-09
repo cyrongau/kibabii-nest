@@ -50,7 +50,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
 
     // Initialize socket
     const token = localStorage.getItem('access_token');
-    socketRef.current = io('http://localhost:3000', {
+    socketRef.current = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000', {
       auth: { token },
       transports: ['websocket']
     });
@@ -76,7 +76,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
   const fetchMessages = async () => {
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:3000/messages/conversation/${conversationId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/messages/conversation/${conversationId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();

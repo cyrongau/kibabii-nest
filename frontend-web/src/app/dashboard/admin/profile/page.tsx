@@ -52,7 +52,7 @@ export default function AdminProfilePage() {
 
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:3000/uploads/image?folder=avatars', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/uploads/image?folder=avatars`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formDataUpload,
@@ -64,7 +64,7 @@ export default function AdminProfilePage() {
       setFormData(prev => ({ ...prev, avatar: url }));
       
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      await fetch(`http://localhost:3000/users/${user.id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/users/${user.id}`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export default function AdminProfilePage() {
         payload.password = formData.password;
       }
 
-      const response = await fetch(`http://localhost:3000/users/${user.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/users/${user.id}`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

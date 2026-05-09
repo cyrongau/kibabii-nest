@@ -40,7 +40,7 @@ export default function AdminAnnouncements() {
   const fetchNotices = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/notices/general', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notices/general`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (!response.ok) throw new Error('Failed to fetch notices');
@@ -61,7 +61,7 @@ export default function AdminAnnouncements() {
 
     setIsPosting(true);
     try {
-      const response = await fetch('http://localhost:3000/notices/general', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notices/general`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export default function AdminAnnouncements() {
     if (!confirm('Are you sure you want to delete this announcement?')) return;
     
     try {
-      const response = await fetch(`http://localhost:3000/notices/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notices/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });

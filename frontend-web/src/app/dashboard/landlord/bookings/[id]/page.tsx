@@ -30,7 +30,7 @@ export default function BookingDetailsPage() {
     const fetchBooking = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch(`http://localhost:3000/bookings/${params.id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/bookings/${params.id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
@@ -54,7 +54,7 @@ export default function BookingDetailsPage() {
     setIsUpdating(true);
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:3000/bookings/${params.id}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/bookings/${params.id}/status`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

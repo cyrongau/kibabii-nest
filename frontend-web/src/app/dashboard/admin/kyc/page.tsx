@@ -26,7 +26,7 @@ export default function AdminKycPage() {
       const userId = searchParams.get('userId');
       if (userId) params.append('userId', userId);
 
-      const response = await fetch(`http://localhost:3000/kyc/admin/all?${params.toString()}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/kyc/admin/all?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -47,7 +47,7 @@ export default function AdminKycPage() {
   const handleVerify = async (id: string, approved: boolean) => {
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:3000/kyc/admin/${id}/verify`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/kyc/admin/${id}/verify`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

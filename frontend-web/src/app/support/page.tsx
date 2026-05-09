@@ -27,7 +27,7 @@ export default function SupportPage() {
     
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:3000/support/tickets', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/support/tickets`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

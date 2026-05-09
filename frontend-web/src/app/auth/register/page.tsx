@@ -25,7 +25,7 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/auth/register', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -55,7 +55,7 @@ export default function RegisterPage() {
     onSuccess: async (tokenResponse) => {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:3000/auth/google', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/auth/google`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: tokenResponse.access_token, role: 'LANDLORD' }),

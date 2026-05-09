@@ -27,14 +27,9 @@ export default function LandlordNoticesPage() {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('access_token');
-      const [propsRes, noticesRes] = await Promise.all([
-        fetch('http://localhost:3000/properties/landlord/all', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        // Since we don't have a direct "all notices for landlord" endpoint yet, 
-        // we'll fetch for the first property or implement a global one.
-        // For now, I'll fetch notices for all properties the landlord owns.
-      ]);
+      const propsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/landlord/all`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
 
       if (propsRes.ok) {
         const props = await propsRes.json();
@@ -44,7 +39,7 @@ export default function LandlordNoticesPage() {
           
           // Fetch notices for all properties
           const allNotices = await Promise.all(props.map(async (p: any) => {
-            const res = await fetch(`http://localhost:3000/notices/property/${p.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notices/property/${p.id}`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             return res.ok ? await res.json() : [];
@@ -63,7 +58,7 @@ export default function LandlordNoticesPage() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await fetch(`http://localhost:3000/notices/property/${formData.propertyId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notices/property/${formData.propertyId}`, {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -88,7 +83,7 @@ export default function LandlordNoticesPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this notice?')) return;
     try {
-      const response = await fetch(`http://localhost:3000/notices/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notices/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });

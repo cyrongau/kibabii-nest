@@ -76,7 +76,7 @@ export default function AdminSettings() {
   const fetchConfig = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/notifications/config', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notifications/config`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       const data = await response.json();
@@ -114,7 +114,7 @@ export default function AdminSettings() {
         firebaseConfig: parsedFirebase
       };
 
-      const response = await fetch('http://localhost:3000/notifications/config', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notifications/config`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ export default function AdminSettings() {
     }
     setIsTestingEmail(true);
     try {
-      const response = await fetch('http://localhost:3000/notifications/email/test', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/notifications/email/test`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -376,7 +376,7 @@ export default function AdminSettings() {
                                   showToast('Dispatching asset to cloud...', 'success');
                                   const formData = new FormData();
                                   formData.append('file', file);
-                                  const response = await fetch('http://localhost:3000/uploads/image', {
+                                  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/uploads/image`, {
                                     method: 'POST',
                                     headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
                                     body: formData

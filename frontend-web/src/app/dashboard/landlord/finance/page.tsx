@@ -23,10 +23,10 @@ export default function LandlordFinancePage() {
         const headers = { Authorization: `Bearer ${token}` };
 
         const [summaryRes, paymentsRes, balanceRes, withdrawalsRes] = await Promise.all([
-          fetch('http://localhost:3000/payments/landlord/summary', { headers }),
-          fetch('http://localhost:3000/payments/landlord', { headers }),
-          fetch('http://localhost:3000/wallet/balance', { headers }),
-          fetch('http://localhost:3000/wallet/history', { headers }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/payments/landlord/summary`, { headers }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/payments/landlord`, { headers }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/wallet/balance`, { headers }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/wallet/history`, { headers }),
         ]);
 
         if (summaryRes.ok) setSummary(await summaryRes.json());
@@ -53,7 +53,7 @@ export default function LandlordFinancePage() {
     setIsWithdrawing(true);
     try {
       const token = localStorage.getItem('access_token');
-      const res = await fetch('http://localhost:3000/wallet/withdraw', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/wallet/withdraw`, {
         method: 'POST',
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -69,7 +69,7 @@ export default function LandlordFinancePage() {
         setShowWithdrawModal(false);
         setWithdrawAmount('');
         // Refresh history
-        const histRes = await fetch('http://localhost:3000/wallet/history', { 
+        const histRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/wallet/history`, { 
           headers: { Authorization: `Bearer ${token}` } 
         });
         if (histRes.ok) {
@@ -87,7 +87,7 @@ export default function LandlordFinancePage() {
   const handleVerify = async (paymentId: string, approved: boolean) => {
     try {
       const token = localStorage.getItem('access_token');
-      const res = await fetch(`http://localhost:3000/payments/${paymentId}/verify`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/payments/${paymentId}/verify`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ approved }),
@@ -510,7 +510,7 @@ function SummaryCard({ icon, label, value, color, subtitle }: { icon: React.Reac
   return (
     <div className="card-premium p-8 shadow-soft hover:shadow-soft-lg transition-all group">
       <div className={`w-14 h-14 badge-tint ${color} rounded-[1.25rem] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-        {React.cloneElement(icon as React.ReactElement, { size: 28 })}
+        {React.cloneElement(icon as React.ReactElement<any>, { size: 28 })}
       </div>
       <div className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mb-2 ml-1">{label}</div>
       <div className="text-3xl font-black text-foreground tracking-tight">{value}</div>

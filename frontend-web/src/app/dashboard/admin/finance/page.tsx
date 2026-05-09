@@ -104,10 +104,10 @@ export default function AdminFinanceOverwatch() {
     try {
       const headers = { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` };
       const [summaryRes, historyRes, withdrawalsRes, transactionsRes] = await Promise.all([
-        fetch('http://localhost:3000/payments/admin/summary', { headers }),
-        fetch('http://localhost:3000/payments/admin/history', { headers }),
-        fetch('http://localhost:3000/wallet/admin/withdrawals', { headers }),
-        fetch('http://localhost:3000/wallet/admin/transactions', { headers })
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/payments/admin/summary`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/payments/admin/history`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/wallet/admin/withdrawals`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/wallet/admin/transactions`, { headers })
       ]);
 
       if (!summaryRes.ok || !historyRes.ok || !withdrawalsRes.ok || !transactionsRes.ok) throw new Error('Failed to fetch finance data');
@@ -143,7 +143,7 @@ export default function AdminFinanceOverwatch() {
 
   const handleApprove = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/wallet/admin/withdrawals/${selectedWithdrawal.id}/approve`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/wallet/admin/withdrawals/${selectedWithdrawal.id}/approve`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
@@ -162,7 +162,7 @@ export default function AdminFinanceOverwatch() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:3000/wallet/admin/withdrawals/${selectedWithdrawal.id}/reject`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/wallet/admin/withdrawals/${selectedWithdrawal.id}/reject`, {
         method: 'PUT',
         headers: { 
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,

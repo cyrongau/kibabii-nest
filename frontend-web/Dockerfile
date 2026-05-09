@@ -13,8 +13,9 @@ RUN npm install
 COPY . .
 
 # Build the application
-# We pass environment variables here if needed at build time
-ENV NEXT_PUBLIC_API_URL=https://api.kibabii.generexcom.com
+# Set build-time environment variable
+ARG NEXT_PUBLIC_API_URL=https://api.kibabii.generexcom.com
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN npm run build
 
 # --- Production Image ---

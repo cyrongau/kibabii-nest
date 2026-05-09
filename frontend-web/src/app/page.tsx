@@ -40,7 +40,7 @@ export default function Home() {
 
   const _fetchTestimonials = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/community/testimonials/approved`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/community/testimonials/approved`);
       const data = await res.json();
       setTestimonials(data);
     } catch (e) {

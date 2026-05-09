@@ -15,7 +15,7 @@ export default function PropertiesPage() {
         const token = localStorage.getItem('access_token');
         const userData = JSON.parse(localStorage.getItem('user') || '{}');
         setUser(userData);
-        const response = await fetch(`http://localhost:3000/properties?landlordId=${userData.id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties?landlordId=${userData.id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();

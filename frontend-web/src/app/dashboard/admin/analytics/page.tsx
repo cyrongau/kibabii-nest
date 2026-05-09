@@ -52,8 +52,8 @@ export default function AdminAnalyticsPage() {
     try {
       const headers = { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` };
       const [overviewRes, growthRes] = await Promise.all([
-        fetch('http://localhost:3000/admin/stats/overview', { headers }),
-        fetch('http://localhost:3000/admin/stats/growth', { headers })
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/admin/stats/overview`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/admin/stats/growth`, { headers })
       ]);
 
       if (!overviewRes.ok || !growthRes.ok) throw new Error('Failed to fetch analytics');

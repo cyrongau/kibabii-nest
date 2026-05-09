@@ -49,7 +49,7 @@ export default function AdminSupportPage() {
   const fetchTickets = async () => {
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:3000/support/tickets', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/support/tickets`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -65,7 +65,7 @@ export default function AdminSupportPage() {
     setSelectedTicket(ticket);
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:3000/support/tickets/${ticket.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/support/tickets/${ticket.id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -80,7 +80,7 @@ export default function AdminSupportPage() {
 
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:3000/support/tickets/respond`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/support/tickets/respond`, {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}`,

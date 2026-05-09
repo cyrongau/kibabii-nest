@@ -42,7 +42,7 @@ export default function EditPropertyPage() {
     }
     setIsGenerating(true);
     try {
-      const response = await fetch('http://localhost:3000/properties/generate-description', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/generate-description`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -102,15 +102,15 @@ export default function EditPropertyPage() {
   const [newRule, setNewRule] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/taxonomy/types').then(r => r.json()).then(setPropertyTypes).catch(console.error);
-    fetch('http://localhost:3000/taxonomy/categories').then(r => r.json()).then(setCategories).catch(console.error);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/taxonomy/types`).then(r => r.json()).then(setPropertyTypes).catch(console.error);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/taxonomy/categories`).then(r => r.json()).then(setCategories).catch(console.error);
   }, []);
 
   useEffect(() => {
     if (!id) return;
     const fetchProperty = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/properties/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/${id}`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
         });
         if (!response.ok) throw new Error('Property not found');
@@ -190,7 +190,7 @@ export default function EditPropertyPage() {
   const addUnit = () => {
     setFormData(prev => ({
       ...prev,
-      units: [...prev.units, { id: Date.now().toString(), typeId: '', type: '', price: '', capacity: '1', totalUnits: '1', unitNames: '' }]
+      units: [...prev.units, { id: Date.now().toString(), typeId: '', type: '', price: '', capacity: '1', totalUnits: '1', unitNames: '', upfrontDiscountPct: '0' }]
     }));
   };
 
@@ -227,7 +227,7 @@ export default function EditPropertyPage() {
     const data = new FormData();
     data.append('file', file);
     try {
-      const response = await fetch('http://localhost:3000/uploads/video', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/uploads/video`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
         body: data,
@@ -250,7 +250,7 @@ export default function EditPropertyPage() {
     const data = new FormData();
     data.append('file', file);
     try {
-      const response = await fetch('http://localhost:3000/uploads/image', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/uploads/image`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
         body: data,
@@ -276,7 +276,7 @@ export default function EditPropertyPage() {
     const data = new FormData();
     data.append('file', file);
     try {
-      const response = await fetch('http://localhost:3000/contracts/upload', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/contracts/upload`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
         body: data,
@@ -349,7 +349,7 @@ export default function EditPropertyPage() {
         units: parsedUnits
       };
 
-      const response = await fetch(`http://localhost:3000/properties/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/${id}`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

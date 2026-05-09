@@ -25,7 +25,7 @@ export default function StudentProfilePage() {
     const fetchStudent = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch(`http://localhost:3000/users/${params.id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/users/${params.id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();

@@ -87,7 +87,7 @@ export default function AdminPropertiesPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3000/properties/admin/stats', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties/admin/stats`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (response.ok) {
@@ -109,7 +109,7 @@ export default function AdminPropertiesPage() {
       if (verifiedFilter) queryParams.append('verified', verifiedFilter);
       if (landlordId) queryParams.append('landlordId', landlordId);
 
-      const response = await fetch(`http://localhost:3000/properties/admin/all?${queryParams.toString()}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties/admin/all?${queryParams.toString()}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (!response.ok) throw new Error('Failed to fetch properties');
@@ -134,7 +134,7 @@ export default function AdminPropertiesPage() {
       onConfirm: async () => {
         setIsActionLoading(true);
         try {
-          const response = await fetch(`http://localhost:3000/properties/${propertyId}/verify`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties/${propertyId}/verify`, {
             method: 'PATCH',
             headers: { 
               'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -164,7 +164,7 @@ export default function AdminPropertiesPage() {
   const openPropertyDetails = async (propertyId: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/properties/${propertyId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties/${propertyId}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (!response.ok) throw new Error('Failed to fetch property details');

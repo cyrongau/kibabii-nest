@@ -13,7 +13,8 @@ import {
   Smile,
   Paperclip,
   Loader2,
-  Clock
+  Clock,
+  MessageSquare
 } from 'lucide-react';
 
 export default function MessagesPage() {
@@ -56,7 +57,7 @@ export default function MessagesPage() {
   const fetchContacts = async () => {
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:3000/messages/contacts', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/messages/contacts`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -71,7 +72,7 @@ export default function MessagesPage() {
   const fetchConversation = async (userId: string) => {
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:3000/messages/conversation/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/messages/conversation/${userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -93,7 +94,7 @@ export default function MessagesPage() {
     setIsSearching(true);
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:3000/messages/search-users?q=${searchQuery}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/messages/search-users?q=${searchQuery}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -119,7 +120,7 @@ export default function MessagesPage() {
     setIsSending(true);
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:3000/messages', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/messages`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -352,19 +353,4 @@ export default function MessagesPage() {
   );
 }
 
-function MessageSquare({ size }: { size: number }) {
-  return (
-    <svg 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    >
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
+

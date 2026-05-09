@@ -17,6 +17,7 @@ import {
   Eye,
   Trash2,
   ShieldX,
+  XCircle,
   Home
 } from 'lucide-react';
 import ConfirmationModal from '@/components/shared/ConfirmationModal';
@@ -73,7 +74,7 @@ export default function AdminUsersPage() {
       if (search) queryParams.append('search', search);
       if (roleFilter) queryParams.append('role', roleFilter);
 
-      const response = await fetch(`http://localhost:3000/users?${queryParams.toString()}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/users?${queryParams.toString()}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (!response.ok) throw new Error('Failed to fetch users');
@@ -100,7 +101,7 @@ export default function AdminUsersPage() {
       onConfirm: async () => {
         setIsActionLoading(true);
         try {
-          const response = await fetch(`http://localhost:3000/users/${userId}/${action}`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/users/${userId}/${action}`, {
             method: 'PATCH',
             headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
           });
@@ -133,7 +134,7 @@ export default function AdminUsersPage() {
       onConfirm: async () => {
         setIsActionLoading(true);
         try {
-          const response = await fetch(`http://localhost:3000/users/${userId}`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/users/${userId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
           });
@@ -163,7 +164,7 @@ export default function AdminUsersPage() {
       onConfirm: async () => {
         setIsActionLoading(true);
         try {
-          const response = await fetch(`http://localhost:3000/users/${userId}/verify-landlord`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/users/${userId}/verify-landlord`, {
             method: 'PATCH',
             headers: { 
               'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -190,7 +191,7 @@ export default function AdminUsersPage() {
   const openUserDetails = async (userId: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/users/${userId}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (!response.ok) throw new Error('Failed to fetch user details');

@@ -46,7 +46,7 @@ function AdminDashboardContent() {
   React.useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('http://localhost:3000/admin/stats', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/admin/stats`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
         });
         if (response.ok) {

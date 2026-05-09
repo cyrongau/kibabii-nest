@@ -40,7 +40,7 @@ export default function PropertyReviewPage() {
 
   const fetchProperty = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/properties/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/${id}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       if (response.ok) {
@@ -59,7 +59,7 @@ export default function PropertyReviewPage() {
   const handleVerify = async (status: boolean) => {
     setIsProcessing(true);
     try {
-      const response = await fetch(`http://localhost:3000/properties/${id}/verify`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/${id}/verify`, {
         method: 'PATCH',
         headers: { 
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,

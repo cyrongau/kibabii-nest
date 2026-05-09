@@ -24,7 +24,7 @@ export default function KycModal({ onClose }: { onClose: () => void }) {
 
     try {
       const token = localStorage.getItem('access_token');
-      const res = await fetch('http://localhost:3000/uploads/document', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/uploads/document`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: data,
@@ -45,7 +45,7 @@ export default function KycModal({ onClose }: { onClose: () => void }) {
     setIsLoading(true);
     try {
       const token = localStorage.getItem('access_token');
-      const res = await fetch('http://localhost:3000/kyc/submit', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/kyc/submit`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

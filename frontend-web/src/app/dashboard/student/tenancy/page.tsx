@@ -25,9 +25,9 @@ export default function StudentTenancyPage() {
   const fetchData = async () => {
     try {
       const [tenancyRes, srRes, noticesRes] = await Promise.all([
-        fetch('http://localhost:3000/tenancy/my-tenancies', { headers }),
-        fetch('http://localhost:3000/service-requests/my-requests', { headers }),
-        fetch('http://localhost:3000/notices/my-notices', { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/tenancy/my-tenancies`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/service-requests/my-requests`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/notices/my-notices`, { headers }),
       ]);
       if (tenancyRes.ok) setTenancies(await tenancyRes.json());
       if (srRes.ok) setServiceRequests(await srRes.json());
@@ -37,12 +37,12 @@ export default function StudentTenancyPage() {
   };
 
   const handleVacationNotice = async (tenancyId: string) => {
-    const res = await fetch(`http://localhost:3000/tenancy/${tenancyId}/vacation-notice`, { method: 'POST', headers });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/tenancy/${tenancyId}/vacation-notice`, { method: 'POST', headers });
     if (res.ok) { setShowVacationModal(null); fetchData(); }
   };
 
   const handleReceiptSubmit = async (paymentId: string) => {
-    const res = await fetch(`http://localhost:3000/payments/${paymentId}/receipt`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/payments/${paymentId}/receipt`, {
       method: 'POST', headers,
       body: JSON.stringify({ rawText: receiptText }),
     });
@@ -50,7 +50,7 @@ export default function StudentTenancyPage() {
   };
 
   const handleServiceSubmit = async () => {
-    const res = await fetch('http://localhost:3000/service-requests', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/service-requests`, {
       method: 'POST', headers,
       body: JSON.stringify(serviceForm),
     });
@@ -348,14 +348,14 @@ function TenancyCard({ t, statusColor, onVacation, headers, onRefresh }: { t: an
     const data = new FormData();
     data.append('file', file);
     try {
-      const uploadRes = await fetch('http://localhost:3000/contracts/upload', {
+      const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/contracts/upload`, {
         method: 'POST',
         headers: { 'Authorization': headers.Authorization },
         body: data,
       });
       const uploadResult = await uploadRes.json();
       
-      const signRes = await fetch(`http://localhost:3000/tenancy/${t.id}/sign`, {
+      const signRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/tenancy/${t.id}/sign`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ agreementUrl: uploadResult.url }),

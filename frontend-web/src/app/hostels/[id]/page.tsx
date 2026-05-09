@@ -33,7 +33,7 @@ export default function HostelDetailsPage() {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/properties/${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/${id}`);
         if (!response.ok) throw new Error('Property not found');
         const data = await response.json();
         

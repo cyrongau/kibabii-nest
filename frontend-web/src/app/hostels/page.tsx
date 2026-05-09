@@ -27,7 +27,7 @@ function HostelsContent() {
   useEffect(() => {
     const fetchHostels = async () => {
       try {
-        const response = await fetch('http://localhost:3000/properties');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties`);
         const data = await response.json();
         if (response.ok) {
           setHostels(Array.isArray(data) ? data : []);

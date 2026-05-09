@@ -35,7 +35,7 @@ export function NotificationBell() {
       const token = localStorage.getItem('access_token');
       if (!token) return;
 
-      const response = await fetch('http://localhost:3000/notifications', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/notifications`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -55,7 +55,7 @@ export function NotificationBell() {
       const token = localStorage.getItem('access_token');
       if (!token) return;
 
-      const response = await fetch(`http://localhost:3000/notifications/${id}/read`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/notifications/${id}/read`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -73,7 +73,7 @@ export function NotificationBell() {
       const token = localStorage.getItem('access_token');
       if (!token) return;
 
-      const response = await fetch('http://localhost:3000/notifications/read-all', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/notifications/read-all`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });

@@ -25,7 +25,7 @@ export default function LandlordAuthPage() {
         ? { email, password, requiredRole: 'LANDLORD' }
         : { name, email, password, role: 'LANDLORD' };
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000';
       const response = await fetch(`${baseUrl}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -58,7 +58,7 @@ export default function LandlordLayout({
 
       // Fetch fresh user data to ensure verification status is up to date
       try {
-        const userResponse = await fetch(`http://localhost:3000/users/${parsedUser.id}`, {
+        const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/users/${parsedUser.id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (userResponse.ok) {
@@ -76,7 +76,7 @@ export default function LandlordLayout({
       
       // Fetch stats once authenticated
       try {
-        const response = await fetch('http://localhost:3000/properties/stats/landlord', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/stats/landlord`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
@@ -97,10 +97,10 @@ export default function LandlordLayout({
         try {
           const parsed = JSON.parse(storedUser);
           const [statsRes, userRes] = await Promise.all([
-            fetch('http://localhost:3000/properties/stats/landlord', {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/stats/landlord`, {
               headers: { 'Authorization': `Bearer ${token}` }
             }),
-            fetch(`http://localhost:3000/users/${parsed.id}`, {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/users/${parsed.id}`, {
               headers: { 'Authorization': `Bearer ${token}` }
             })
           ]);

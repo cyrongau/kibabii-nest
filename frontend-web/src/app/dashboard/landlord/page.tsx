@@ -34,21 +34,21 @@ export default function LandlordDashboard() {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         
         // Fetch stats
-        const statsRes = await fetch('http://localhost:3000/properties/stats/landlord', {
+        const statsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/stats/landlord`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const statsData = await statsRes.json();
         if (statsRes.ok) setStats(statsData);
 
         // Fetch properties
-        const propRes = await fetch(`http://localhost:3000/properties?landlordId=${user.id}`, {
+        const propRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties?landlordId=${user.id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const propData = await propRes.json();
         if (propRes.ok) setProperties(Array.isArray(propData) ? propData : []);
 
         // Fetch recent bookings
-        const bookingsRes = await fetch('http://localhost:3000/bookings/landlord', {
+        const bookingsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/bookings/landlord`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const bookingsData = await bookingsRes.json();
@@ -68,7 +68,7 @@ export default function LandlordDashboard() {
   const handleDeleteProperty = async () => {
     const { propertyId } = deleteModal;
     try {
-      const response = await fetch(`http://localhost:3000/properties/${propertyId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/${propertyId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
