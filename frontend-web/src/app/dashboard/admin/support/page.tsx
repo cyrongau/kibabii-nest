@@ -277,7 +277,7 @@ export default function AdminSupportPage() {
                 </button>
               </div>
             </div>
-          </div>
+          </>
         ) : (
           <div className="h-full flex flex-col items-center justify-center p-12 space-y-12 animate-in fade-in zoom-in duration-1000">
             <div className="w-32 h-32 bg-primary/10 rounded-[2.5rem] flex items-center justify-center text-primary group hover:scale-110 hover:rotate-3 transition-all duration-700 shadow-soft-2xl border border-primary/20">

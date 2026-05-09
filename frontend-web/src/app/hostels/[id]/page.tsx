@@ -13,15 +13,19 @@ import {
   Heart, 
   Share2, 
   CheckCircle2, 
-  Loader2, 
-  CreditCard, 
+  Loader2,
+  CreditCard,
   Smartphone,
-  ChevronRight
+  ChevronRight,
+  Navigation,
+  CalendarClock
 } from 'lucide-react';
+import { useNotifications } from '@/context/NotificationContext';
 
 export default function HostelDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
+  const { showToast } = useNotifications();
   const [property, setProperty] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -222,12 +226,30 @@ export default function HostelDetailsPage() {
                    </div>
                  )}
                </div>
-               <button 
-                 onClick={handleStartBooking}
-                 className="w-full md:w-auto bg-primary text-white px-12 py-5 rounded-2xl font-black shadow-2xl shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
-               >
-                 Book This Room
-               </button>
+               <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                 <div className="flex gap-2">
+                    <button 
+                      onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${property.lat},${property.lng}`, '_blank')}
+                      className="p-5 bg-blue-50 text-primary rounded-2xl font-black hover:bg-blue-100 transition-all flex items-center justify-center gap-2 border border-blue-100"
+                      title="Navigate to property"
+                    >
+                      <Navigation size={20} />
+                    </button>
+                    <button 
+                      onClick={() => showToast?.('Tour scheduling is being integrated with your calendar. Please contact support to book a visit manually for now.', 'info')}
+                      className="p-5 bg-emerald-50 text-emerald-600 rounded-2xl font-black hover:bg-emerald-100 transition-all flex items-center justify-center gap-2 border border-emerald-100"
+                      title="Schedule Physical Tour"
+                    >
+                      <CalendarClock size={20} />
+                    </button>
+                 </div>
+                 <button 
+                   onClick={handleStartBooking}
+                   className="flex-1 bg-primary text-white px-12 py-5 rounded-2xl font-black shadow-2xl shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                 >
+                   Book This Room
+                 </button>
+               </div>
             </div>
 
             <div className="space-y-4">
