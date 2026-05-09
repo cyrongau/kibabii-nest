@@ -34,6 +34,9 @@ export default function AdminLoginPage() {
         
         // Strictly allow only ADMINs
         if (data.user?.role !== 'ADMIN') {
+          showAlert({
+            title: 'Unauthorized',
+            message: 'This portal is restricted to system administrators only.',
             type: 'danger'
           });
           return;
