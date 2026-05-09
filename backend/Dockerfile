@@ -24,6 +24,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Install openssl for Prisma
+RUN apk add --no-cache openssl libc6-compat libssl1.1 || apk add --no-cache openssl libc6-compat
+
 # Copy only the necessary files from builder
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
