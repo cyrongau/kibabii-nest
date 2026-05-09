@@ -14,18 +14,10 @@ async function fixUrls() {
   console.log(`Starting URL migration to: ${newBase}`);
 
   // 1. Fix Properties images
-  const properties = await prisma.property.findMany({
-    where: {
-      OR: [
-        { images: { hasSome: [`http://${oldHost}`] } }, // Prisma doesn't support substring match in string arrays easily
-        { agreementTemplateUrl: { contains: oldHost } }
-      ]
-    }
-  });
+  const properties = await prisma.property.findMany();
 
   // Since Prisma array search is limited, we'll fetch all and filter in JS for simplicity in this script
-  const allProperties = await prisma.property.findMany();
-  for (const prop of allProperties) {
+  for (const prop of properties) {
     let updated = false;
     
     // Update images array
