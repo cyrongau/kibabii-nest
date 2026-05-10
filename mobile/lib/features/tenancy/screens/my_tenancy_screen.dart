@@ -584,9 +584,9 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
       context: context,
       title: 'Vacation Notice',
       message: 'Are you sure you want to file a 30-day notice to vacate? This will notify your landlord and start the move-out process.',
-      confirmLabel: 'Confirm Notice',
-      cancelLabel: 'Cancel',
-      isDestructive: true,
+      confirmText: 'Confirm Notice',
+      cancelText: 'Cancel',
+      confirmColor: Colors.red,
       onConfirm: () async {
         AppModals.showLoading(context: context, message: 'Filing notice...');
         try {
