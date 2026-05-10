@@ -69,7 +69,7 @@ class _LandlordMainScreenState extends State<LandlordMainScreen> {
           selectedItemColor: colorScheme.primary,
           unselectedItemColor: colorScheme.onSurface.withOpacity(0.4),
           selectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 10),
-          unselectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.medium, fontSize: 10),
+          unselectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.w500, fontSize: 10),
           elevation: 0,
           items: const [
             BottomNavigationBarItem(

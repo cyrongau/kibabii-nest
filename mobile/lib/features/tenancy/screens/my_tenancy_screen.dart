@@ -4,7 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../services/api_service.dart';
 import 'package:intl/intl.dart';
 import '../../profile/screens/docs_hub_screen.dart';
-import './digital_agreement_screen.dart';
+import 'package:kibabii_nest/features/tenancy/screens/digital_agreement_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../chat/screens/chat_screen.dart';
