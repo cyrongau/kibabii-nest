@@ -308,9 +308,7 @@ class AppRouter {
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
           return DigitalAgreementScreen(
-            bookingId: extra?['bookingId'] ?? '',
-            propertyName: extra?['propertyName'] ?? 'The Azure Commons',
-            unitType: extra?['unitType'] ?? 'Standard Unit',
+            tenancy: extra?['tenancy'] ?? {},
           );
         },
       ),
