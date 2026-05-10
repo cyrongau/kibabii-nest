@@ -44,7 +44,7 @@ export default function MessagesPage() {
 
   useEffect(() => {
     if (activeContact) {
-      fetchConversation(activeContact.id);
+      fetchConversation(activeContact?.id);
     }
   }, [activeContact]);
 
@@ -96,7 +96,7 @@ export default function MessagesPage() {
         // The endpoint returns a conversation object
         setMessages(data.messages || []);
         // Also set the active contact details if we're starting a new chat from search
-        if (!activeContact || activeContact.id !== userId) {
+        if (!activeContact || activeContact?.id !== userId) {
            const otherParticipant = data.participants?.[0];
            if (otherParticipant) setActiveContact(otherParticipant);
         }
@@ -143,7 +143,7 @@ export default function MessagesPage() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          receiverId: activeContact.id,
+          receiverId: activeContact?.id,
           content: newMessage
         }),
       });
@@ -154,7 +154,7 @@ export default function MessagesPage() {
         setNewMessage('');
         // Update contact last message
         setContacts(prev => prev.map(c => 
-          c.user?.id === activeContact.id ? { ...c, lastMessage: msg } : c
+          c?.user?.id === activeContact?.id ? { ...c, lastMessage: msg } : c
         ));
       }
     } catch (error) {

@@ -134,35 +134,35 @@ export function NotificationBell() {
                   </div>
                 ) : (
                   <div className="divide-y divide-border">
-                    {notifications.map(notification => (
+                    {notifications.map((notification, idx) => (
                       <div 
-                        key={notification.id}
+                        key={notification?.id || idx}
                         onClick={() => {
-                          if ((notification as any).link) {
+                          if ((notification as any)?.link) {
                             router.push((notification as any).link);
                             setIsOpen(false);
                           }
-                          if (!notification.isRead) {
+                          if (notification && !notification.isRead) {
                             markAsRead(notification.id);
                           }
                         }}
-                        className={`p-6 transition-all cursor-pointer hover:bg-muted/50 flex gap-4 ${!notification.isRead ? 'bg-primary/5' : ''}`}
+                        className={`p-6 transition-all cursor-pointer hover:bg-muted/50 flex gap-4 ${notification && !notification.isRead ? 'bg-primary/5' : ''}`}
                       >
                         <div className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${
-                          notification.type === 'booking' ? 'bg-emerald-500/10 text-emerald-500' :
-                          notification.type === 'message' ? 'bg-primary/10 text-primary' :
+                          notification?.type === 'booking' ? 'bg-emerald-500/10 text-emerald-500' :
+                          notification?.type === 'message' ? 'bg-primary/10 text-primary' :
                           'bg-orange-500/10 text-orange-500'
                         }`}>
-                          {notification.type === 'booking' ? <Check size={20} /> : <Circle size={10} fill="currentColor" />}
+                          {notification?.type === 'booking' ? <Check size={20} /> : <Circle size={10} fill="currentColor" />}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-bold text-foreground mb-1">{notification.title}</div>
-                          <p className="text-xs text-muted-foreground font-medium line-clamp-2 leading-relaxed">{notification.message}</p>
+                          <div className="text-sm font-bold text-foreground mb-1">{notification?.title || 'Notification'}</div>
+                          <p className="text-xs text-muted-foreground font-medium line-clamp-2 leading-relaxed">{notification?.message}</p>
                           <div className="text-[10px] text-muted-foreground mt-2 font-bold uppercase tracking-tight">
-                            {new Date(notification.createdAt).toLocaleDateString()}
+                            {notification?.createdAt ? new Date(notification.createdAt).toLocaleDateString() : ''}
                           </div>
                         </div>
-                        {!notification.isRead && (
+                        {notification && !notification.isRead && (
                           <div className="shrink-0 w-2 h-2 bg-primary rounded-full mt-2" />
                         )}
                       </div>
