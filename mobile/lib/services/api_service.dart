@@ -1253,27 +1253,5 @@ class ApiService {
     }
   }
 
-  // ── Tours ──
-  Future<List<dynamic>> getLandlordTours() async {
-    final response = await get('/tours/landlord');
-    return response is List ? response : [];
-  }
 
-  Future<List<dynamic>> getStudentTours() async {
-    final response = await get('/tours/student');
-    return response is List ? response : [];
-  }
-
-  // ── Service Requests ──
-  Future<List<dynamic>> getLandlordServiceRequests() async {
-    final response = await get('/service-requests/landlord');
-    return response is List ? response : [];
-  }
-
-  Future<bool> updateServiceRequestStatus(String id, String status) async {
-    final response = await patch('/service-requests/$id/status', {
-      'status': status,
-    });
-    return response != null;
-  }
 }
