@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../features/discovery/screens/discovery_screen.dart';
 import '../features/management/screens/add_property_screen.dart';
 import '../features/management/screens/landlord_dashboard_screen.dart';
+import '../features/management/screens/landlord_main_screen.dart';
+import '../features/management/screens/landlord_tour_management_screen.dart';
 import '../features/management/screens/my_properties_screen.dart';
 import '../features/management/screens/booking_requests_screen.dart';
 import '../features/management/screens/student_profile_view_screen.dart';
@@ -32,8 +34,13 @@ import '../features/management/screens/reports_screen.dart';
 import '../features/management/screens/property_edit_screen.dart';
 import '../features/management/screens/settings_screen.dart';
 import '../features/management/screens/wallet_screen.dart';
-
+import '../features/management/screens/landlord_service_requests_screen.dart';
 import '../features/discovery/screens/saved_properties_screen.dart';
+import '../features/profile/screens/edit_profile_screen.dart';
+import '../features/profile/screens/docs_hub_screen.dart';
+import '../features/tenancy/screens/my_tenancy_screen.dart';
+import '../features/tenancy/screens/digital_agreement_screen.dart';
+import '../features/tenancy/screens/payment_history_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -52,12 +59,28 @@ class AppRouter {
         builder: (context, state) => const DiscoveryScreen(),
       ),
       GoRoute(
+        path: '/dashboard',
+        builder: (context, state) => const DiscoveryScreen(),
+      ),
+      GoRoute(
+        path: '/dashboard/student',
+        builder: (context, state) => const DiscoveryScreen(),
+      ),
+      GoRoute(
+        path: '/dashboard/landlord',
+        builder: (context, state) => const LandlordMainScreen(),
+      ),
+      GoRoute(
         path: '/admin',
         builder: (context, state) => const AdminHomeScreen(),
       ),
       GoRoute(
         path: '/landlord-dashboard',
-        builder: (context, state) => const LandlordDashboardScreen(),
+        builder: (context, state) => const LandlordMainScreen(),
+      ),
+      GoRoute(
+        path: '/landlord/tours',
+        builder: (context, state) => const LandlordTourManagementScreen(),
       ),
       GoRoute(
         path: '/my-properties',
@@ -159,6 +182,10 @@ class AppRouter {
         path: '/profile/scan-document',
         builder: (context, state) => const DocumentScannerScreen(),
       ),
+      GoRoute(
+        path: '/profile/edit',
+        builder: (context, state) => const EditProfileScreen(),
+      ),
       // Landlord: View Student Profile
       GoRoute(
         path: '/student-profile/:id',
@@ -181,6 +208,10 @@ class AppRouter {
           final extra = state.extra as Map<String, dynamic>?;
           return ApprovalHubScreen(initialTab: extra?['tab'] ?? 0);
         },
+      ),
+      GoRoute(
+        path: '/landlord/maintenance',
+        builder: (context, state) => const LandlordServiceRequestsScreen(),
       ),
       GoRoute(
         path: '/withdraw',
@@ -267,6 +298,32 @@ class AppRouter {
       GoRoute(
         path: '/support',
         builder: (context, state) => const SubmitTicketScreen(),
+      ),
+      GoRoute(
+        path: '/docs-hub',
+        builder: (context, state) => const DocsHubScreen(),
+      ),
+      GoRoute(
+        path: '/digital-agreement',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return DigitalAgreementScreen(
+            bookingId: extra?['bookingId'] ?? '',
+            propertyName: extra?['propertyName'] ?? 'The Azure Commons',
+            unitType: extra?['unitType'] ?? 'Standard Unit',
+          );
+        },
+      ),
+      GoRoute(
+        path: '/payment-history',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return PaymentHistoryScreen(payments: extra?['payments'] ?? []);
+        },
+      ),
+      GoRoute(
+        path: '/tenancy',
+        builder: (context, state) => const MyTenancyScreen(),
       ),
     ],
   );

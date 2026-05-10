@@ -9,7 +9,9 @@ import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import '../../../services/api_service.dart';
+import '../../../core/widgets/app_modals.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
@@ -48,33 +50,92 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
+
   Future<void> _exportAsPDF() async {
     setState(() => _isExporting = true);
     try {
       final pdf = pw.Document();
       final now = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
 
+      // Load Logo
+      final logoData = await rootBundle.load('assets/images/pdf_brand_logo.png');
+      final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
+
       pdf.addPage(
         pw.MultiPage(
+          margin: const pw.EdgeInsets.all(40),
+          header: (pw.Context context) => pw.Column(
+            children: [
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Kibabii Nest', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24, color: PdfColors.blue900)),
+                      pw.Text('Financial Statement', style: pw.TextStyle(fontSize: 14, color: PdfColors.grey700)),
+                    ],
+                  ),
+                  pw.Image(logoImage, width: 100, height: 40, fit: pw.BoxFit.contain),
+                ],
+              ),
+              pw.SizedBox(height: 20),
+              pw.Divider(thickness: 2, color: PdfColors.blue900),
+              pw.SizedBox(height: 10),
+            ],
+          ),
           build: (pw.Context context) => [
-            pw.Header(level: 0, child: pw.Text('Kibabii Nest - Financial Statement', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24))),
-            pw.SizedBox(height: 10),
-            pw.Text('Generated on: $now'),
-            pw.SizedBox(height: 20),
-            pw.Text('Summary', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
-            pw.Divider(),
-            pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
-              pw.Text('Total Earnings:'),
-              pw.Text('Ksh ${_summary?['totalEarnings'] ?? 0}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            ]),
-            pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
-              pw.Text('Wallet Balance:'),
-              pw.Text('Ksh ${_summary?['balance'] ?? 0}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            ]),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Text('Generated on: $now', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
+                pw.Text('Landlord ID: ${_summary?['landlordId'] ?? 'N/A'}', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
+              ],
+            ),
             pw.SizedBox(height: 30),
-            pw.Text('Payment History', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+            pw.Text('Summary Overview', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18, color: PdfColors.blue900)),
+            pw.SizedBox(height: 15),
+            pw.Container(
+              padding: const pw.EdgeInsets.all(20),
+              decoration: pw.BoxDecoration(
+                color: PdfColors.grey100,
+                borderRadius: const pw.BorderRadius.all(pw.Radius.circular(10)),
+              ),
+              child: pw.Column(
+                children: [
+                  pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
+                    pw.Text('Total Earnings:'),
+                    pw.Text('Ksh ${_summary?['totalEarnings'] ?? 0}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 16)),
+                  ]),
+                  pw.SizedBox(height: 10),
+                  pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
+                    pw.Text('Wallet Balance:'),
+                    pw.Text('Ksh ${_summary?['balance'] ?? 0}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 16, color: PdfColors.green700)),
+                  ]),
+                  pw.SizedBox(height: 10),
+                  pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
+                    pw.Text('Active Tenants:'),
+                    pw.Text('${_summary?['activeTenantsCount'] ?? 0}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                  ]),
+                ],
+              ),
+            ),
+            pw.SizedBox(height: 40),
+            pw.Text('Detailed Transaction History', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18, color: PdfColors.blue900)),
+            pw.SizedBox(height: 15),
             pw.Table.fromTextArray(
               context: context,
+              border: pw.TableBorder.symmetric(inside: const pw.BorderSide(width: 0.1, color: PdfColors.grey300)),
+              headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+              headerDecoration: const pw.BoxDecoration(color: PdfColors.blue900),
+              cellHeight: 30,
+              cellAlignments: {
+                0: pw.Alignment.centerLeft,
+                1: pw.Alignment.centerLeft,
+                2: pw.Alignment.centerLeft,
+                3: pw.Alignment.centerRight,
+                4: pw.Alignment.center,
+              },
               data: <List<String>>[
                 <String>['Date', 'Tenant', 'Property', 'Amount', 'Status'],
                 ..._payments.map((p) => [
@@ -82,9 +143,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   p['tenancy']?['tenant']?['name'] ?? 'N/A',
                   p['tenancy']?['propertyUnit']?['property']?['name'] ?? 'N/A',
                   'Ksh ${p['amountPaid'] ?? p['amountDue'] ?? 0}',
-                  p['status']?.toString() ?? 'N/A',
+                  p['status']?.toString().toUpperCase() ?? 'N/A',
                 ]),
               ],
+            ),
+            pw.SizedBox(height: 40),
+            pw.Divider(color: PdfColors.grey300),
+            pw.Center(
+              child: pw.Text(
+                'This is an official document generated by the Kibabii Nest Property Management System.',
+                style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey),
+              ),
             ),
           ],
         ),
@@ -99,7 +168,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
       }
     } catch (e) {
       debugPrint('Export Error: $e');
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to export PDF')));
+      if (mounted) {
+        AppModals.showError(
+          context: context, 
+          title: 'Export Failed',
+          message: 'Failed to generate financial statement. Please try again.'
+        );
+      }
     } finally {
       setState(() => _isExporting = false);
     }
@@ -140,6 +215,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final amount = p['amountPaid'] ?? p['amountDue'] ?? 0;
       final receiptNo = p['mpesaReceiptNumber'] ?? p['id'].toString().substring(0, 8).toUpperCase();
 
+      // Load Logo
+      final logoData = await rootBundle.load('assets/images/pdf_brand_logo.png');
+      final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
+
       pdf.addPage(
         pw.Page(
           build: (pw.Context context) => pw.Column(
@@ -148,8 +227,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text('OFFICIAL RECEIPT', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 20)),
-                  pw.Text('Kibabii Nest', style: pw.TextStyle(color: PdfColors.blue)),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('OFFICIAL RECEIPT', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 20)),
+                      pw.Text('Kibabii Nest Housing', style: pw.TextStyle(color: PdfColors.blue, fontSize: 10)),
+                    ],
+                  ),
+                  pw.Image(logoImage, width: 80, height: 32, fit: pw.BoxFit.contain),
                 ],
               ),
               pw.Divider(),

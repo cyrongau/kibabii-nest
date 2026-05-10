@@ -114,6 +114,13 @@ export class CommunityService {
     });
   }
 
+  async getStudentTestimonials(userId: string) {
+    return this.prisma.testimonial.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   // --- Study Buddies ---
   async createStudyPost(userId: string, data: { title: string; content: string; faculty?: string; tags?: string[] }) {
     return this.prisma.studyBuddyPost.create({

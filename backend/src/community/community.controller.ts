@@ -24,6 +24,12 @@ export class CommunityController {
     return this.communityService.submitTestimonial(req.user.userId, data);
   }
 
+  @Get('testimonials/me')
+  @UseGuards(JwtAuthGuard)
+  async getMyTestimonials(@Request() req) {
+    return this.communityService.getStudentTestimonials(req.user.userId);
+  }
+
   @Patch('admin/testimonials/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')

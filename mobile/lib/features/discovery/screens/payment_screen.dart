@@ -1,12 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../../services/api_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../services/payment_service.dart';
-import '../../../core/widgets/app_modals.dart';
+import 'package:kibabii_nest/services/api_service.dart';
+import 'package:kibabii_nest/services/payment_service.dart';
+import 'package:kibabii_nest/core/widgets/app_modals.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String price;
@@ -172,7 +173,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               context: context,
               title: 'Payment Successful',
               message: 'Your payment has been processed from your wallet.',
-              onConfirm: () => context.go('/dashboard'),
+              onConfirm: () => context.go('/'),
             );
           }
         } else {
@@ -221,7 +222,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               context: context,
               title: 'Proof Submitted',
               message: 'Your payment proof has been submitted. Please wait for the landlord to verify it.',
-              onConfirm: () => context.go('/dashboard'),
+              onConfirm: () => context.go('/'),
             );
           } else {
             throw Exception('Failed to submit payment proof. Please try again or contact support.');
@@ -322,7 +323,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               context: context,
               title: 'Payment Received',
               message: 'Your payment was successful.',
-              onConfirm: () => context.go('/dashboard'),
+              onConfirm: () => context.go('/'),
             );
           }
         }

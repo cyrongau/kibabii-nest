@@ -23,6 +23,7 @@ class _LandlordDashboardScreenState extends State<LandlordDashboardScreen> {
     'pendingPayments': 0,
   };
   Map<String, dynamic>? _profile;
+  int _unreadNotifications = 0;
 
   @override
   void initState() {
@@ -38,9 +39,13 @@ class _LandlordDashboardScreenState extends State<LandlordDashboardScreen> {
         setState(() => _profile = profile);
       }
 
+      final notifications = await _apiService.getNotifications();
+      final unreadCount = notifications.where((n) => n['isRead'] == false).length;
+
       final stats = await _apiService.getLandlordStats();
       if (stats != null && mounted) {
         setState(() {
+          _unreadNotifications = unreadCount;
           _stats['balance'] = stats['balance']?.toString() ?? '0';
           _stats['totalEarnings'] = stats['totalEarnings']?.toString() ?? '0';
           _stats['totalProperties'] = stats['totalProperties']?.toString() ?? '0';
@@ -138,11 +143,13 @@ class _LandlordDashboardScreenState extends State<LandlordDashboardScreen> {
             ],
           ),
           IconButton(
-            onPressed: () {},
-            icon: Badge(
-              label: const Text('2'),
-              child: Icon(LucideIcons.bell, color: colorScheme.onBackground),
-            ),
+            onPressed: () => context.push('/notifications'),
+            icon: _unreadNotifications > 0 
+              ? Badge(
+                  label: Text(_unreadNotifications.toString()),
+                  child: Icon(LucideIcons.bell, color: colorScheme.onBackground),
+                )
+              : Icon(LucideIcons.bell, color: colorScheme.onBackground),
           ),
         ],
       ),
@@ -203,7 +210,7 @@ class _LandlordDashboardScreenState extends State<LandlordDashboardScreen> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => context.push('/withdraw'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white.withOpacity(0.2),
                     foregroundColor: Colors.white,
@@ -415,7 +422,9 @@ class _LandlordDashboardScreenState extends State<LandlordDashboardScreen> {
           childAspectRatio: 2.2,
           children: [
             _buildActionItem(colorScheme, isDark, 'Add Property', LucideIcons.plus, () => context.push('/add-property')),
-            _buildActionItem(colorScheme, isDark, 'Manage Listings', LucideIcons.list, () => context.push('/landlord/properties')),
+            _buildActionItem(colorScheme, isDark, 'Manage Listings', LucideIcons.list, () => context.push('/my-properties')),
+            _buildActionItem(colorScheme, isDark, 'Manage Tours', LucideIcons.calendar, () => context.push('/landlord/tours')),
+            _buildActionItem(colorScheme, isDark, 'Maintenance', LucideIcons.wrench, () => context.push('/landlord/maintenance')),
             _buildActionItem(colorScheme, isDark, 'View Reports', LucideIcons.barChart3, () => context.push('/reports')),
             _buildActionItem(colorScheme, isDark, 'Settings', LucideIcons.settings, () => context.push('/settings')),
           ],

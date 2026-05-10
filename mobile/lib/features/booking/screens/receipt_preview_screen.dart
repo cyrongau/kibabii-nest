@@ -48,7 +48,7 @@ class ReceiptPreviewScreen extends StatelessWidget {
     final pw.MemoryImage qrMemoryImage = pw.MemoryImage(qrBytes);
 
     // Load the brand logo
-    final ByteData logoData = await rootBundle.load('assets/images/logo_full.png');
+    final ByteData logoData = await rootBundle.load('assets/images/pdf_brand_logo.png');
     final Uint8List logoBytes = logoData.buffer.asUint8List();
     final pw.MemoryImage logoImage = pw.MemoryImage(logoBytes);
 

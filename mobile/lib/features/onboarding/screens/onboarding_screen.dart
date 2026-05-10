@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:ui';
-import '../../services/auth_service.dart';
-import '../../core/widgets/app_modals.dart';
+import 'package:kibabii_nest/services/auth_service.dart';
+import 'package:kibabii_nest/core/widgets/app_modals.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

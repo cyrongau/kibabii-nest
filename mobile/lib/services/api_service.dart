@@ -337,6 +337,19 @@ class ApiService {
     return [];
   }
 
+  Future<bool> verifyPayment(String paymentId, bool approved) async {
+    final token = await getToken();
+    if (token == null) return false;
+
+    final response = await http.patch(
+      Uri.parse('$baseUrl/payments/$paymentId/verify'),
+      headers: _authHeaders(token),
+      body: jsonEncode({'approved': approved}),
+    );
+
+    return response.statusCode == 200;
+  }
+
   Future<Map<String, dynamic>?> getPropertyById(String id) async {
     final token = await getToken();
     if (token == null) return null;
@@ -571,14 +584,17 @@ class ApiService {
     return response.statusCode == 201 || response.statusCode == 200;
   }
 
-  Future<bool> signTenancy(String tenancyId) async {
+  Future<bool> signTenancy(String tenancyId, {String? signatureBase64}) async {
     final token = await getToken();
     if (token == null) return false;
 
     final response = await http.post(
       Uri.parse('$baseUrl/tenancy/$tenancyId/sign'),
       headers: _authHeaders(token),
-      body: jsonEncode({'agreementUrl': 'signed_digitally_via_mobile'}),
+      body: jsonEncode({
+        'agreementUrl': 'signed_digitally_via_mobile',
+        if (signatureBase64 != null) 'signature': signatureBase64,
+      }),
     );
 
     return response.statusCode == 201 || response.statusCode == 200;
@@ -607,6 +623,155 @@ class ApiService {
     );
 
     return response.statusCode == 201 || response.statusCode == 200;
+  }
+
+  Future<List<dynamic>> getTenantServiceRequests() async {
+    final token = await getToken();
+    if (token == null) return [];
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/service-requests/tenant'),
+      headers: _authHeaders(token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return [];
+  }
+
+  Future<List<dynamic>> getLandlordServiceRequests() async {
+    final token = await getToken();
+    if (token == null) return [];
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/service-requests/landlord'),
+      headers: _authHeaders(token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return [];
+  }
+
+  Future<bool> updateServiceRequestStatus(String requestId, String status) async {
+    final token = await getToken();
+    if (token == null) return false;
+
+    final response = await http.patch(
+      Uri.parse('$baseUrl/service-requests/$requestId/status'),
+      headers: _authHeaders(token),
+      body: jsonEncode({'status': status}),
+    );
+
+    return response.statusCode == 200;
+  }
+
+  // ── Tours & Open Days ──
+
+  Future<Map<String, dynamic>?> requestTour(String propertyId, DateTime tourDate) async {
+    final token = await getToken();
+    if (token == null) return null;
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/tours/request'),
+      headers: _authHeaders(token),
+      body: jsonEncode({
+        'propertyId': propertyId,
+        'tourDate': tourDate.toIso8601String(),
+      }),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return null;
+  }
+
+  Future<List<dynamic>> getStudentTours() async {
+    final token = await getToken();
+    if (token == null) return [];
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/tours/student'),
+      headers: _authHeaders(token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return [];
+  }
+
+  Future<List<dynamic>> getLandlordTours() async {
+    final token = await getToken();
+    if (token == null) return [];
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/tours/landlord'),
+      headers: _authHeaders(token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return [];
+  }
+
+  Future<bool> updateTourStatus(String tourId, String status, {String? feedback}) async {
+    final token = await getToken();
+    if (token == null) return false;
+
+    final response = await http.patch(
+      Uri.parse('$baseUrl/tours/$tourId/status'),
+      headers: _authHeaders(token),
+      body: jsonEncode({
+        'status': status,
+        if (feedback != null) 'feedback': feedback,
+      }),
+    );
+
+    return response.statusCode == 200;
+  }
+
+  Future<Map<String, dynamic>?> createOpenDay({
+    required String propertyId,
+    required DateTime date,
+    required String startTime,
+    required String endTime,
+    String? description,
+  }) async {
+    final token = await getToken();
+    if (token == null) return null;
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/tours/open-days'),
+      headers: _authHeaders(token),
+      body: jsonEncode({
+        'propertyId': propertyId,
+        'date': date.toIso8601String(),
+        'startTime': startTime,
+        'endTime': endTime,
+        if (description != null) 'description': description,
+      }),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return null;
+  }
+
+  Future<List<dynamic>> getPropertyOpenDays(String propertyId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/tours/property/$propertyId/open-days'),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return [];
   }
 
   // ── Notifications & Announcements ──
@@ -1060,5 +1225,54 @@ class ApiService {
       print('API POST Exception [$endpoint]: $e');
       rethrow;
     }
+  }
+
+  // ── Tours ──
+  Future<List<dynamic>> getLandlordTours() async {
+    final response = await get('/tours/landlord');
+    return response is List ? response : [];
+  }
+
+  Future<List<dynamic>> getStudentTours() async {
+    final response = await get('/tours/student');
+    return response is List ? response : [];
+  }
+
+  Future<bool> updateTourStatus(String id, String status, {String? feedback}) async {
+    final response = await patch('/tours/$id/status', {
+      'status': status,
+      if (feedback != null) 'feedback': feedback,
+    });
+    return response != null;
+  }
+
+  Future<bool> createOpenDay({
+    required String propertyId,
+    required DateTime date,
+    required String startTime,
+    required String endTime,
+    String? description,
+  }) async {
+    final response = await post('/tours/open-days', {
+      'propertyId': propertyId,
+      'date': date.toIso8601String(),
+      'startTime': startTime,
+      'endTime': endTime,
+      if (description != null) 'description': description,
+    });
+    return response != null;
+  }
+
+  // ── Service Requests ──
+  Future<List<dynamic>> getLandlordServiceRequests() async {
+    final response = await get('/service-requests/landlord');
+    return response is List ? response : [];
+  }
+
+  Future<bool> updateServiceRequestStatus(String id, String status) async {
+    final response = await patch('/service-requests/$id/status', {
+      'status': status,
+    });
+    return response != null;
   }
 }

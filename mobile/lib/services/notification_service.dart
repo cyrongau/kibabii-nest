@@ -55,6 +55,10 @@ class NotificationService {
       // Map web-style links to mobile routes
       if (link.contains('/dashboard/landlord/bookings/')) {
         link = '/booking-requests';
+      } else if (link.contains('/dashboard/landlord/tours')) {
+        link = '/landlord/tours';
+      } else if (link.contains('/dashboard/landlord/maintenance')) {
+        link = '/landlord/maintenance';
       } else if (link == '/dashboard/student/tenancy' || link == '/dashboard/student') {
         link = '/my-bookings';
       } else if (link.startsWith('/dashboard/landlord/properties/') && link.endsWith('/edit')) {

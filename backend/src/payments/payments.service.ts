@@ -1,13 +1,17 @@
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { PaymentRecordStatus, TransactionType, TransactionStatus } from '@prisma/client';
+import { NotificationsService } from '../notifications/notifications.service';
 import axios from 'axios';
 
 @Injectable()
 export class PaymentsService {
   private readonly logger = new Logger(PaymentsService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notifications: NotificationsService
+  ) {}
 
   /**
    * Generate monthly payment records for all active/break-hold tenancies.
@@ -98,7 +102,13 @@ export class PaymentsService {
    * Submit a manual payment receipt with optional SMS text for AI scanning.
    */
   async submitReceipt(paymentId: string, data: { fileUrl?: string; rawText?: string }) {
-    const payment = await this.prisma.payment.findUnique({ where: { id: paymentId } });
+    const payment = await this.prisma.payment.findUnique({ 
+      where: { id: paymentId },
+      include: {
+        tenancy: { include: { propertyUnit: { include: { property: true } } } },
+        booking: { include: { propertyUnit: { include: { property: true } } } }
+      }
+    });
     if (!payment) throw new NotFoundException('Payment not found');
 
     // AI-scan the receipt
@@ -147,6 +157,17 @@ export class PaymentsService {
       data: { status: PaymentRecordStatus.SUBMITTED }
     });
 
+    // Notify Landlord
+    const landlordId = payment.tenancy?.propertyUnit?.property?.landlordId || payment.booking?.propertyUnit?.property?.landlordId;
+    if (landlordId) {
+      await this.notifications.createNotification(landlordId, {
+        title: 'Payment Verification Required',
+        message: `A manual payment has been submitted for ${payment.tenancy ? 'Rent' : 'Booking'}. Please verify the receipt.`,
+        type: 'PAYMENT',
+        link: '/management/payments'
+      });
+    }
+
     return receipt;
   }
 
@@ -182,9 +203,6 @@ export class PaymentsService {
   /**
    * Landlord verifies (approves) a submitted payment.
    */
-  /**
-   * Landlord verifies (approves) a submitted payment.
-   */
   async verifyPayment(paymentId: string, approved: boolean) {
     const payment = await this.prisma.payment.findUnique({
       where: { id: paymentId },
@@ -192,6 +210,15 @@ export class PaymentsService {
         receipt: true,
         tenancy: {
           include: {
+            tenant: { select: { id: true, name: true } },
+            propertyUnit: {
+              include: { property: true }
+            }
+          }
+        },
+        booking: {
+          include: {
+            student: { select: { id: true, name: true } },
             propertyUnit: {
               include: { property: true }
             }
@@ -201,9 +228,12 @@ export class PaymentsService {
     });
     if (!payment) throw new NotFoundException('Payment not found');
 
+    const userId = payment.tenancy?.tenant?.id || payment.booking?.student?.id;
+    if (!userId) throw new BadRequestException('Recipient user not found');
+
     if (approved) {
       const amountPaid = payment.receipt?.aiAmount || payment.amountDue;
-      const landlordId = payment.tenancy?.propertyUnit?.property?.landlordId;
+      const landlordId = payment.tenancy?.propertyUnit?.property?.landlordId || payment.booking?.propertyUnit?.property?.landlordId;
       
       if (!landlordId) throw new BadRequestException('Tenancy or property details missing');
 
@@ -225,10 +255,26 @@ export class PaymentsService {
           data: { balance: { increment: amountPaid } }
         })
       ]);
+
+      // Notify User
+      await this.notifications.createNotification(userId, {
+        title: 'Payment Verified',
+        message: `Your payment of Ksh ${amountPaid} has been successfully verified.`,
+        type: 'PAYMENT',
+        link: payment.bookingId ? '/bookings' : '/residency/tenancy'
+      });
     } else {
       await this.prisma.payment.update({
         where: { id: paymentId },
         data: { status: PaymentRecordStatus.REJECTED }
+      });
+
+      // Notify User
+      await this.notifications.createNotification(userId, {
+        title: 'Payment Rejected',
+        message: `Your payment receipt was rejected. Please contact your landlord or re-upload a clear receipt.`,
+        type: 'PAYMENT',
+        link: payment.bookingId ? '/bookings' : '/residency/tenancy'
       });
     }
 
@@ -303,6 +349,8 @@ export class PaymentsService {
     let description = '';
     let accountRef = '';
 
+    this.logger.log(`[MPESA] Initiating ${type} push for ID: ${id}, Phone: ${phoneNumber}`);
+
     if (type === 'payment') {
       let payment = await this.prisma.payment.findUnique({
         where: { id },
@@ -324,15 +372,19 @@ export class PaymentsService {
             include: { tenancy: true, booking: true }
           });
         } else {
+          this.logger.error(`[MPESA] Payment or Booking not found for ID: ${id}`);
           throw new NotFoundException('Payment or Booking not found');
         }
       }
-      amount = Math.ceil(payment.amountDue - payment.discountAmount + payment.penaltyAmount);
+      amount = Math.ceil(payment.amountDue - (payment.discountAmount || 0) + (payment.penaltyAmount || 0));
       description = payment.bookingId ? `Booking for ${payment.bookingId}` : `Rent ${payment.month}/${payment.year}`;
       accountRef = `KNEST-PAY-${payment.id.substring(0, 8).toUpperCase()}`;
     } else {
       const tx = await this.prisma.walletTransaction.findUnique({ where: { id } });
-      if (!tx) throw new NotFoundException('Wallet transaction not found');
+      if (!tx) {
+        this.logger.error(`[MPESA] Wallet transaction not found for ID: ${id}`);
+        throw new NotFoundException('Wallet transaction not found');
+      }
       amount = Math.ceil(tx.amount);
       description = `Wallet Topup: ${tx.id.substring(0, 8)}`;
       accountRef = `KNEST-WAL-${tx.id.substring(0, 8).toUpperCase()}`;
@@ -340,6 +392,7 @@ export class PaymentsService {
 
     const config = await this.prisma.systemConfig.findUnique({ where: { id: 'default' } });
     if (!config?.mpesaConsumerKey || !config?.mpesaConsumerSecret || !config?.mpesaShortcode || !config?.mpesaPasskey) {
+      this.logger.error('[MPESA] Missing configuration in SystemConfig');
       throw new BadRequestException('M-Pesa is not configured. Please contact the administrator.');
     }
 
@@ -350,6 +403,7 @@ export class PaymentsService {
         ? 'https://api.safaricom.co.ke'
         : 'https://sandbox.safaricom.co.ke';
 
+      this.logger.log(`[MPESA] Fetching OAuth token from ${baseUrl}`);
       const tokenRes = await axios.get(`${baseUrl}/oauth/v1/generate?grant_type=client_credentials`, {
         headers: { Authorization: `Basic ${authString}` }
       });
@@ -359,23 +413,28 @@ export class PaymentsService {
       const timestamp = new Date().toISOString().replace(/[-T:\.Z]/g, '').substring(0, 14);
       const password = Buffer.from(`${config.mpesaShortcode}${config.mpesaPasskey}${timestamp}`).toString('base64');
 
-      const amountToCharge = amount;
-
-      const stkRes = await axios.post(`${baseUrl}/mpesa/stkpush/v1/processrequest`, {
+      const payload = {
         BusinessShortCode: config.mpesaShortcode,
         Password: password,
         Timestamp: timestamp,
         TransactionType: 'CustomerPayBillOnline',
-        Amount: amountToCharge,
-        PartyA: phoneNumber,
+        Amount: amount,
+        PartyA: phoneNumber.startsWith('0') ? `254${phoneNumber.substring(1)}` : phoneNumber,
         PartyB: config.mpesaShortcode,
-        PhoneNumber: phoneNumber,
+        PhoneNumber: phoneNumber.startsWith('0') ? `254${phoneNumber.substring(1)}` : phoneNumber,
         CallBackURL: config.mpesaCallbackUrl || `${process.env.APP_URL || 'http://localhost:3000'}/payments/mpesa/callback`,
         AccountReference: accountRef,
         TransactionDesc: description,
-      }, {
+      };
+
+      const { Password, ...safePayload } = payload;
+      this.logger.log(`[MPESA] STK Push Payload: ${JSON.stringify(safePayload)}`);
+
+      const stkRes = await axios.post(`${baseUrl}/mpesa/stkpush/v1/processrequest`, payload, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
+
+      this.logger.log(`[MPESA] STK Push Response: ${JSON.stringify(stkRes.data)}`);
 
       // Update record with checkout request ID
       if (type === 'payment') {
@@ -397,8 +456,16 @@ export class PaymentsService {
         message: 'STK Push sent. Please check your phone to complete the payment.',
       };
     } catch (error: any) {
-      this.logger.error('M-Pesa STK Push failed:', error.response?.data || error.message);
-      throw new BadRequestException(`M-Pesa payment failed: ${error.response?.data?.errorMessage || error.message}`);
+      const errorData = error.response?.data;
+      const status = error.response?.status;
+      this.logger.error(`[MPESA] Error Status: ${status}`);
+      this.logger.error(`[MPESA] Error Data: ${JSON.stringify(errorData || error.message)}`);
+      
+      if (status === 400 && errorData?.errorMessage?.includes('BusinessShortCode')) {
+        this.logger.error('[MPESA] Hint: Check if BusinessShortCode and PartyB match and are valid for the environment.');
+      }
+
+      throw new BadRequestException(`M-Pesa payment failed: ${errorData?.errorMessage || error.message}`);
     }
   }
 

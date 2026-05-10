@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ServiceRequestStatus } from '@prisma/client';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class ServiceRequestsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notifications: NotificationsService
+  ) {}
 
   async create(tenantId: string, data: {
     propertyId: string;
@@ -13,7 +17,7 @@ export class ServiceRequestsService {
     priority?: string;
     photos?: string[];
   }) {
-    return this.prisma.serviceRequest.create({
+    const request = await this.prisma.serviceRequest.create({
       data: {
         tenantId,
         propertyId: data.propertyId,
@@ -27,6 +31,16 @@ export class ServiceRequestsService {
         property: { select: { name: true, landlordId: true } }
       }
     });
+
+    // Notify Landlord
+    await this.notifications.createNotification(request.property.landlordId, {
+      title: 'New Service Request',
+      message: `${request.tenant.name} has submitted a new ${request.priority} priority request for ${request.property.name}: ${request.title}`,
+      type: 'MAINTENANCE',
+      link: `/management/service-requests/${request.id}`
+    });
+
+    return request;
   }
 
   async findByTenant(tenantId: string) {
@@ -52,7 +66,7 @@ export class ServiceRequestsService {
     const req = await this.prisma.serviceRequest.findUnique({
       where: { id },
       include: {
-        tenant: { select: { name: true, email: true, phone: true } },
+        tenant: { select: { name: true, email: true, phone: true, id: true } },
         property: { select: { name: true, address: true, landlordId: true } }
       }
     });
@@ -63,13 +77,24 @@ export class ServiceRequestsService {
   async updateStatus(id: string, status: ServiceRequestStatus) {
     const data: any = { status };
     if (status === 'RESOLVED') data.resolvedAt = new Date();
-    return this.prisma.serviceRequest.update({
+    
+    const request = await this.prisma.serviceRequest.update({
       where: { id },
       data,
       include: {
-        tenant: { select: { name: true, email: true } },
+        tenant: { select: { id: true, name: true, email: true } },
         property: { select: { name: true } }
       }
     });
+
+    // Notify Tenant
+    await this.notifications.createNotification(request.tenant.id, {
+      title: 'Service Request Update',
+      message: `Your request "${request.title}" for ${request.property.name} has been marked as ${status}.`,
+      type: 'MAINTENANCE',
+      link: `/residency/maintenance`
+    });
+
+    return request;
   }
 }

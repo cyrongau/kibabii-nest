@@ -26,6 +26,7 @@ import { MarketplaceModule } from './marketplace/marketplace.module';
 import { SupportModule } from './support/support.module';
 import { AdminModule } from './admin/admin.module';
 import { WalletModule } from './wallet/wallet.module';
+import { ToursModule } from './tours/tours.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { WalletModule } from './wallet/wallet.module';
     CommunityModule,
     MarketplaceModule,
     SupportModule,
+    ToursModule,
   ],
   controllers: [AppController],
   providers: [AppService],

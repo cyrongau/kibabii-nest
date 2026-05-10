@@ -61,6 +61,7 @@ model User {
   walletTransactions          WalletTransaction[]
   withdrawals                 Withdrawal[]
   conversations               Conversation[]      @relation("UserConversations")
+  tours                       Tour[]
 }
 
 model LandlordKyc {
@@ -210,6 +211,8 @@ model Property {
   units                PropertyUnit[]
   reviews              Review[]
   serviceRequests      ServiceRequest[]
+  tours                Tour[]
+  openDays             OpenDay[]
 }
 
 model Favorite {
@@ -345,6 +348,30 @@ model ServiceRequest {
   updatedAt   DateTime             @updatedAt
   property    Property             @relation(fields: [propertyId], references: [id])
   tenant      User                 @relation(fields: [tenantId], references: [id])
+}
+
+model Tour {
+  id          String   @id @default(uuid())
+  studentId   String
+  propertyId  String
+  tourDate    DateTime
+  status      TourStatus @default(PENDING)
+  feedback    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  property    Property @relation(fields: [propertyId], references: [id])
+  student     User     @relation(fields: [studentId], references: [id])
+}
+
+model OpenDay {
+  id          String   @id @default(uuid())
+  propertyId  String
+  date        DateTime
+  startTime   String
+  endTime     String
+  description String?
+  createdAt   DateTime @default(now())
+  property    Property @relation(fields: [propertyId], references: [id])
 }
 
 model Review {
@@ -530,4 +557,11 @@ enum TransactionStatus {
   COMPLETED
   FAILED
   CANCELLED
+}
+
+enum TourStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
 }

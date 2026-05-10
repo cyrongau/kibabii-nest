@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import '../../../services/api_service.dart';
+import '../../../core/widgets/app_modals.dart';
 import 'package:intl/intl.dart';
 
 class WithdrawalScreen extends StatefulWidget {
@@ -16,21 +17,24 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
   final ApiService _apiService = ApiService();
   final TextEditingController _amountController = TextEditingController();
   String _selectedMethod = 'BANK'; // BANK or MPESA
+  List<dynamic> _history = [];
   double _balance = 0.0;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchBalance();
+    _loadData();
   }
 
-  Future<void> _fetchBalance() async {
+  Future<void> _loadData() async {
     try {
-      final res = await _apiService.get('/wallet/balance');
+      final balanceRes = await _apiService.get('/wallet/balance');
+      final historyRes = await _apiService.get('/wallet/history');
       if (mounted) {
         setState(() {
-          _balance = (res?['balance'] ?? 0.0).toDouble();
+          _balance = (balanceRes?['balance'] ?? 0.0).toDouble();
+          _history = historyRes ?? [];
           _isLoading = false;
         });
       }
@@ -39,40 +43,46 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
     }
   }
 
+  void _fetchBalance() => _loadData();
+
   void _handleWithdrawal() async {
     final amount = double.tryParse(_amountController.text);
     if (amount == null || amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid amount')));
+      AppModals.showError(context: context, title: 'Invalid Amount', message: 'Please enter a valid amount');
       return;
     }
 
     if (amount > _balance) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Insufficient balance')));
+      AppModals.showError(context: context, title: 'Insufficient Balance', message: 'You do not have enough funds to withdraw this amount.');
       return;
     }
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
+    AppModals.showLoading(context: context, message: 'Processing withdrawal...');
 
     try {
       await _apiService.post('/wallet/withdraw', {
-        'amount': amount,
+        'amount': double.tryParse(amount) ?? 0.0,
         'method': _selectedMethod,
       });
 
       if (mounted) {
         Navigator.pop(context); // Close loading
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Withdrawal request submitted successfully')));
+        AppModals.showSuccess(
+          context: context,
+          title: 'Submitted!',
+          message: 'Withdrawal request submitted successfully! It may take up to 24 hours to process.',
+        );
         _fetchBalance();
         _amountController.clear();
       }
     } catch (e) {
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to submit withdrawal: $e')));
+        AppModals.showError(
+          context: context,
+          title: 'Withdrawal Failed',
+          message: e.toString().replaceAll('Exception: ', ''),
+        );
       }
     }
   }
@@ -147,14 +157,28 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
   }
 
   Widget _buildHistorySection() {
+    if (_history.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Withdrawal History', style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B))),
+        Text('Transaction History', style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B))),
         const SizedBox(height: 16),
-        _buildHistoryItem('Ksh 5,000', 'Nov 02, 2023', 'COMPLETED', Colors.green),
-        _buildHistoryItem('Ksh 12,000', 'Oct 28, 2023', 'COMPLETED', Colors.green),
-        _buildHistoryItem('Ksh 8,500', 'Oct 15, 2023', 'COMPLETED', Colors.green),
+        ..._history.map((tx) {
+          final amount = (tx['amount'] ?? 0.0).toDouble();
+          final isDebit = amount < 0;
+          final status = tx['status']?.toString().toUpperCase() ?? 'PENDING';
+          final date = tx['createdAt'] != null ? DateFormat('MMM dd, yyyy').format(DateTime.parse(tx['createdAt'])) : 'N/A';
+          final color = status == 'COMPLETED' ? Colors.green : (status == 'PENDING' ? Colors.orange : Colors.red);
+          
+          return _buildHistoryItem(
+            '${isDebit ? '-' : '+'} Ksh ${amount.abs()}', 
+            date, 
+            status, 
+            color
+          );
+        }).toList(),
       ],
     );
   }

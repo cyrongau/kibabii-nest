@@ -34,9 +34,10 @@ export class ContractsService {
                   type: 'text',
                   text: `Analyze this tenancy agreement carefully and extract details for a property listing. 
                   
-                  1. Monthly Rent: Look for "Monthly rent" or "Rent". Capture the numeric value only (e.g., from "Ksh 4,500" extract 4500).
+                  1. Monthly Rent: Look for "Monthly rent" or "Rent". Capture the numeric value only.
                   2. Security Deposit: Look for "refundable deposit" or "Security Deposit". Capture the numeric value only.
-                  3. Rules: Extract a concise list of rules and tenant obligations from sections 4, 5, 6, and 7.
+                  3. Rules: Extract a concise list of rules and tenant obligations.
+                  4. Signatures: Check if there are signature lines or signed names for both "Landlord" and "Tenant".
                   
                   Return ONLY a valid JSON object:
                   {
@@ -44,10 +45,12 @@ export class ContractsService {
                     "deposit": number,
                     "rules": ["rule 1", "rule 2", ...],
                     "suggestedName": "A catchy name for this property",
-                    "suggestedDescription": "A professional 2-sentence description based on the agreement"
+                    "suggestedDescription": "A professional description",
+                    "signaturesDetected": boolean,
+                    "partiesIdentified": string[]
                   }
                   
-                  If any value is missing, use default values (0 for numbers, empty array for rules).`,
+                  If any value is missing, use default values.`,
                 },
                 {
                   type: 'image_url',
@@ -78,7 +81,9 @@ export class ContractsService {
         deposit: parsed?.deposit || 0,
         rules: parsed?.rules || [],
         suggestedName: parsed?.suggestedName || '',
-        suggestedDescription: parsed?.suggestedDescription || ''
+        suggestedDescription: parsed?.suggestedDescription || '',
+        signaturesDetected: parsed?.signaturesDetected || false,
+        partiesIdentified: parsed?.partiesIdentified || []
       };
     } catch (error) {
       console.error('AI Extraction Error:', error.response?.data || error.message);
@@ -87,7 +92,9 @@ export class ContractsService {
         deposit: 0,
         rules: ['Failed to extract rules'],
         suggestedName: '',
-        suggestedDescription: ''
+        suggestedDescription: '',
+        signaturesDetected: false,
+        partiesIdentified: []
       };
     }
   }

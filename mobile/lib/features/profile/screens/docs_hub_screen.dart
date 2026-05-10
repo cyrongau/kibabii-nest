@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
+import '../../../core/widgets/app_modals.dart';
 import '../../tenancy/screens/digital_agreement_screen.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -150,20 +151,22 @@ class _DocsHubScreenState extends State<DocsHubScreen> {
             onPressed: () async {
               String urlStr = doc['url'] ?? '';
 
-              if (urlStr == 'signed_digitally_via_mobile' && doc['tenancy'] != null) {
+              if ((urlStr == 'signed_digitally_via_mobile' || urlStr == '#' || urlStr.isEmpty) && doc['type'] == 'Agreement' && doc['tenancy'] != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => DigitalAgreementScreen(tenancy: doc['tenancy']),
                   ),
-                );
+                ).then((_) => _loadDocuments());
                 return;
               }
 
               if (urlStr == '#' || urlStr.isEmpty) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Document URL is not available yet.')),
+                  AppModals.showError(
+                    context: context,
+                    title: 'Not Ready',
+                    message: 'This document URL is not available yet. It may be being processed.',
                   );
                 }
                 return;
@@ -179,8 +182,10 @@ class _DocsHubScreenState extends State<DocsHubScreen> {
                 await launchUrl(url, mode: LaunchMode.externalApplication);
               } else {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Could not open document.')),
+                  AppModals.showError(
+                    context: context,
+                    title: 'Error',
+                    message: 'Could not open the document URL. Please try again later.',
                   );
                 }
               }

@@ -7,6 +7,7 @@ import '../../../shared/widgets/nest_alert.dart';
 import 'package:intl/intl.dart';
 import 'payment_archive_screen.dart';
 import '../../profile/screens/docs_hub_screen.dart';
+import '../../tenancy/screens/digital_agreement_screen.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   const MyBookingsScreen({super.key});
@@ -536,7 +537,14 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
                       child: _buildActionBtn(
                         LucideIcons.fileSignature, 
                         'VIEW AGREEMENT', 
-                        () {},
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DigitalAgreementScreen(tenancy: _activeTenancy!),
+                            ),
+                          ).then((_) => _loadBookings()); // Refresh after signing
+                        },
                         const Color(0xFF3B82F6),
                       ),
                     ),

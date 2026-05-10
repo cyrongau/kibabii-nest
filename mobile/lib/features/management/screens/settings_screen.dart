@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (confirm == true) {
       await _authService.logout();
-      if (mounted) context.go('/login');
+      if (mounted) context.go('/auth');
     }
   }
 
@@ -86,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       'Edit Profile', 
                       LucideIcons.user, 
                       colorScheme, 
-                      onTap: () {},
+                      onTap: () => context.push('/profile/edit'),
                     ),
                     _buildSettingTile(
                       'Financial Settings', 
@@ -98,7 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       'Notifications', 
                       LucideIcons.bell, 
                       colorScheme, 
-                      onTap: () {},
+                      onTap: () => context.push('/notifications'),
                     ),
                     const SizedBox(height: 32),
                     _buildSectionTitle('Legal & Support', colorScheme),
@@ -112,7 +112,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       'Help Center', 
                       LucideIcons.helpCircle, 
                       colorScheme, 
-                      onTap: () {},
+                      onTap: () => context.push('/support'),
                     ),
                     const SizedBox(height: 48),
                     _buildLogoutButton(colorScheme),

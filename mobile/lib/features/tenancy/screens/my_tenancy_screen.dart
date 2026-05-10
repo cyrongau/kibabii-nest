@@ -8,6 +8,8 @@ import './digital_agreement_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../chat/screens/chat_screen.dart';
+import '../../../core/widgets/app_modals.dart';
+import './payment_history_screen.dart';
 
 class MyTenancyScreen extends StatefulWidget {
   const MyTenancyScreen({super.key});
@@ -148,17 +150,12 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
                   category: 'LANDLORD',
                 );
                 if (conversation != null && mounted) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatScreen(
-                        conversationId: conversation['id'],
-                        otherUserId: landlordId,
-                        otherUserName: _tenancy!['propertyUnit']['property']['landlord']?['name'] ?? 'Landlord',
-                        otherUserAvatar: _tenancy!['propertyUnit']['property']['landlord']?['avatar'],
-                      ),
-                    ),
-                  );
+                  context.push('/chat', extra: {
+                    'conversationId': conversation['id'],
+                    'otherUserId': landlordId,
+                    'otherUserName': _tenancy!['propertyUnit']['property']['landlord']?['name'] ?? 'Landlord',
+                    'otherUserAvatar': _tenancy!['propertyUnit']['property']['landlord']?['avatar'],
+                  });
                 }
               } finally {
                 if (mounted) setState(() => _isLoading = false);
@@ -344,11 +341,11 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
             Expanded(child: _buildActionButton('Repair', LucideIcons.wrench, Colors.orange, colorScheme, () => _showRepairDialog())),
             const SizedBox(width: 12),
             Expanded(child: _buildActionButton('Docs', LucideIcons.folder, colorScheme.primary, colorScheme, () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DocsHubScreen(tenancy: _tenancy)));
+              context.push('/docs-hub', extra: {'tenancy': _tenancy});
             })),
             const SizedBox(width: 12),
             Expanded(child: _buildActionButton('Agreement', LucideIcons.fileSignature, const Color(0xFF10B981), colorScheme, () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DigitalAgreementScreen(tenancy: _tenancy!)));
+              context.push('/digital-agreement', extra: {'tenancy': _tenancy!});
             })),
             const SizedBox(width: 12),
             Expanded(child: _buildActionButton('Vacate', LucideIcons.logOut, Colors.red, colorScheme, () => _showNoticeDialog())),
@@ -385,64 +382,72 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
   void _showRepairDialog() {
     final TextEditingController controller = TextEditingController();
     File? selectedImage;
-    bool isUploading = false;
 
-    showDialog(
+    AppModals.showCustom(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: Text('Report a Repair', style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: controller,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: 'Describe the issue (e.g. broken tap)',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      title: 'Report a Repair',
+      child: StatefulBuilder(
+        builder: (context, setDialogState) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: controller,
+              maxLines: 3,
+              style: GoogleFonts.outfit(),
+              decoration: InputDecoration(
+                hintText: 'Describe the issue (e.g. broken tap)',
+                hintStyle: GoogleFonts.outfit(color: Colors.grey),
+                filled: true,
+                fillColor: Colors.grey[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
                 ),
               ),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () async {
-                  final picker = ImagePicker();
-                  final image = await picker.pickImage(source: ImageSource.camera);
-                  if (image != null) {
-                    setDialogState(() => selectedImage = File(image.path));
-                  }
-                },
-                child: Container(
-                  height: 100,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: selectedImage != null 
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.file(selectedImage!, fit: BoxFit.cover),
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(LucideIcons.camera, color: Colors.grey[400]),
-                          const SizedBox(height: 4),
-                          Text('Take Photo (Optional)', style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey[500])),
-                        ],
-                      ),
+            ),
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTap: () async {
+                final picker = ImagePicker();
+                final image = await picker.pickImage(source: ImageSource.camera);
+                if (image != null) {
+                  setDialogState(() => selectedImage = File(image.path));
+                }
+              },
+              child: Container(
+                height: 120,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey[200]!),
                 ),
+                child: selectedImage != null 
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.file(selectedImage!, fit: BoxFit.cover),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(LucideIcons.camera, color: Colors.grey[400]),
+                        const SizedBox(height: 4),
+                        Text('Take Photo (Optional)', style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey[500])),
+                      ],
+                    ),
               ),
-            ],
-          ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-            ElevatedButton(
-              onPressed: isUploading ? null : () async {
-                if (controller.text.isNotEmpty) {
-                  setDialogState(() => isUploading = true);
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (controller.text.isEmpty) return;
+                  
+                  Navigator.pop(context); // Close custom modal
+                  AppModals.showLoading(context: context, message: 'Submitting request...');
+                  
                   try {
                     List<String> photos = [];
                     if (selectedImage != null) {
@@ -456,19 +461,34 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
                       description: controller.text,
                       photos: photos,
                     );
+                    
+                    if (mounted) Navigator.pop(context); // Close loading
+
                     if (success && mounted) {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Repair request submitted successfully!')));
+                      AppModals.showSuccess(
+                        context: context,
+                        title: 'Success!',
+                        message: 'Repair request submitted successfully!',
+                      );
                     }
-                  } finally {
-                    if (mounted) setDialogState(() => isUploading = false);
+                  } catch (e) {
+                    if (mounted) {
+                      Navigator.pop(context); // Close loading
+                      AppModals.showError(
+                        context: context,
+                        title: 'Error',
+                        message: 'Failed to submit request: $e',
+                      );
+                    }
                   }
-                }
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF3B82F6)),
-              child: isUploading 
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                : const Text('Submit', style: TextStyle(color: Colors.white)),
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF3B82F6),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 0,
+                ),
+                child: const Text('Submit Request', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              ),
             ),
           ],
         ),
@@ -522,10 +542,18 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
                           if (mounted) {
                             Navigator.pop(context);
                             _loadTenancy();
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Agreement signed successfully!')));
+                            AppModals.showSuccess(
+                              context: context,
+                              title: 'Signed!',
+                              message: 'Agreement signed successfully!',
+                            );
                           }
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                          AppModals.showError(
+                            context: context,
+                            title: 'Error',
+                            message: 'Error signing agreement: $e',
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -551,27 +579,38 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
   }
 
   void _showNoticeDialog() {
-    showDialog(
+    AppModals.showConfirm(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Vacation Notice', style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-        content: const Text('Are you sure you want to file a 30-day notice to vacate? This will notify your landlord.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          ElevatedButton(
-            onPressed: () async {
-              final success = await _api.fileVacationNotice(_tenancy!['id']);
-              if (success && mounted) {
-                Navigator.pop(context);
-                _loadTenancy();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notice filed successfully.')));
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Confirm', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
+      title: 'Vacation Notice',
+      message: 'Are you sure you want to file a 30-day notice to vacate? This will notify your landlord and start the move-out process.',
+      confirmLabel: 'Confirm Notice',
+      cancelLabel: 'Cancel',
+      isDestructive: true,
+      onConfirm: () async {
+        AppModals.showLoading(context: context, message: 'Filing notice...');
+        try {
+          final success = await _api.fileVacationNotice(_tenancy!['id']);
+          if (mounted) Navigator.pop(context); // Close loading
+          
+          if (success && mounted) {
+            _loadTenancy();
+            AppModals.showInfo(
+              context: context,
+              title: 'Notice Filed',
+              message: 'Notice filed successfully. Your landlord has been notified.',
+            );
+          }
+        } catch (e) {
+          if (mounted) {
+            Navigator.pop(context); // Close loading
+            AppModals.showError(
+              context: context,
+              title: 'Error',
+              message: 'Failed to file notice: $e',
+            );
+          }
+        }
+      },
     );
   }
 
@@ -583,7 +622,10 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Recent Payments', style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
-            TextButton(onPressed: () {}, child: Text('See All', style: GoogleFonts.outfit(color: colorScheme.primary, fontWeight: FontWeight.bold))),
+            TextButton(
+              onPressed: () => context.push('/payment-history', extra: {'payments': payments}),
+              child: Text('See All', style: GoogleFonts.outfit(color: colorScheme.primary, fontWeight: FontWeight.bold))
+            ),
           ],
         ),
         if (payments.isEmpty)
