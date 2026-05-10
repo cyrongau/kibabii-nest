@@ -74,32 +74,32 @@ class _LandlordMainScreenState extends State<LandlordMainScreen> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(LucideIcons.layoutDashboard),
-              activeIcon: Icon(LucideIcons.layoutDashboard, fill: Colors.currentColor),
+              activeIcon: Icon(LucideIcons.layoutDashboard),
               label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Icon(LucideIcons.home),
-              activeIcon: Icon(LucideIcons.home, fill: Colors.currentColor),
+              activeIcon: Icon(LucideIcons.home),
               label: 'Listings',
             ),
             BottomNavigationBarItem(
               icon: Icon(LucideIcons.calendarClock),
-              activeIcon: Icon(LucideIcons.calendarClock, fill: Colors.currentColor),
+              activeIcon: Icon(LucideIcons.calendarClock),
               label: 'Bookings',
             ),
             BottomNavigationBarItem(
               icon: Icon(LucideIcons.calendarRange),
-              activeIcon: Icon(LucideIcons.calendarRange, fill: Colors.currentColor),
+              activeIcon: Icon(LucideIcons.calendarRange),
               label: 'Tours',
             ),
             BottomNavigationBarItem(
               icon: Icon(LucideIcons.tool),
-              activeIcon: Icon(LucideIcons.tool, fill: Colors.currentColor),
+              activeIcon: Icon(LucideIcons.tool),
               label: 'Fixes',
             ),
             BottomNavigationBarItem(
               icon: Icon(LucideIcons.wallet),
-              activeIcon: Icon(LucideIcons.wallet, fill: Colors.currentColor),
+              activeIcon: Icon(LucideIcons.wallet),
               label: 'Wallet',
             ),
           ],
