@@ -28,8 +28,17 @@ export default function MessagesPage() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [currentUser, setCurrentUser] = useState<any>({});
 
   useEffect(() => {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr && userStr !== 'undefined' && userStr !== 'null') {
+        setCurrentUser(JSON.parse(userStr) || {});
+      }
+    } catch (e) {
+      console.error('Error parsing user from localStorage:', e);
+    }
     fetchContacts();
   }, []);
 
@@ -154,8 +163,6 @@ export default function MessagesPage() {
       setIsSending(false);
     }
   };
-
-  const currentUser = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || '{}') : {};
 
   return (
     <main className="h-[calc(100vh-64px)] p-8 lg:p-12 overflow-hidden bg-background">
