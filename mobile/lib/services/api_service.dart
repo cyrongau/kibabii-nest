@@ -1227,6 +1227,32 @@ class ApiService {
     }
   }
 
+  Future<dynamic> patch(String endpoint, Map<String, dynamic> data) async {
+    final token = await getToken();
+    print('API PATCH: $baseUrl$endpoint (Token: ${token != null ? 'Present' : 'Missing'})');
+    try {
+      final response = await http.patch(
+        Uri.parse('$baseUrl$endpoint'),
+        headers: token != null ? _authHeaders(token) : {'Content-Type': 'application/json'},
+        body: jsonEncode(data),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonDecode(response.body);
+      }
+
+      final errorBody = jsonDecode(response.body);
+      final message = errorBody['message'] ?? 'An error occurred';
+      throw Exception(message is List ? message.join(', ') : message);
+    } catch (e) {
+      if (e is Exception && !e.toString().contains('Exception:')) {
+         rethrow;
+      }
+      print('API PATCH Exception [$endpoint]: $e');
+      rethrow;
+    }
+  }
+
   // ── Tours ──
   Future<List<dynamic>> getLandlordTours() async {
     final response = await get('/tours/landlord');
