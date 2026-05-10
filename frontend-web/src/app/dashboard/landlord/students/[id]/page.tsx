@@ -76,7 +76,7 @@ export default function StudentProfilePage() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32 blur-3xl" />
           
           <div className="relative flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
-            <div className="w-32 h-32 bg-foreground rounded-[2.5rem] flex items-center justify-center text-background text-5xl font-black border-8 border-card shadow-xl">
+            <div className="w-32 h-32 bg-foreground rounded-[2.5rem] flex items-center justify-center text-background text-5xl font-black border-8 border-card shadow-xl overflow-hidden">
               {student.avatar ? (
                 <img src={student.avatar} alt={student.name} className="w-full h-full object-cover" />
               ) : (

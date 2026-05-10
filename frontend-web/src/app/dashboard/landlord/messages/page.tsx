@@ -61,7 +61,14 @@ export default function MessagesPage() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
-      if (response.ok) setContacts(data);
+      if (response.ok) {
+        const formattedContacts = data.map((conv: any) => ({
+          conversationId: conv.id,
+          user: conv.participants?.[0] || {},
+          lastMessage: conv.messages?.[0] || null,
+        }));
+        setContacts(formattedContacts);
+      }
     } catch (error) {
       console.error('Error fetching contacts:', error);
     } finally {
@@ -138,7 +145,7 @@ export default function MessagesPage() {
         setNewMessage('');
         // Update contact last message
         setContacts(prev => prev.map(c => 
-          c.id === activeContact.id ? { ...c, lastMessage: newMessage, lastMessageAt: new Date().toISOString() } : c
+          c.user?.id === activeContact.id ? { ...c, lastMessage: msg } : c
         ));
       }
     } catch (error) {
