@@ -93,8 +93,8 @@ class _LandlordMainScreenState extends State<LandlordMainScreen> {
               label: 'Tours',
             ),
             BottomNavigationBarItem(
-              icon: Icon(LucideIcons.tool),
-              activeIcon: Icon(LucideIcons.tool),
+              icon: Icon(LucideIcons.wrench),
+              activeIcon: Icon(LucideIcons.wrench),
               label: 'Fixes',
             ),
             BottomNavigationBarItem(
