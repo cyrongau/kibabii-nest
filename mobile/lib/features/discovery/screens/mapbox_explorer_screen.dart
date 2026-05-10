@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../services/api_service.dart';
 import '../widgets/hostel_card.dart';
 import '../../../core/widgets/app_modals.dart';
@@ -118,6 +118,12 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
         setState(() {
           _properties = props;
         });
+        // FIX: Re-add markers now that data has arrived, if the map is already ready.
+        // This resolves the race condition where properties loaded before the map was
+        // initialized, causing _addPropertyMarkers() to exit early with an empty list.
+        if (_isMapReady && _annotationManager != null) {
+          _addPropertyMarkers();
+        }
         if (props.isEmpty) {
           AppModals.showInfo(
             context: context,
@@ -488,10 +494,11 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
 
   Future<void> _startNavigation() async {
     if (_selectedProperty == null) return;
-    
+
     final lat = double.tryParse(_selectedProperty['lat']?.toString() ?? '');
     final lng = double.tryParse(_selectedProperty['lng']?.toString() ?? '');
-    
+    final propertyName = Uri.encodeComponent(_selectedProperty['name'] ?? 'Destination');
+
     if (lat == null || lng == null) {
       AppModals.showError(
         context: context,
@@ -501,77 +508,54 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
       return;
     }
 
-    // 1. Check permissions first
+    // Check & request location permission
     var status = await Permission.location.request();
+    if (status.isPermanentlyDenied) {
+      openAppSettings();
+      return;
+    }
     if (status.isDenied) {
       if (mounted) {
         AppModals.showError(
           context: context,
           title: 'Permission Denied',
-          message: 'Location permission is required for turn-by-turn navigation.',
+          message: 'Location permission is required for navigation.',
         );
       }
       return;
     }
 
-    if (status.isPermanentlyDenied) {
-      openAppSettings();
-      return;
-    }
+    // Open navigation via Google Maps (walking mode).
+    // This is reliable across all Android devices and doesn't require a
+    // separate native SDK — avoiding the flutter_mapbox_navigation crash.
+    final googleMapsUrl = Uri.parse(
+      'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=walking'
+    );
 
-    // 2. Check if location services are enabled
-    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!isLocationEnabled) {
-      if (mounted) {
-        AppModals.showError(
-          context: context,
-          title: 'Location Disabled',
-          message: 'Please enable your device\'s location services to start navigation.',
-        );
-      }
-      return;
-    }
+    // Fallback: native geo: URI supported by any maps app
+    final geoUri = Uri.parse('geo:$lat,$lng?q=$lat,$lng($propertyName)');
 
     try {
-      debugPrint("MapboxExplorerScreen: Getting current position...");
-      final Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high
-      );
-
-      debugPrint("MapboxExplorerScreen: Starting navigation from ${position.latitude}, ${position.longitude} to $lat, $lng");
-      
-      final origin = WayPoint(
-        name: "My Location",
-        latitude: position.latitude,
-        longitude: position.longitude,
-      );
-
-      final destination = WayPoint(
-        name: _selectedProperty['name'],
-        latitude: lat,
-        longitude: lng,
-      );
-
-      List<WayPoint> wayPoints = [origin, destination];
-
-      await MapBoxNavigation.instance.startNavigation(
-        wayPoints: wayPoints,
-        options: MapBoxOptions(
-          mode: MapBoxNavigationMode.walking,
-          simulateRoute: false,
-          language: "en",
-          units: VoiceUnits.metric,
-          voiceInstructionsEnabled: true,
-          bannerInstructionsEnabled: true,
-        ),
-      );
+      if (await canLaunchUrl(googleMapsUrl)) {
+        await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+      } else if (await canLaunchUrl(geoUri)) {
+        await launchUrl(geoUri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          AppModals.showError(
+            context: context,
+            title: 'No Maps App',
+            message: 'Could not open a maps application on this device. Please install Google Maps.',
+          );
+        }
+      }
     } catch (e) {
-      debugPrint("MapboxExplorerScreen: Navigation Error: $e");
+      debugPrint('Navigation launch error: $e');
       if (mounted) {
         AppModals.showError(
           context: context,
           title: 'Navigation Failed',
-          message: 'Could not start navigation. This might be due to an incompatible device or missing Google Play Services.',
+          message: 'Could not open navigation. Please try again.',
         );
       }
     }

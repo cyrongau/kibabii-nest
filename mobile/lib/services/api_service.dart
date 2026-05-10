@@ -1159,6 +1159,27 @@ class ApiService {
     return null;
   }
 
+  /// Sends a message via the REST API. Used as a fallback when the socket
+  /// is not connected. The backend also broadcasts via socket on success.
+  Future<Map<String, dynamic>?> sendMessageRest({
+    required String receiverId,
+    required String content,
+  }) async {
+    final token = await getToken();
+    if (token == null) return null;
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/messages'),
+      headers: _authHeaders(token),
+      body: jsonEncode({'receiverId': receiverId, 'content': content}),
+    ).timeout(ApiConstants.defaultTimeout);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return jsonDecode(response.body);
+    }
+    return null;
+  }
+
   Future<List<dynamic>> searchUsers(String query) async {
     final token = await getToken();
     if (token == null) return [];

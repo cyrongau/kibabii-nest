@@ -4,10 +4,9 @@ import 'package:kibabii_nest/core/widgets/app_modals.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
-import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
 import '../widgets/hostel_card.dart';
@@ -94,7 +93,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   Future<void> _startNavigation() async {
     final lat = widget.latitude;
     final lng = widget.longitude;
-    
+    final propertyName = Uri.encodeComponent(widget.name);
+
     if (lat == null || lng == null) {
       AppModals.showError(
         context: context,
@@ -104,73 +104,50 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       return;
     }
 
-    // 1. Check permissions first
+    // Check permissions
     var status = await Permission.location.request();
+    if (status.isPermanentlyDenied) {
+      openAppSettings();
+      return;
+    }
     if (status.isDenied) {
       if (mounted) {
         AppModals.showError(
           context: context,
           title: 'Permission Denied',
-          message: 'Location permission is required for turn-by-turn navigation.',
+          message: 'Location permission is required for navigation.',
         );
       }
       return;
     }
 
-    if (status.isPermanentlyDenied) {
-      openAppSettings();
-      return;
-    }
-
-    // 2. Check if location services are enabled
-    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!isLocationEnabled) {
-      if (mounted) {
-        AppModals.showError(
-          context: context,
-          title: 'Location Disabled',
-          message: 'Please enable your device\'s location services to start navigation.',
-        );
-      }
-      return;
-    }
+    // Open in Google Maps (walking mode) — avoids native SDK crashes
+    final googleMapsUrl = Uri.parse(
+      'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=walking'
+    );
+    final geoUri = Uri.parse('geo:$lat,$lng?q=$lat,$lng($propertyName)');
 
     try {
-      final Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high
-      );
-      
-      final origin = WayPoint(
-        name: "My Location",
-        latitude: position.latitude,
-        longitude: position.longitude,
-      );
-
-      final destination = WayPoint(
-        name: widget.name,
-        latitude: lat,
-        longitude: lng,
-      );
-
-      List<WayPoint> wayPoints = [origin, destination];
-
-      await MapBoxNavigation.instance.startNavigation(
-        wayPoints: wayPoints,
-        options: MapBoxOptions(
-          mode: MapBoxNavigationMode.walking,
-          simulateRoute: false,
-          language: "en",
-          units: VoiceUnits.metric,
-          voiceInstructionsEnabled: true,
-          bannerInstructionsEnabled: true,
-        ),
-      );
+      if (await canLaunchUrl(googleMapsUrl)) {
+        await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+      } else if (await canLaunchUrl(geoUri)) {
+        await launchUrl(geoUri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          AppModals.showError(
+            context: context,
+            title: 'No Maps App',
+            message: 'Could not open a maps application. Please install Google Maps.',
+          );
+        }
+      }
     } catch (e) {
+      debugPrint('Navigation launch error: $e');
       if (mounted) {
         AppModals.showError(
           context: context,
           title: 'Navigation Failed',
-          message: 'Could not start navigation. This might be due to an incompatible device or missing Google Play Services.',
+          message: 'Could not open navigation. Please try again.',
         );
       }
     }

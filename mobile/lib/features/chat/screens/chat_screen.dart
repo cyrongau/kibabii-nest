@@ -107,27 +107,56 @@ class _ChatScreenState extends State<ChatScreen> {
   void _handleSend() async {
     if (_messageController.text.trim().isEmpty) return;
 
+    final text = _messageController.text.trim();
+    _messageController.clear();
+    _socket.setTyping(widget.conversationId, false);
+
     final messageData = {
       'conversationId': widget.conversationId,
       'receiverId': widget.otherUserId,
-      'text': _messageController.text.trim(),
+      'text': text,
       'type': 'TEXT',
     };
 
-    final text = _messageController.text;
-    _messageController.clear();
-    _socket.setTyping(widget.conversationId, false);
-    
-    try {
-      await _socket.sendMessage(messageData);
-    } catch (e) {
-      debugPrint('Error sending message: $e');
-      if (mounted) {
-        _messageController.text = text;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to send message. Please try again.')),
-        );
+    // Try socket first (real-time). If not connected, fall back to REST API.
+    // The backend REST endpoint also broadcasts via socket, so other participants
+    // still receive the message in real-time.
+    if (_socket.connected) {
+      try {
+        await _socket.sendMessage(messageData);
+        return;
+      } catch (e) {
+        debugPrint('Socket send failed, falling back to REST: $e');
       }
+    }
+
+    // REST fallback
+    try {
+      final result = await _api.sendMessageRest(
+        receiverId: widget.otherUserId,
+        content: text,
+      );
+      if (result != null && mounted) {
+        final exists = _messages.any((m) => m['id'] == result['id']);
+        if (!exists) {
+          setState(() => _messages.add(Map<String, dynamic>.from(result)));
+          _scrollToBottom();
+        }
+      } else {
+        _restoreMessageOnFailure(text);
+      }
+    } catch (e) {
+      debugPrint('REST send also failed: $e');
+      _restoreMessageOnFailure(text);
+    }
+  }
+
+  void _restoreMessageOnFailure(String text) {
+    if (mounted) {
+      _messageController.text = text;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to send message. Please check your connection.')),
+      );
     }
   }
 
