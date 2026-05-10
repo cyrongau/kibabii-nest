@@ -121,6 +121,30 @@ class AppModals {
       ),
     );
   }
+
+  static void showCustom({
+    required BuildContext context,
+    required String title,
+    required String message,
+    required IconData icon,
+    required Color iconColor,
+    required Color accentColor,
+    String buttonText = 'OK',
+    VoidCallback? onConfirm,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => _BaseModal(
+        title: title,
+        message: message,
+        buttonText: buttonText,
+        onConfirm: onConfirm,
+        icon: icon,
+        iconColor: iconColor,
+        accentColor: accentColor,
+      ),
+    );
+  }
 }
 
 class _BaseModal extends StatelessWidget {
