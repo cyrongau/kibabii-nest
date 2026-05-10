@@ -24,12 +24,12 @@ export class ToursService {
     });
 
     // Notify Landlord
-    await this.notifications.createNotification(tour.property.landlordId, {
-      title: 'New Tour Request',
-      message: `${tour.student.name} has requested a tour for ${tour.property.name} on ${tour.tourDate.toLocaleDateString()}.`,
-      type: 'TOUR',
-      link: `/management/tours/${tour.id}`,
-    });
+    await this.notifications.sendNotification(tour.property.landlordId, 
+      'New Tour Request',
+      `${tour.student.name} has requested a tour for ${tour.property.name} on ${tour.tourDate.toLocaleDateString()}.`,
+      'TOUR',
+      `/management/tours/${tour.id}`
+    );
 
     return tour;
   }
@@ -45,12 +45,12 @@ export class ToursService {
     });
 
     // Notify Student
-    await this.notifications.createNotification(tour.student.id, {
-      title: 'Tour Request Update',
-      message: `Your tour request for ${tour.property.name} has been ${status.toLowerCase()}. ${feedback ? `Feedback: ${feedback}` : ''}`,
-      type: 'TOUR',
-      link: '/tours',
-    });
+    await this.notifications.sendNotification(tour.student.id, 
+      'Tour Request Update',
+      `Your tour request for ${tour.property.name} has been ${status.toLowerCase()}. ${feedback ? `Feedback: ${feedback}` : ''}`,
+      'TOUR',
+      '/tours'
+    );
 
     return tour;
   }
@@ -101,12 +101,12 @@ export class ToursService {
     });
 
     for (const user of interestedUsers) {
-      await this.notifications.createNotification(user.id, {
-        title: 'New Open Day Scheduled!',
-        message: `${property.name} is hosting an open day on ${data.date.toLocaleDateString()} from ${data.startTime} to ${data.endTime}.`,
-        type: 'OPEN_DAY',
-        link: `/properties/${property.id}`,
-      });
+      await this.notifications.sendNotification(user.id, 
+        'New Open Day Scheduled!',
+        `${property.name} is hosting an open day on ${data.date.toLocaleDateString()} from ${data.startTime} to ${data.endTime}.`,
+        'OPEN_DAY',
+        `/properties/${property.id}`
+      );
     }
 
     return openDay;

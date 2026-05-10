@@ -160,12 +160,12 @@ export class PaymentsService {
     // Notify Landlord
     const landlordId = payment.tenancy?.propertyUnit?.property?.landlordId || payment.booking?.propertyUnit?.property?.landlordId;
     if (landlordId) {
-      await this.notifications.createNotification(landlordId, {
-        title: 'Payment Verification Required',
-        message: `A manual payment has been submitted for ${payment.tenancy ? 'Rent' : 'Booking'}. Please verify the receipt.`,
-        type: 'PAYMENT',
-        link: '/management/payments'
-      });
+      await this.notifications.sendNotification(landlordId, 
+        'Payment Verification Required',
+        `A manual payment has been submitted for ${payment.tenancy ? 'Rent' : 'Booking'}. Please verify the receipt.`,
+        'PAYMENT',
+        '/management/payments'
+      );
     }
 
     return receipt;
@@ -257,12 +257,12 @@ export class PaymentsService {
       ]);
 
       // Notify User
-      await this.notifications.createNotification(userId, {
-        title: 'Payment Verified',
-        message: `Your payment of Ksh ${amountPaid} has been successfully verified.`,
-        type: 'PAYMENT',
-        link: payment.bookingId ? '/bookings' : '/residency/tenancy'
-      });
+      await this.notifications.sendNotification(userId, 
+        'Payment Verified',
+        `Your payment of Ksh ${amountPaid} has been successfully verified.`,
+        'PAYMENT',
+        payment.bookingId ? '/bookings' : '/residency/tenancy'
+      );
     } else {
       await this.prisma.payment.update({
         where: { id: paymentId },
@@ -270,12 +270,12 @@ export class PaymentsService {
       });
 
       // Notify User
-      await this.notifications.createNotification(userId, {
-        title: 'Payment Rejected',
-        message: `Your payment receipt was rejected. Please contact your landlord or re-upload a clear receipt.`,
-        type: 'PAYMENT',
-        link: payment.bookingId ? '/bookings' : '/residency/tenancy'
-      });
+      await this.notifications.sendNotification(userId, 
+        'Payment Rejected',
+        `Your payment receipt was rejected. Please contact your landlord or re-upload a clear receipt.`,
+        'PAYMENT',
+        payment.bookingId ? '/bookings' : '/residency/tenancy'
+      );
     }
 
     return { success: true, status: approved ? 'VERIFIED' : 'REJECTED' };

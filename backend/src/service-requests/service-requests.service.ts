@@ -33,12 +33,12 @@ export class ServiceRequestsService {
     });
 
     // Notify Landlord
-    await this.notifications.createNotification(request.property.landlordId, {
-      title: 'New Service Request',
-      message: `${request.tenant.name} has submitted a new ${request.priority} priority request for ${request.property.name}: ${request.title}`,
-      type: 'MAINTENANCE',
-      link: `/management/service-requests/${request.id}`
-    });
+    await this.notifications.sendNotification(request.property.landlordId, 
+      'New Service Request',
+      `${request.tenant.name} has submitted a new ${request.priority} priority request for ${request.property.name}: ${request.title}`,
+      'MAINTENANCE',
+      `/management/service-requests/${request.id}`
+    );
 
     return request;
   }
@@ -88,12 +88,12 @@ export class ServiceRequestsService {
     });
 
     // Notify Tenant
-    await this.notifications.createNotification(request.tenant.id, {
-      title: 'Service Request Update',
-      message: `Your request "${request.title}" for ${request.property.name} has been marked as ${status}.`,
-      type: 'MAINTENANCE',
-      link: `/residency/maintenance`
-    });
+    await this.notifications.sendNotification(request.tenant.id, 
+      'Service Request Update',
+      `Your request "${request.title}" for ${request.property.name} has been marked as ${status}.`,
+      'MAINTENANCE',
+      `/residency/maintenance`
+    );
 
     return request;
   }
