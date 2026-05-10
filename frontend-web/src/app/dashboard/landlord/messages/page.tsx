@@ -72,9 +72,9 @@ export default function MessagesPage() {
       const data = await response.json();
       if (response.ok) {
         const formattedContacts = data.map((conv: any) => ({
-          conversationId: conv.id,
-          user: conv.participants?.[0] || {},
-          lastMessage: conv.messages?.[0] || null,
+          conversationId: conv?.id,
+          user: conv?.participants?.[0] || {},
+          lastMessage: conv?.messages?.[0] || null,
         }));
         setContacts(formattedContacts);
       }
@@ -188,18 +188,18 @@ export default function MessagesPage() {
                       <Loader2 className="animate-spin" size={14} /> Searching...
                     </div>
                   ) : (
-                    searchResults.map(result => (
+                    searchResults.map((result, index) => (
                       <button
-                        key={result.id}
+                        key={result?.id || index}
                         onClick={() => startNewChat(result)}
                         className="w-full p-4 flex items-center gap-3 hover:bg-muted/50 transition-colors text-left"
                       >
                         <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center overflow-hidden shrink-0">
-                          {result.avatar ? <img src={result.avatar} className="w-full h-full object-cover" /> : <User size={20} className="text-muted-foreground/40" />}
+                          {result?.avatar ? <img src={result.avatar} className="w-full h-full object-cover" /> : <User size={20} className="text-muted-foreground/40" />}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-black text-foreground truncate">{result.name}</div>
-                          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{result.role}</div>
+                          <div className="text-sm font-black text-foreground truncate">{result?.name || 'Unknown'}</div>
+                          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{result?.role}</div>
                         </div>
                       </button>
                     ))
@@ -224,31 +224,31 @@ export default function MessagesPage() {
                 <p className="text-xs text-muted-foreground mt-2 font-medium leading-relaxed">Students will appear here once they message you about a booking.</p>
               </div>
             ) : (
-              contacts.map(contact => (
+              contacts.map((contact, index) => (
                 <button 
-                  key={contact.conversationId}
-                  onClick={() => setActiveContact(contact.user)}
+                  key={contact?.conversationId || index}
+                  onClick={() => setActiveContact(contact?.user)}
                   className={`w-full p-4 rounded-[1.5rem] flex items-center gap-4 transition-all duration-300 group relative ${
-                    activeContact?.id === contact.user.id 
+                    activeContact?.id && activeContact?.id === contact?.user?.id 
                     ? 'bg-primary text-white shadow-lg shadow-primary/20' 
                     : 'hover:bg-muted/50 text-foreground'
                   }`}
                 >
                   <div className="relative shrink-0">
-                    <div className={`w-14 h-14 ${activeContact?.id === contact.user.id ? 'bg-white/20' : 'bg-muted'} rounded-2xl flex items-center justify-center overflow-hidden border-2 border-background/10 shadow-soft-sm`}>
-                      {contact.user.avatar ? <img src={contact.user.avatar} className="w-full h-full object-cover" /> : <User size={28} className={activeContact?.id === contact.user.id ? 'text-white/60' : 'text-muted-foreground/40'} />}
+                    <div className={`w-14 h-14 ${activeContact?.id && activeContact?.id === contact?.user?.id ? 'bg-white/20' : 'bg-muted'} rounded-2xl flex items-center justify-center overflow-hidden border-2 border-background/10 shadow-soft-sm`}>
+                      {contact?.user?.avatar ? <img src={contact.user.avatar} className="w-full h-full object-cover" /> : <User size={28} className={activeContact?.id && activeContact?.id === contact?.user?.id ? 'text-white/60' : 'text-muted-foreground/40'} />}
                     </div>
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-4 border-card rounded-full shadow-sm"></div>
                   </div>
                   <div className="flex-1 text-left min-w-0">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="font-black text-sm truncate tracking-tight">{contact.user.name}</span>
-                      <span className={`text-[10px] font-bold shrink-0 ${activeContact?.id === contact.user.id ? 'text-white/60' : 'text-muted-foreground/40'}`}>
-                        {contact.lastMessage ? new Date(contact.lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                      <span className="font-black text-sm truncate tracking-tight">{contact?.user?.name || 'Unknown User'}</span>
+                      <span className={`text-[10px] font-bold shrink-0 ${activeContact?.id && activeContact?.id === contact?.user?.id ? 'text-white/60' : 'text-muted-foreground/40'}`}>
+                        {contact?.lastMessage ? new Date(contact.lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                       </span>
                     </div>
-                    <div className={`text-xs truncate font-medium ${activeContact?.id === contact.user.id ? 'text-white/80' : 'text-muted-foreground/60'}`}>
-                      {contact.lastMessage?.text}
+                    <div className={`text-xs truncate font-medium ${activeContact?.id && activeContact?.id === contact?.user?.id ? 'text-white/80' : 'text-muted-foreground/60'}`}>
+                      {contact?.lastMessage?.text}
                     </div>
                   </div>
                 </button>
@@ -294,20 +294,20 @@ export default function MessagesPage() {
                 className="flex-1 overflow-y-auto p-10 space-y-8 scrollbar-hide"
               >
                 {messages.map((msg, idx) => {
-                  const isMe = msg.senderId === currentUser.id;
+                  const isMe = msg?.senderId === currentUser?.id;
                   return (
-                    <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+                    <div key={msg?.id || idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
                       <div className={`max-w-[70%] space-y-2.5`}>
                          <div className={`px-7 py-4.5 rounded-[2rem] text-sm font-bold shadow-soft-sm leading-relaxed ${
                            isMe 
                            ? 'bg-primary text-white rounded-br-lg' 
                            : 'bg-card text-foreground rounded-bl-lg border border-border-subtle'
                          }`}>
-                           {msg.text}
+                           {msg?.text}
                          </div>
                          <div className={`flex items-center gap-2 text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest ${isMe ? 'justify-end mr-2' : 'justify-start ml-2'}`}>
                            <Clock size={10} />
-                           {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                           {msg?.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                          </div>
                       </div>
                     </div>
