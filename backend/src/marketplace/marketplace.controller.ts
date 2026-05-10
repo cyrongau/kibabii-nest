@@ -52,8 +52,20 @@ export class MarketplaceController {
   @Get('admin/all')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  async getAllAdmin(@Query() filters: any) {
-    return this.marketplaceService.findAllAdmin(filters);
+  async getAllAdmin(
+    @Query('status') status?: string,
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('sellerId') sellerId?: string,
+  ) {
+    return this.marketplaceService.findAllAdmin({
+      status,
+      search,
+      page: page ? parseInt(page) : 1,
+      limit: limit ? parseInt(limit) : 25,
+      sellerId,
+    });
   }
 
   @Patch('admin/:id/status')

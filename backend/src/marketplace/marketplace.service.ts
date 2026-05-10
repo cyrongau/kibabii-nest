@@ -87,8 +87,10 @@ export class MarketplaceService {
     });
   }
 
-  async findAllAdmin(filters: { status?: string; search?: string; page?: number; limit?: number; sellerId?: string } = {}) {
-    const { status, search, page = 1, limit = 25, sellerId } = filters;
+  async findAllAdmin(filters: { status?: string; search?: string; page?: any; limit?: any; sellerId?: string } = {}) {
+    const page = filters.page ? parseInt(filters.page.toString()) : 1;
+    const limit = filters.limit ? parseInt(filters.limit.toString()) : 25;
+    const { status, search, sellerId } = filters;
 
     const where: any = {};
     if (status) where.status = status;
