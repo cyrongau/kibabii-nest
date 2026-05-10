@@ -61,7 +61,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
 
     try {
       await _apiService.post('/wallet/withdraw', {
-        'amount': double.tryParse(amount) ?? 0.0,
+        'amount': amount,
         'method': _selectedMethod,
       });
 
