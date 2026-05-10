@@ -1264,31 +1264,6 @@ class ApiService {
     return response is List ? response : [];
   }
 
-  Future<bool> updateTourStatus(String id, String status, {String? feedback}) async {
-    final response = await patch('/tours/$id/status', {
-      'status': status,
-      if (feedback != null) 'feedback': feedback,
-    });
-    return response != null;
-  }
-
-  Future<bool> createOpenDay({
-    required String propertyId,
-    required DateTime date,
-    required String startTime,
-    required String endTime,
-    String? description,
-  }) async {
-    final response = await post('/tours/open-days', {
-      'propertyId': propertyId,
-      'date': date.toIso8601String(),
-      'startTime': startTime,
-      'endTime': endTime,
-      if (description != null) 'description': description,
-    });
-    return response != null;
-  }
-
   // ── Service Requests ──
   Future<List<dynamic>> getLandlordServiceRequests() async {
     final response = await get('/service-requests/landlord');
