@@ -63,7 +63,11 @@ export class S3Service implements OnModuleInit {
       }));
       console.log(`Public policy ensured for bucket: ${this.bucketName}`);
     } catch (e) {
-      console.error('Error setting bucket policy. Ensure MinIO allows anonymous policies. Error:', e.message);
+      if (e.$metadata?.httpStatusCode === 403) {
+        console.warn('MinIO does not allow anonymous policies. Files will be served via signed URLs or proxy.');
+      } else {
+        console.error('Error setting bucket policy:', e.message);
+      }
     }
   }
 
@@ -86,7 +90,7 @@ export class S3Service implements OnModuleInit {
 
       await upload.done();
       console.log(`✅ File uploaded successfully to S3: ${fileName}`);
-      return `${process.env.S3_PUBLIC_URL}/${fileName}`;
+      return `${process.env.S3_PUBLIC_URL}/${this.bucketName}/${fileName}`;
     } catch (error) {
       console.error(`❌ S3 Upload Error for file ${fileName}:`, error.message);
       console.error(`Bucket: ${this.bucketName}, Endpoint: ${process.env.S3_ENDPOINT}`);
@@ -95,7 +99,8 @@ export class S3Service implements OnModuleInit {
   }
 
   async getFileBase64(url: string): Promise<string> {
-    const fileName = url.replace(`${process.env.S3_PUBLIC_URL}/`, '');
+    const baseUrl = `${process.env.S3_PUBLIC_URL}/${this.bucketName}/`;
+    const fileName = url.replace(baseUrl, '');
     const { GetObjectCommand } = await import('@aws-sdk/client-s3');
     
     const command = new GetObjectCommand({

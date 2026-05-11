@@ -27,11 +27,6 @@ export class PropertiesController {
     return this.propertiesService.findAll(filters);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.propertiesService.findOne(id);
-  }
-
   @Get('stats/landlord')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('LANDLORD', 'ADMIN')
@@ -76,6 +71,12 @@ export class PropertiesController {
   @Roles('LANDLORD', 'ADMIN')
   async findAllLandlord(@Request() req: any) {
     return this.propertiesService.findAllLandlord(req.user.userId);
+  }
+
+  // IMPORTANT: :id wildcard MUST come after all static paths to prevent route shadowing
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.propertiesService.findOne(id);
   }
 
   @Patch(':id/verify')

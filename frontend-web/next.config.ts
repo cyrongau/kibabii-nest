@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'api.kibabii.generexcom.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'localhost',
       }
     ],
   },

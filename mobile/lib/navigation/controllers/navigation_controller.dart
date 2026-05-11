@@ -48,6 +48,8 @@ class NavigationController extends StateNotifier<TripStateModel> {
   
   StreamSubscription<Position>? _positionSubscription;
   Timer? _rerouteTimer;
+  Timer? _locationPollingTimer;
+  int _currentPollingInterval = 5;
 
   NavigationController(
     this._directionsService,
@@ -152,12 +154,28 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
   void _startLocationTracking() {
     _positionSubscription?.cancel();
+    _locationPollingTimer?.cancel();
+    _gpsService.stopTracking();
     
-    _gpsService.startTracking(distanceFilter: 3, accuracy: LocationAccuracy.high);
-    
-    _positionSubscription = _gpsService.positionStream.listen((position) {
+    _pollLocation();
+  }
+
+  Future<void> _pollLocation() async {
+    if (!state.isNavigating) return;
+
+    final position = await _gpsService.getCurrentPosition();
+    if (position != null) {
       _updatePosition(position);
-    });
+    }
+
+    // Adaptive polling: 5s interval when close, 10s when further
+    if (state.distanceRemaining < 200) {
+      _currentPollingInterval = 5;
+    } else {
+      _currentPollingInterval = 10;
+    }
+
+    _locationPollingTimer = Timer(Duration(seconds: _currentPollingInterval), _pollLocation);
   }
 
   void _updatePosition(Position position) {
@@ -311,6 +329,7 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
   void _arrived() {
     _positionSubscription?.cancel();
+    _locationPollingTimer?.cancel();
     _rerouteTimer?.cancel();
     _ttsService.stop();
     _stopBackgroundTracking();
@@ -320,6 +339,7 @@ class NavigationController extends StateNotifier<TripStateModel> {
   }
 
   void pauseNavigation() {
+    _locationPollingTimer?.cancel();
     _gpsService.stopTracking();
     _ttsService.pause();
     state = state.copyWith(state: TripState.paused);
@@ -333,6 +353,7 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
   void stopNavigation() {
     _positionSubscription?.cancel();
+    _locationPollingTimer?.cancel();
     _rerouteTimer?.cancel();
     _gpsService.stopTracking();
     _ttsService.stop();
@@ -343,6 +364,7 @@ class NavigationController extends StateNotifier<TripStateModel> {
   @override
   void dispose() {
     _positionSubscription?.cancel();
+    _locationPollingTimer?.cancel();
     _rerouteTimer?.cancel();
     super.dispose();
   }

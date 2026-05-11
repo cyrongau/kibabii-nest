@@ -1,16 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../../core/constants.dart';
 import '../models/route_model.dart';
 import '../models/maneuver_model.dart';
 import 'route_cache_service.dart';
 
 class DirectionsService {
   final Dio _dio;
-  final String _baseUrl = 'https://api.mapbox.com/directions/v5';
+  final String _baseUrl = '${ApiConstants.baseUrl}/navigation/directions';
   
   DirectionsService() : _dio = Dio();
-
-  String get _accessToken => dotenv.get('MAPBOX_PUBLIC_TOKEN', fallback: '');
 
   Future<RouteModel?> getRoute({
     required double startLng,
@@ -35,7 +33,7 @@ class DirectionsService {
 
     // Make API call only once (optimization #1)
     try {
-      final url = '$_baseUrl/mapbox/$profile/$startLng,$startLat;$endLng,$endLat';
+      final url = '$_baseUrl/$profile/$startLng,$startLat;$endLng,$endLat';
       
       final response = await _dio.get(
         url,
@@ -43,7 +41,6 @@ class DirectionsService {
           'steps': true,
           'geometries': 'geojson',
           'overview': 'full',
-          'access_token': _accessToken,
         },
       );
 
