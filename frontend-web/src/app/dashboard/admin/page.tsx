@@ -46,7 +46,7 @@ function AdminDashboardContent() {
   React.useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/admin/stats`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/admin/stats/overview`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
         });
         if (response.ok) {
@@ -80,29 +80,29 @@ function AdminDashboardContent() {
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <StatCard 
-              label="New Bookings (24h)" 
-              value={stats?.newBookings?.toString() || '0'} 
-              trend="+12%" 
+              label="Pending Bookings" 
+              value={stats?.bookings?.pending?.toString() || '0'} 
+              trend={`${stats?.bookings?.total || 0} total`} 
               icon={<Zap size={20} />} 
               badgeClass="badge-blue"
             />
             <StatCard 
               label="Verified Properties" 
-              value={stats?.approvedBookings?.toLocaleString() || '0'} 
-              trend="+4.2%" 
+              value={stats?.properties?.verified?.toLocaleString() || '0'} 
+              trend={`${stats?.properties?.total || 0} total`} 
               icon={<Building2 size={20} />} 
               badgeClass="badge-emerald"
             />
             <StatCard 
               label="Platform Revenue" 
-              value={`KES ${(stats?.totalPayments || 0).toLocaleString()}`} 
-              trend="+18%" 
+              value={`KES ${(stats?.revenue?.total || 0).toLocaleString()}`} 
+              trend={`${stats?.bookings?.approved || 0} approved`} 
               icon={<TrendingUp size={20} />} 
               badgeClass="badge-emerald"
             />
             <StatCard 
-              label="Pending Verifications" 
-              value={stats?.pendingKyc?.toString() || '0'} 
+              label="Pending KYC" 
+              value={stats?.kyc?.pending?.toString() || '0'} 
               trend="Action Required" 
               icon={<ShieldCheck size={20} />} 
               badgeClass="badge-orange"

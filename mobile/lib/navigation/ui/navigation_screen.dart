@@ -1,0 +1,362 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../controllers/navigation_controller.dart';
+import '../models/trip_state_model.dart';
+
+class NavigationScreen extends ConsumerStatefulWidget {
+  final double destinationLat;
+  final double destinationLng;
+  final String? destinationName;
+
+  const NavigationScreen({
+    super.key,
+    required this.destinationLat,
+    required this.destinationLng,
+    this.destinationName,
+  });
+
+  @override
+  ConsumerState<NavigationScreen> createState() => _NavigationScreenState();
+}
+
+class _NavigationScreenState extends ConsumerState<NavigationScreen> {
+  mbx.MapboxMap? _mapboxMap;
+  bool _isFollowingUser = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _startNavigation();
+  }
+
+  Future<void> _startNavigation() async {
+    await ref.read(navigationControllerProvider.notifier).startNavigation(
+      destinationLat: widget.destinationLat,
+      destinationLng: widget.destinationLng,
+      destinationName: widget.destinationName,
+    );
+  }
+
+  void _onMapCreated(mbx.MapboxMap mapboxMap) {
+    setState(() {
+      _mapboxMap = mapboxMap;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final tripState = ref.watch(navigationControllerProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    ref.listen(navigationControllerProvider, (previous, next) {
+      // Camera follow will be added after API compatibility check
+    });
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: mbx.MapWidget(
+              key: const ValueKey("navigation_map"),
+              resourceOptions: mbx.ResourceOptions(
+                accessToken: dotenv.get('MAPBOX_PUBLIC_TOKEN', fallback: ''),
+              ),
+              onMapCreated: _onMapCreated,
+              styleUri: isDark 
+                  ? "mapbox://styles/mapbox/dark-v11" 
+                  : "mapbox://styles/mapbox/streets-v11",
+            ),
+          ),
+          
+          if (tripState.state == TripState.loading)
+            Container(
+              color: Colors.black54,
+              child: const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
+            ),
+          
+          if (tripState.hasError)
+            _buildErrorBanner(tripState.errorMessage ?? 'Navigation error'),
+          
+          if (tripState.isOffRoute)
+            _buildOffRouteBanner(),
+          
+          _buildNavigationCard(tripState),
+          
+          _buildControlButtons(tripState),
+          
+          if (tripState.hasArrived)
+            _buildArrivedOverlay(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorBanner(String message) {
+    return Positioned(
+      top: MediaQuery.of(context).padding.top + 16,
+      left: 16,
+      right: 16,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.error, color: Colors.white),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOffRouteBanner() {
+    return Positioned(
+      top: MediaQuery.of(context).padding.top + 16,
+      left: 16,
+      right: 16,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.orange,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.warning, color: Colors.white),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Recalculating route...',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavigationCard(TripStateModel tripState) {
+    final theme = Theme.of(context);
+    
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.destinationName ?? 'Destination',
+                        style: GoogleFonts.outfit(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${tripState.formattedDistanceRemaining} - ${tripState.formattedDurationRemaining}',
+                        style: GoogleFonts.outfit(
+                          fontSize: 16,
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      LucideIcons.navigation,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+              
+              if (tripState.hasRoute && tripState.currentManeuverIndex < tripState.currentRoute!.maneuvers.length) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          _getManeuverIcon(tripState.currentRoute!.maneuvers[tripState.currentManeuverIndex].type),
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Text(
+                          tripState.currentRoute!.maneuvers[tripState.currentManeuverIndex].fullInstruction,
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _getManeuverIcon(String type) {
+    switch (type) {
+      case 'turn':
+        return LucideIcons.arrowRight;
+      case 'arrive':
+        return LucideIcons.mapPin;
+      case 'continue':
+        return LucideIcons.arrowRight;
+      case 'merge':
+        return LucideIcons.gitBranch;
+      case 'fork':
+        return LucideIcons.gitFork;
+      default:
+        return LucideIcons.navigation;
+    }
+  }
+
+  Widget _buildControlButtons(TripStateModel tripState) {
+    return Positioned(
+      top: MediaQuery.of(context).padding.top + 16,
+      left: 16,
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: Colors.white,
+            child: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                ref.read(navigationControllerProvider.notifier).stopNavigation();
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (tripState.isNavigating)
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                icon: const Icon(Icons.pause),
+                onPressed: () {
+                  ref.read(navigationControllerProvider.notifier).pauseNavigation();
+                },
+              ),
+            ),
+          if (tripState.state == TripState.paused)
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                icon: const Icon(Icons.play_arrow),
+                onPressed: () {
+                  ref.read(navigationControllerProvider.notifier).resumeNavigation();
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildArrivedOverlay() {
+    return Container(
+      color: Colors.black54,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(32),
+          margin: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                LucideIcons.checkCircle,
+                size: 64,
+                color: Colors.green,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'You have arrived!',
+                style: GoogleFonts.outfit(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(navigationControllerProvider.notifier).stopNavigation();
+                  Navigator.pop(context);
+                },
+                child: const Text('Done'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -6,12 +6,12 @@ import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_mapbox_navigation_plus/flutter_mapbox_navigation_plus.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
 import '../widgets/hostel_card.dart';
+import '../../../navigation/ui/navigation_screen.dart';
 
 class PropertyDetailScreen extends StatefulWidget {
   final String id;
@@ -105,91 +105,16 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       return;
     }
 
-    // 1. Check permissions first
-    var locStatus = await Permission.location.request();
-    if (locStatus.isDenied) {
-      if (mounted) {
-        AppModals.showError(
-          context: context,
-          title: 'Permission Denied',
-          message: 'Location permission is required for turn-by-turn navigation.',
-        );
-      }
-      return;
-    }
-
-    if (locStatus.isPermanentlyDenied) {
-      openAppSettings();
-      return;
-    }
-    
-    // Request notification permission for foreground service (needed on Android 13+)
-    var notifStatus = await Permission.notification.request();
-    if (notifStatus.isDenied && mounted) {
-      AppModals.showError(
-        context: context,
-        title: 'Notification Permission Required',
-        message: 'Notification permission is required to run navigation in the background. Without it, the app may crash.',
-      );
-      return;
-    }
-
-    // 2. Check if location services are enabled
-    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!isLocationEnabled) {
-      if (mounted) {
-        AppModals.showError(
-          context: context,
-          title: 'Location Disabled',
-          message: 'Please enable your device\'s location services to start navigation.',
-        );
-      }
-      return;
-    }
-
-    try {
-      debugPrint("PropertyDetailScreen: Getting current position...");
-      final Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high
-      );
-
-      debugPrint("PropertyDetailScreen: Starting navigation from ${position.latitude}, ${position.longitude} to $lat, $lng");
-      
-      final origin = WayPoint(
-        name: "My Location",
-        latitude: position.latitude,
-        longitude: position.longitude,
-      );
-
-      final destination = WayPoint(
-        name: widget.name,
-        latitude: lat,
-        longitude: lng,
-      );
-
-      List<WayPoint> wayPoints = [origin, destination];
-
-      await MapBoxNavigation.instance.startNavigation(
-        wayPoints: wayPoints,
-        options: MapBoxOptions(
-          mode: MapBoxNavigationMode.walking,
-          simulateRoute: false,
-          language: "en",
-          units: VoiceUnits.metric,
-          voiceInstructionsEnabled: true,
-          bannerInstructionsEnabled: true,
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NavigationScreen(
+          destinationLat: lat,
+          destinationLng: lng,
+          destinationName: widget.name,
         ),
-      );
-    } catch (e) {
-      debugPrint("PropertyDetailScreen: Navigation Error: $e");
-      if (mounted) {
-        AppModals.showError(
-          context: context,
-          title: 'Navigation Failed',
-          message: 'Could not start navigation. Error: $e',
-        );
-      }
-    }
+      ),
+    );
   }
 
   void _toggleFavorite() async {
