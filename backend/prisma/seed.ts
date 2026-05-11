@@ -46,11 +46,38 @@ async function main() {
     },
   });
 
+  // Landlord 2
+  await prisma.user.upsert({
+    where: { email: 'alexfgfgdf@landlord.com' },
+    update: {},
+    create: {
+      email: 'alexfgfgdf@landlord.com',
+      name: 'Alex Landlord 2',
+      password,
+      role: 'LANDLORD',
+    },
+  });
+
+  // Student 2
+  const student2Password = await bcrypt.hash('Cyro@#4001', 10);
+  await prisma.user.upsert({
+    where: { email: 'cyrongau@gmail.com' },
+    update: {},
+    create: {
+      email: 'cyrongau@gmail.com',
+      name: 'Cyro Student',
+      password: student2Password,
+      role: 'STUDENT',
+    },
+  });
+
   console.log('Seed data created successfully!');
   console.log('--- LOGIN CREDENTIALS ---');
   console.log('Admin: admin@kibabiinest.com / Password@123');
   console.log('Landlord: alex@landlord.com / Password@123');
   console.log('Student: sarah@student.com / Password@123');
+  console.log('Landlord 2: alexfgfgdf@landlord.com / Password@123');
+  console.log('Student 2: cyrongau@gmail.com / Cyro@#4001');
 }
 
 main()
