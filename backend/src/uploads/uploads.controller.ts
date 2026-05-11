@@ -12,7 +12,6 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import * as express from 'express';
-import { Response } from 'express';
 import { S3Service } from './s3.service';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 
@@ -33,7 +32,7 @@ export class UploadsController {
   }
 
   @Get('proxy/:bucket/*')
-  async proxyFile(@Param() params: any, @Res() res: Response) {
+  async proxyFile(@Param() params: any, @Res() res: express.Response) {
     const { bucket, '0': key } = params;
     let finalKey = key;
     // Handle double-bucket nesting if S3_PUBLIC_URL was misconfigured
@@ -65,7 +64,7 @@ export class UploadsController {
 
   // Fallback for URLs missing the /proxy prefix
   @Get(':bucket/*')
-  async proxyFileFallback(@Param() params: any, @Res() res: Response) {
+  async proxyFileFallback(@Param() params: any, @Res() res: express.Response) {
     return this.proxyFile(params, res);
   }
 

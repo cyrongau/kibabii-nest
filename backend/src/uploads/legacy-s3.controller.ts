@@ -1,6 +1,5 @@
 import { Controller, Get, Param, Res } from '@nestjs/common';
 import * as express from 'express';
-import { Response } from 'express';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 
 @Controller('s3')
@@ -20,7 +19,7 @@ export class LegacyS3Controller {
   }
 
   @Get(':bucket/*')
-  async proxyLegacyFile(@Param() params: any, @Res() res: Response) {
+  async proxyLegacyFile(@Param() params: any, @Res() res: express.Response) {
     const { bucket, '0': key } = params;
     let finalKey = key;
     // Handle double-bucket nesting if S3_PUBLIC_URL was misconfigured
