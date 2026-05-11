@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
 import { 
   Search, 
   Send, 
@@ -29,6 +30,7 @@ export default function MessagesPage() {
   const [isSearching, setIsSearching] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentUser, setCurrentUser] = useState<any>({});
+  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
     try {
@@ -40,13 +42,48 @@ export default function MessagesPage() {
       console.error('Error parsing user from localStorage:', e);
     }
     fetchContacts();
+
+    // Initialize socket connection for real-time updates
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      socketRef.current = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000', {
+        auth: { token },
+        transports: ['websocket']
+      });
+
+      socketRef.current.on('new_message', (message: any) => {
+        // Update messages if this is the active conversation
+        if (activeContact && message.conversationId) {
+          // Need to check if this message belongs to current conversation
+          // For now, just refetch conversation
+          fetchConversation(activeContact.id);
+        }
+        // Update contacts list to show new message
+        fetchContacts();
+      });
+
+      return () => {
+        socketRef.current?.disconnect();
+      };
+    }
   }, []);
 
   useEffect(() => {
     if (activeContact) {
       fetchConversation(activeContact?.id);
+      // Join the conversation room for real-time updates
+      if (socketRef.current?.connected) {
+        socketRef.current.emit('join_conversation', activeContact.conversationId);
+      }
     }
   }, [activeContact]);
+
+  // Effect to ensure socket joins rooms when connection is ready
+  useEffect(() => {
+    if (socketRef.current?.connected && activeContact?.conversationId) {
+      socketRef.current.emit('join_conversation', activeContact.conversationId);
+    }
+  }, [socketRef.current?.connected]);
 
   useEffect(() => {
     if (searchQuery.length >= 2) {
@@ -70,16 +107,23 @@ export default function MessagesPage() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
-      if (response.ok) {
-        const formattedContacts = data.map((conv: any) => ({
-          conversationId: conv?.id,
-          user: conv?.participants?.[0] || {},
-          lastMessage: conv?.messages?.[0] || null,
-        }));
+      if (response.ok && Array.isArray(data)) {
+        const formattedContacts = data
+          .filter((conv: any) => conv && conv.id)  // Filter out invalid conversations
+          .map((conv: any) => ({
+            conversationId: conv?.id,
+            user: conv?.participants?.[0] || null,
+            lastMessage: conv?.messages?.[0] || null,
+          }))
+          .filter((c: any) => c.user && c.user.id);  // Only include contacts with valid user
         setContacts(formattedContacts);
+      } else {
+        console.error('Invalid response format:', data);
+        setContacts([]);
       }
     } catch (error) {
       console.error('Error fetching contacts:', error);
+      setContacts([]);
     } finally {
       setIsLoading(false);
     }

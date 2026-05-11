@@ -7,7 +7,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
+import 'package:flutter_mapbox_navigation_plus/flutter_mapbox_navigation_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
@@ -106,8 +106,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     }
 
     // 1. Check permissions first
-    var status = await Permission.location.request();
-    if (status.isDenied) {
+    var locStatus = await Permission.location.request();
+    if (locStatus.isDenied) {
       if (mounted) {
         AppModals.showError(
           context: context,
@@ -118,8 +118,19 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       return;
     }
 
-    if (status.isPermanentlyDenied) {
+    if (locStatus.isPermanentlyDenied) {
       openAppSettings();
+      return;
+    }
+    
+    // Request notification permission for foreground service (needed on Android 13+)
+    var notifStatus = await Permission.notification.request();
+    if (notifStatus.isDenied && mounted) {
+      AppModals.showError(
+        context: context,
+        title: 'Notification Permission Required',
+        message: 'Notification permission is required to run navigation in the background. Without it, the app may crash.',
+      );
       return;
     }
 
@@ -175,7 +186,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
         AppModals.showError(
           context: context,
           title: 'Navigation Failed',
-          message: 'Could not start navigation. This might be due to an incompatible device or missing native services.',
+          message: 'Could not start navigation. Error: $e',
         );
       }
     }
@@ -697,17 +708,21 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         ? "mapbox://styles/mapbox/dark-v11" 
                         : "mapbox://styles/mapbox/streets-v11",
                     onMapCreated: (mapboxMap) async {
-                    mapboxMap.setCamera(mbx.CameraOptions(
-                      center: mbx.Point(coordinates: mbx.Position(lng, lat)).toJson(),
-                      zoom: 15.0,
-                    ));
-                    
-                    final annotationManager = await mapboxMap.annotations.createPointAnnotationManager();
-                    annotationManager.create(mbx.PointAnnotationOptions(
-                      geometry: mbx.Point(coordinates: mbx.Position(lng, lat)).toJson(),
-                      iconImage: "marker-15",
-                    ));
-                  },
+                      try {
+                        mapboxMap.setCamera(mbx.CameraOptions(
+                          center: mbx.Point(coordinates: mbx.Position(lng, lat)).toJson(),
+                          zoom: 15.0,
+                        ));
+                        
+                        final annotationManager = await mapboxMap.annotations.createPointAnnotationManager();
+                        annotationManager.create(mbx.PointAnnotationOptions(
+                          geometry: mbx.Point(coordinates: mbx.Position(lng, lat)).toJson(),
+                          iconImage: "marker-15",
+                        ));
+                      } catch (e) {
+                        debugPrint("PropertyDetailScreen: Map error: $e");
+                      }
+                    },
                   ),
                 ),
                 Positioned(

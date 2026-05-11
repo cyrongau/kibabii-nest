@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
+import 'package:flutter_mapbox_navigation_plus/flutter_mapbox_navigation_plus.dart';
 import '../../../services/api_service.dart';
 import '../widgets/hostel_card.dart';
 import '../../../core/widgets/app_modals.dart';
@@ -139,17 +139,28 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
   }
 
   void _onMapCreated(mbx.MapboxMap mapboxMap) async {
-    debugPrint("MapboxExplorerScreen: Map created successfully");
-    _mapboxMap = mapboxMap;
-    _isMapReady = true;
-    _annotationManager = await mapboxMap.annotations.createPointAnnotationManager();
-    _circleManager = await mapboxMap.annotations.createCircleAnnotationManager();
-    _addPropertyMarkers();
-    
-    if (widget.targetLat != null && widget.targetLng != null) {
-      _focusOnLocation(widget.targetLat!, widget.targetLng!);
-    } else {
-      _focusOnLocation(0.6231, 34.5028); // Default Kibabii University Gate
+    try {
+      debugPrint("MapboxExplorerScreen: Map created successfully");
+      _mapboxMap = mapboxMap;
+      _isMapReady = true;
+      _annotationManager = await mapboxMap.annotations.createPointAnnotationManager();
+      _circleManager = await mapboxMap.annotations.createCircleAnnotationManager();
+      _addPropertyMarkers();
+      
+      if (widget.targetLat != null && widget.targetLng != null) {
+        _focusOnLocation(widget.targetLat!, widget.targetLng!);
+      } else {
+        _focusOnLocation(0.6170124177529738, 34.523624254983);
+      }
+    } catch (e, stackTrace) {
+      debugPrint("MapboxExplorerScreen: Error in onMapCreated: $e");
+      debugPrint("Stack trace: $stackTrace");
+      if (mounted) {
+        setState(() {
+          _errorMessage = "Error initializing map: $e";
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -175,6 +186,44 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
     final List<mbx.PointAnnotationOptions> pointOptions = [];
     final List<mbx.CircleAnnotationOptions> circleOptions = [];
     final List<Map<String, dynamic>> validProps = [];
+
+    // Add Kibabii University Gate Marker
+    final gatePos = mbx.Position(34.523624254983, 0.6170124177529738);
+    pointOptions.add(
+      mbx.PointAnnotationOptions(
+        geometry: mbx.Point(coordinates: gatePos).toJson(),
+        textField: "Kibabii University Gate",
+        textColor: Colors.white.value,
+        textHaloColor: const Color(0xFF10B981).value, // Green halo
+        textHaloWidth: 2.5,
+        textSize: 14.0,
+        textOffset: [0, -2.5],
+        symbolSortKey: 20.0,
+        iconImage: "marker-15",
+        iconSize: 1.5,
+      ),
+    );
+    circleOptions.add(
+      mbx.CircleAnnotationOptions(
+        geometry: mbx.Point(coordinates: gatePos).toJson(),
+        circleColor: const Color(0xFF10B981).value,
+        circleRadius: 10.0,
+        circleStrokeWidth: 3.0,
+        circleStrokeColor: Colors.white.value,
+      ),
+    );
+    
+    // Add dummy property for the gate so tapping it works
+    validProps.add({
+      'id': 'gate_id',
+      'name': 'Kibabii University Gate',
+      'lat': 0.6170124177529738,
+      'lng': 34.523624254983,
+      'price': 'N/A',
+      'verified': true,
+      'distanceToCampus': 0,
+      'avgRating': '5.0',
+    });
 
     for (var prop in _properties) {
       final lat = double.tryParse(prop['lat']?.toString() ?? '');
@@ -230,16 +279,51 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
     }
   }
 
+  String get _mapboxToken {
+    final token = dotenv.get('MAPBOX_PUBLIC_TOKEN', fallback: '');
+    debugPrint("MapboxExplorerScreen: Token loaded: ${token.isNotEmpty ? 'present' : 'EMPTY'}");
+    return token;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    // Fix status bar rendering issue (the 'dark line')
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
     ));
+
+    final token = _mapboxToken;
+    if (token.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text("Map Explorer")),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.map_outlined, size: 64, color: Colors.grey),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 32),
+                child: Text(
+                  'Map configuration is loading. Please restart the app or check your internet connection.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                child: const Text("Retry"),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     if (_isLoading) {
       return const Scaffold(
@@ -286,7 +370,7 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
                 pixelRatio: MediaQuery.of(context).devicePixelRatio,
               ),
               cameraOptions: mbx.CameraOptions(
-                center: mbx.Point(coordinates: mbx.Position(34.523580, 0.616923)).toJson(),
+                center: mbx.Point(coordinates: mbx.Position(34.523624254983, 0.6170124177529738)).toJson(),
                 zoom: 15.0,
               ),
               onMapCreated: _onMapCreated,
@@ -509,8 +593,8 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
     }
 
     // 1. Check permissions first
-    var status = await Permission.location.request();
-    if (status.isDenied) {
+    var locStatus = await Permission.location.request();
+    if (locStatus.isDenied) {
       if (mounted) {
         AppModals.showError(
           context: context,
@@ -521,8 +605,19 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
       return;
     }
 
-    if (status.isPermanentlyDenied) {
+    if (locStatus.isPermanentlyDenied) {
       openAppSettings();
+      return;
+    }
+    
+    // Request notification permission for foreground service (needed on Android 13+)
+    var notifStatus = await Permission.notification.request();
+    if (notifStatus.isDenied && mounted) {
+      AppModals.showError(
+        context: context,
+        title: 'Notification Permission Required',
+        message: 'Notification permission is required to run navigation in the background. Without it, the app may crash.',
+      );
       return;
     }
 
@@ -554,7 +649,7 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
       );
 
       final destination = WayPoint(
-        name: _selectedProperty['name'] ?? 'Destination',
+        name: _selectedProperty['name'] ?? "Destination",
         latitude: lat,
         longitude: lng,
       );
@@ -578,7 +673,7 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
         AppModals.showError(
           context: context,
           title: 'Navigation Failed',
-          message: 'Could not start navigation. This might be due to an incompatible device or missing native services.',
+          message: 'Could not start navigation. Error: $e',
         );
       }
     }

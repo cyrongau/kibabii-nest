@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TicketStatus } from '@prisma/client';
+import { ChatGateway } from '../messages/chat.gateway';
 
 @Injectable()
 export class SupportService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => ChatGateway))
+    private chatGateway: ChatGateway,
+  ) {}
 
   async createTicket(userId: string, data: { subject: string; description: string; category?: string }) {
     return this.prisma.supportTicket.create({
@@ -107,7 +112,7 @@ export class SupportService {
       }
     }
 
-    return this.prisma.message.create({
+    const message = await this.prisma.message.create({
       data: {
         senderId: adminId,
         receiverId: data.receiverId,
@@ -118,5 +123,12 @@ export class SupportService {
         sender: { select: { id: true, name: true, avatar: true, role: true } },
       },
     });
+
+    // Emit via socket for real-time updates
+    if (this.chatGateway && this.chatGateway.server) {
+      this.chatGateway.server.to(conversationId).emit('new_message', message);
+    }
+
+    return message;
   }
 }
