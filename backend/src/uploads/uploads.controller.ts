@@ -31,10 +31,10 @@ export class UploadsController {
     });
   }
 
-  @Get('proxy/:bucket/*key')
-  async proxyFile(@Param('bucket') bucket: string, @Param('key') key: string, @Res() res: any) {
+  @Get('proxy/:bucket/*')
+  async proxyFile(@Param('bucket') bucket: string, @Param('0') key: string, @Res() res: any) {
+    console.log(`🔍 Proxying request for bucket: ${bucket}, key: ${key}`);
     try {
-      const s3Key = `${bucket}/${key}`;
       const command = new GetObjectCommand({
         Bucket: bucket,
         Key: key,

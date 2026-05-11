@@ -18,8 +18,8 @@ export class LegacyS3Controller {
     });
   }
 
-  @Get(':bucket/*key')
-  async proxyLegacyFile(@Param('bucket') bucket: string, @Param('key') key: string, @Res() res: express.Response) {
+  @Get(':bucket/*')
+  async proxyLegacyFile(@Param('bucket') bucket: string, @Param('0') key: string, @Res() res: express.Response) {
     try {
       const command = new GetObjectCommand({
         Bucket: bucket,
