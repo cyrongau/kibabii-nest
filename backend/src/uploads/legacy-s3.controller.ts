@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Res } from '@nestjs/common';
-import { Response } from 'express';
+import * as express from 'express';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 
 @Controller('s3')
@@ -19,7 +19,7 @@ export class LegacyS3Controller {
   }
 
   @Get(':bucket/*key')
-  async proxyLegacyFile(@Param('bucket') bucket: string, @Param('key') key: string, @Res() res: Response) {
+  async proxyLegacyFile(@Param('bucket') bucket: string, @Param('key') key: string, @Res() res: express.Response) {
     try {
       const command = new GetObjectCommand({
         Bucket: bucket,
