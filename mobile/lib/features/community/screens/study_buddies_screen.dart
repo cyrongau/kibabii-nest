@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'study_buddy_forum_screen.dart';
 import '../../../services/api_service.dart';
+import '../../../core/utils/image_utils.dart';
 
 class StudyBuddiesScreen extends StatefulWidget {
   const StudyBuddiesScreen({super.key});
@@ -154,7 +155,7 @@ class _StudyBuddiesScreenState extends State<StudyBuddiesScreen> {
               CircleAvatar(
                 radius: 16,
                 backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                backgroundImage: post['author']['avatar'] != null ? NetworkImage(post['author']['avatar']) : null,
+                backgroundImage: post['author']['avatar'] != null ? NetworkImage(ImageUtils.formatUrl(post['author']['avatar'])) : null,
                 child: post['author']['avatar'] == null 
                   ? Icon(LucideIcons.user, size: 14, color: Theme.of(context).colorScheme.primary) 
                   : null,

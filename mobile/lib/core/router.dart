@@ -170,6 +170,7 @@ class AppRouter {
             longitude: double.tryParse(extra?['lng']?.toString() ?? ''),
             units: extra?['units'],
             extraCharges: extra?['extraCharges'],
+            videoUrl: extra?['videoUrl'],
           );
         },
       ),

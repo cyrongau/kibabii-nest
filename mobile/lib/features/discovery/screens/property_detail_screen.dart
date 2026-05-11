@@ -8,8 +8,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
+import '../../../core/utils/image_utils.dart';
 import '../widgets/hostel_card.dart';
 import '../../../navigation/ui/navigation_screen.dart';
 
@@ -25,6 +29,7 @@ class PropertyDetailScreen extends StatefulWidget {
   final double? longitude;
   final List<dynamic>? units;
   final Map<String, dynamic>? extraCharges;
+  final String? videoUrl;
 
   const PropertyDetailScreen({
     super.key,
@@ -39,6 +44,7 @@ class PropertyDetailScreen extends StatefulWidget {
     this.longitude,
     this.units,
     this.extraCharges,
+    this.videoUrl,
   });
 
   @override
@@ -53,12 +59,59 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   Map<String, dynamic>? _activeTenancy;
 
   bool _hasLocationPermission = false;
+  
+  VideoPlayerController? _videoPlayerController;
+  ChewieController? _chewieController;
+  bool _isVideoInitialized = false;
 
   @override
   void initState() {
     super.initState();
     _requestPermissions();
     _loadData();
+    _initializeVideo();
+  }
+
+  void _initializeVideo() async {
+    final videoUrl = widget.videoUrl;
+    if (videoUrl == null || videoUrl.isEmpty) return;
+
+    final formattedUrl = ImageUtils.formatUrl(videoUrl);
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(formattedUrl));
+    
+    try {
+      await _videoPlayerController!.initialize();
+      _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController!,
+        aspectRatio: _videoPlayerController!.value.aspectRatio,
+        autoPlay: false,
+        looping: false,
+        placeholder: Container(
+          color: Colors.black,
+          child: const Center(child: CircularProgressIndicator()),
+        ),
+        materialProgressColors: ChewieProgressColors(
+          playedColor: Theme.of(context).primaryColor,
+          handleColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.grey,
+          bufferedColor: Colors.white.withOpacity(0.5),
+        ),
+      );
+      if (mounted) {
+        setState(() {
+          _isVideoInitialized = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error initializing video: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController?.dispose();
+    _chewieController?.dispose();
+    super.dispose();
   }
 
   Future<void> _requestPermissions() async {
@@ -172,7 +225,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                       const SizedBox(height: 32),
                       _buildGallery(colorScheme),
                       const SizedBox(height: 32),
-                      _buildVideoPlaceholder(colorScheme),
+                      _buildVideoTour(colorScheme),
                       const SizedBox(height: 32),
                       _buildAmenities(colorScheme),
                       const SizedBox(height: 32),
@@ -236,8 +289,13 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   }
 
   Widget _buildMainImage(ColorScheme colorScheme) {
-    if (widget.image != null && widget.image!.startsWith('http')) {
-      return Image.network(widget.image!, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(colorScheme));
+    if (widget.image != null && (widget.image!.startsWith('http') || widget.image!.startsWith('/'))) {
+      return CachedNetworkImage(
+        imageUrl: ImageUtils.formatUrl(widget.image),
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Center(child: CircularProgressIndicator(color: colorScheme.primary)),
+        errorWidget: (context, url, error) => _buildPlaceholderImage(colorScheme),
+      );
     }
     return Image.asset(
       'assets/images/${widget.image ?? 'hostel_1.png'}',
@@ -379,8 +437,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(
-                      image: img.startsWith('http') 
-                        ? NetworkImage(img) 
+                      image: (img.startsWith('http') || img.startsWith('/'))
+                        ? CachedNetworkImageProvider(ImageUtils.formatUrl(img)) 
                         : AssetImage('assets/images/$img') as ImageProvider,
                       fit: BoxFit.cover,
                     ),
@@ -394,7 +452,11 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     );
   }
 
-  Widget _buildVideoPlaceholder(ColorScheme colorScheme) {
+  Widget _buildVideoTour(ColorScheme colorScheme) {
+    if (!_isVideoInitialized && (widget.videoUrl == null || widget.videoUrl!.isEmpty)) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -402,24 +464,20 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
           style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
         const SizedBox(height: 16),
         Container(
-          height: 200,
+          height: 220,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: colorScheme.onSurface.withOpacity(0.05),
+            color: Colors.black,
             borderRadius: BorderRadius.circular(24),
-            image: const DecorationImage(
-              image: NetworkImage('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800'),
-              fit: BoxFit.cover,
-              opacity: 0.6,
-            ),
           ),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: colorScheme.surface, shape: BoxShape.circle),
-              child: Icon(LucideIcons.play, color: colorScheme.primary, size: 32),
-            ),
-          ),
+          clipBehavior: Clip.antiAlias,
+          child: _isVideoInitialized && _chewieController != null
+              ? Chewie(controller: _chewieController!)
+              : Center(
+                  child: widget.videoUrl != null && widget.videoUrl!.isNotEmpty
+                      ? CircularProgressIndicator(color: colorScheme.primary)
+                      : Icon(LucideIcons.videoOff, color: colorScheme.onSurface.withOpacity(0.2), size: 48),
+                ),
         ),
       ],
     );
@@ -973,7 +1031,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                 maxScale: 4.0,
                 child: images[index].startsWith('http')
                   ? Image.network(
-                      images[index],
+                      ImageUtils.formatUrl(images[index]),
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, color: Colors.white, size: 50),
                     )
@@ -1049,7 +1107,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         CircleAvatar(
                           radius: 16,
                           backgroundImage: (review['student'] != null && review['student']['avatar'] != null) 
-                            ? NetworkImage(review['student']['avatar']) 
+                            ? NetworkImage(ImageUtils.formatUrl(review['student']['avatar'])) 
                             : null,
                           child: (review['student'] == null || review['student']['avatar'] == null) ? Icon(LucideIcons.user, size: 16, color: colorScheme.onSurface.withOpacity(0.3)) : null,
                         ),

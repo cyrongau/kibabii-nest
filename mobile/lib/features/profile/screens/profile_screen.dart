@@ -3,12 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
 import '../../../services/auth_service.dart';
 import '../../../core/providers/theme_provider.dart';
+import '../../../core/utils/image_utils.dart';
 import '../../support/screens/support_center_screen.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -358,7 +360,7 @@ class _ProfileHeader extends StatelessWidget {
           CircleAvatar(
             radius: 48,
             backgroundColor: Theme.of(context).colorScheme.primary,
-            backgroundImage: avatar != null ? NetworkImage(avatar) : null,
+            backgroundImage: avatar != null ? CachedNetworkImageProvider(ImageUtils.formatUrl(avatar)) : null,
             child: avatar == null
                 ? Text(name[0].toUpperCase(), style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white))
                 : null,

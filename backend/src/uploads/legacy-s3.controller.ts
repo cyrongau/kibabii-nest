@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Res } from '@nestjs/common';
 import * as express from 'express';
+import { Response } from 'express';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 
 @Controller('s3')
@@ -19,11 +20,19 @@ export class LegacyS3Controller {
   }
 
   @Get(':bucket/*')
-  async proxyLegacyFile(@Param('bucket') bucket: string, @Param('0') key: string, @Res() res: express.Response) {
+  async proxyLegacyFile(@Param() params: any, @Res() res: Response) {
+    const { bucket, '0': key } = params;
+    let finalKey = key;
+    // Handle double-bucket nesting if S3_PUBLIC_URL was misconfigured
+    if (key.startsWith(`${bucket}/`)) {
+      finalKey = key.substring(bucket.length + 1);
+    }
+    console.log('📦 Legacy params:', params);
+    console.log(`🔍 Legacy proxying for bucket: ${bucket}, key: ${finalKey}`);
     try {
       const command = new GetObjectCommand({
         Bucket: bucket,
-        Key: key,
+        Key: finalKey,
       });
       const response = await this.s3ProxyClient.send(command);
       const contentType = response.ContentType || 'application/octet-stream';
@@ -32,6 +41,7 @@ export class LegacyS3Controller {
       const stream = response.Body as any;
       stream.pipe(res);
     } catch (error: any) {
+      console.error(`❌ Legacy proxy error for ${bucket}/${finalKey}:`, error.message);
       if (error.$metadata?.httpStatusCode === 404) {
         res.status(404).json({ error: 'File not found' });
       } else {

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../services/api_service.dart';
 import '../../../services/auth_service.dart';
+import '../../../core/utils/image_utils.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -137,7 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           CircleAvatar(
             radius: 32,
             backgroundColor: colorScheme.primary.withOpacity(0.1),
-            backgroundImage: _profile?['avatar'] != null ? NetworkImage(_profile!['avatar']) : null,
+            backgroundImage: _profile?['avatar'] != null ? NetworkImage(ImageUtils.formatUrl(_profile!['avatar'])) : null,
             child: _profile?['avatar'] == null ? Icon(LucideIcons.user, color: colorScheme.primary, size: 28) : null,
           ),
           const SizedBox(width: 20),

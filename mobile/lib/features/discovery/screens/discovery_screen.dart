@@ -349,6 +349,7 @@ class _DiscoverContentState extends State<_DiscoverContent> {
             longitude: double.tryParse(prop['lng']?.toString() ?? ''),
             units: prop['units'],
             extraCharges: prop['extraCharges'],
+            videoUrl: prop['videoUrl'],
           );
         },
       ),

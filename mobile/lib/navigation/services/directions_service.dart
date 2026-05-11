@@ -8,7 +8,11 @@ class DirectionsService {
   final Dio _dio;
   final String _baseUrl = '${ApiConstants.baseUrl}/navigation/directions';
   
-  DirectionsService() : _dio = Dio();
+  DirectionsService() : _dio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 15),
+    receiveTimeout: const Duration(seconds: 15),
+    sendTimeout: const Duration(seconds: 15),
+  ));
 
   Future<RouteModel?> getRoute({
     required double startLng,
@@ -34,6 +38,7 @@ class DirectionsService {
     // Make API call only once (optimization #1)
     try {
       final url = '$_baseUrl/$profile/$startLng,$startLat;$endLng,$endLat';
+      print('🚗 DirectionsService: Fetching route from $url');
       
       final response = await _dio.get(
         url,
@@ -45,13 +50,17 @@ class DirectionsService {
       );
 
       if (response.statusCode == 200 && response.data['routes'] != null) {
+        print('✅ DirectionsService: Route received successfully');
         final routes = response.data['routes'] as List;
-        if (routes.isEmpty) return null;
+        if (routes.isEmpty) {
+          print('⚠️ DirectionsService: Empty routes list');
+          return null;
+        }
 
         final routeData = routes[0];
         final geometry = routeData['geometry']['coordinates'] as List;
-        final duration = routeData['duration'] as double;
-        final distance = routeData['distance'] as double;
+        final duration = (routeData['duration'] ?? 0).toDouble();
+        final distance = (routeData['distance'] ?? 0).toDouble();
         
         final legs = routeData['legs'] as List;
         final List<ManeuverModel> maneuvers = [];
@@ -92,9 +101,17 @@ class DirectionsService {
 
         return route;
       }
+      print('❌ DirectionsService: Failed with status ${response.statusCode}');
       return null;
     } catch (e) {
-      print('DirectionsService: Error fetching route: $e');
+      if (e is DioException) {
+        print('❌ DirectionsService: Network error: ${e.type} - ${e.message}');
+        if (e.response != null) {
+          print('❌ DirectionsService: Response data: ${e.response?.data}');
+        }
+      } else {
+        print('❌ DirectionsService: Unexpected error: $e');
+      }
       return null;
     }
   }

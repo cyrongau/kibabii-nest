@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../core/utils/image_utils.dart';
 import '../screens/item_details_screen.dart';
 
 class ProductCard extends StatelessWidget {
@@ -62,7 +63,7 @@ class ProductCard extends StatelessWidget {
                 children: [
                   image != null
                       ? CachedNetworkImage(
-                          imageUrl: image!,
+                          imageUrl: ImageUtils.formatUrl(image!),
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: colorScheme.onSurface.withOpacity(0.05),

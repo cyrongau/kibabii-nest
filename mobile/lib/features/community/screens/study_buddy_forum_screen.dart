@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../services/api_service.dart';
+import '../../../core/utils/image_utils.dart';
 
 class StudyBuddyForumScreen extends StatefulWidget {
   final dynamic post;
@@ -83,7 +84,7 @@ class _StudyBuddyForumScreenState extends State<StudyBuddyForumScreen> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundImage: _post['author']['avatar'] != null ? NetworkImage(_post['author']['avatar']) : null,
+                        backgroundImage: _post['author']['avatar'] != null ? NetworkImage(ImageUtils.formatUrl(_post['author']['avatar'])) : null,
                         child: _post['author']['avatar'] == null ? const Icon(LucideIcons.user) : null,
                       ),
                       const SizedBox(width: 12),
@@ -177,7 +178,7 @@ class _StudyBuddyForumScreenState extends State<StudyBuddyForumScreen> {
             children: [
               CircleAvatar(
                 radius: 12,
-                backgroundImage: reply['author']['avatar'] != null ? NetworkImage(reply['author']['avatar']) : null,
+                backgroundImage: reply['author']['avatar'] != null ? NetworkImage(ImageUtils.formatUrl(reply['author']['avatar'])) : null,
                 child: reply['author']['avatar'] == null ? const Icon(LucideIcons.user, size: 10) : null,
               ),
               const SizedBox(width: 8),

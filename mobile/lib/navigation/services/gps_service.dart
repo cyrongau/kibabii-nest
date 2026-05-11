@@ -8,6 +8,21 @@ class GpsService {
   Stream<Position> get positionStream => _positionController.stream;
 
   Future<bool> checkPermissions() async {
+    try {
+      return await _checkPermissionsLogic().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          print('GpsService: Permission check timed out');
+          return false;
+        },
+      );
+    } catch (e) {
+      print('GpsService: Permission check error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> _checkPermissionsLogic() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return false;
@@ -31,14 +46,20 @@ class GpsService {
   Future<Position?> getCurrentPosition() async {
     try {
       final hasPermission = await checkPermissions();
-      if (!hasPermission) return null;
+      if (!hasPermission) {
+        print('GpsService: Location permission denied');
+        return null;
+      }
 
+      print('GpsService: Fetching current position with 10s timeout...');
       return await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
-          distanceFilter: 5,
         ),
-      );
+      ).timeout(const Duration(seconds: 10), onTimeout: () {
+        print('GpsService: GPS lock timed out');
+        throw TimeoutException('GPS lock timed out');
+      });
     } catch (e) {
       print('GpsService: Error getting current position: $e');
       return null;

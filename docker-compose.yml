@@ -45,7 +45,7 @@ services:
       S3_ACCESS_KEY: minioadmin
       S3_SECRET_KEY: minioadmin
       S3_BUCKET_NAME: kibabii-nest
-      S3_PUBLIC_URL: https://api.kibabii.generexcom.com/s3/kibabii-nest
+      S3_PUBLIC_URL: https://api.kibabii.generexcom.com/s3
     ports:
       - "9000:9000"
     volumes:

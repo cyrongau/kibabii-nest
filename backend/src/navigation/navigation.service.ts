@@ -14,6 +14,7 @@ export class NavigationService {
       }
 
       const url = `${this.mapboxBaseUrl}/${profile}/${coordinates}`;
+      this.logger.log(`🚗 Fetching directions from Mapbox: ${url}`);
       
       const response = await axios.get(url, {
         params: {
@@ -22,10 +23,12 @@ export class NavigationService {
         },
       });
 
+      this.logger.log(`✅ Received route from Mapbox for ${coordinates}`);
       return response.data;
     } catch (error: any) {
-      this.logger.error(`Failed to fetch directions: ${error.message}`);
+      this.logger.error(`❌ Failed to fetch directions for ${coordinates}: ${error.message}`);
       if (error.response) {
+        this.logger.error(`Mapbox error response: ${JSON.stringify(error.response.data)}`);
         throw new InternalServerErrorException(error.response.data);
       }
       throw new InternalServerErrorException('Failed to fetch directions from Mapbox');

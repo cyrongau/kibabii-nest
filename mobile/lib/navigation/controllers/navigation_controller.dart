@@ -69,33 +69,72 @@ class NavigationController extends StateNotifier<TripStateModel> {
     required double destinationLng,
     String? destinationName,
   }) async {
+    debugPrint('🏁 Navigation: startNavigation called for $destinationLat, $destinationLng');
     state = state.copyWith(
       state: TripState.loading,
       destinationLat: destinationLat,
       destinationLng: destinationLng,
       destinationName: destinationName,
+      errorMessage: null,
     );
 
+    try {
+      return await _startNavigationLogic(
+        destinationLat: destinationLat, 
+        destinationLng: destinationLng, 
+        destinationName: destinationName
+      ).timeout(
+        const Duration(seconds: 40),
+        onTimeout: () {
+          debugPrint('❌ Navigation: startNavigation timed out after 40s');
+          state = state.copyWith(
+            state: TripState.error,
+            errorMessage: 'Navigation initialization timed out. Please check your GPS and internet.',
+          );
+          return false;
+        },
+      );
+    } catch (e) {
+      debugPrint('❌ Navigation: startNavigation error: $e');
+      state = state.copyWith(
+        state: TripState.error,
+        errorMessage: 'Failed to start navigation: ${e.toString()}',
+      );
+      return false;
+    }
+  }
+
+  Future<bool> _startNavigationLogic({
+    required double destinationLat,
+    required double destinationLng,
+    String? destinationName,
+  }) async {
+    debugPrint('🏁 Navigation: Checking permissions...');
     final hasPermission = await _gpsService.checkPermissions();
     if (!hasPermission) {
+      debugPrint('❌ Navigation: Location permission denied');
       state = state.copyWith(
         state: TripState.error,
-        errorMessage: 'Location permission denied',
+        errorMessage: 'Location permission denied. Please enable location access in settings.',
       );
       return false;
     }
 
+    debugPrint('🏁 Navigation: Getting current position...');
     final currentPosition = await _gpsService.getCurrentPosition();
     if (currentPosition == null) {
+      debugPrint('❌ Navigation: Could not get current position');
       state = state.copyWith(
         state: TripState.error,
-        errorMessage: 'Could not get current location',
+        errorMessage: 'Could not get GPS lock. Try moving to an open area.',
       );
       return false;
     }
 
+    debugPrint('🏁 Navigation: Current position: ${currentPosition.latitude}, ${currentPosition.longitude}');
     state = state.copyWith(currentPosition: currentPosition);
 
+    debugPrint('🏁 Navigation: Fetching route from DirectionsService...');
     final route = await _directionsService.getWalkingRoute(
       startLng: currentPosition.longitude,
       startLat: currentPosition.latitude,
@@ -104,12 +143,15 @@ class NavigationController extends StateNotifier<TripStateModel> {
     );
 
     if (route == null) {
+      debugPrint('❌ Navigation: Route fetching failed');
       state = state.copyWith(
         state: TripState.error,
-        errorMessage: 'Could not find a route',
+        errorMessage: 'Could not find a walking route to this destination.',
       );
       return false;
     }
+
+    debugPrint('✅ Navigation: Route found! Distance: ${route.distance}m');
 
     state = state.copyWith(
       state: TripState.navigating,

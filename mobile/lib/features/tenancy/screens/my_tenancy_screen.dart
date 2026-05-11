@@ -11,6 +11,7 @@ import '../../chat/screens/chat_screen.dart';
 import '../../../core/widgets/app_modals.dart';
 import './payment_history_screen.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/utils/image_utils.dart';
 
 class MyTenancyScreen extends StatefulWidget {
   const MyTenancyScreen({super.key});
@@ -155,7 +156,7 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
                     'conversationId': conversation['id'],
                     'otherUserId': landlordId,
                     'otherUserName': _tenancy!['propertyUnit']['property']['landlord']?['name'] ?? 'Landlord',
-                    'otherUserAvatar': _tenancy!['propertyUnit']['property']['landlord']?['avatar'],
+                    'otherUserAvatar': ImageUtils.formatUrl(_tenancy!['propertyUnit']['property']['landlord']?['avatar'] ?? ''),
                   });
                 }
               } finally {
@@ -223,8 +224,8 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
               borderRadius: BorderRadius.circular(16),
               image: DecorationImage(
                 image: NetworkImage((property['images'] != null && property['images'].isNotEmpty) 
-                  ? property['images'][0] 
-                  : 'https://via.placeholder.com/150'),
+                  ? ImageUtils.formatUrl(property['images'][0]) 
+                  : 'https://api.kibabii.generexcom.com/uploads/proxy/placeholder/hostel_1.png'),
                 fit: BoxFit.cover,
               ),
             ),

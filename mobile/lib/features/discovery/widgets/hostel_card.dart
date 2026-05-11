@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
 import '../../../services/api_service.dart';
+import '../../../core/utils/image_utils.dart';
 
 class HostelCard extends StatefulWidget {
   final String id;
@@ -21,6 +22,7 @@ class HostelCard extends StatefulWidget {
   final List<dynamic>? units;
   final Map<String, dynamic>? extraCharges;
   final bool isFull;
+  final String? videoUrl;
 
   const HostelCard({
     super.key,
@@ -38,6 +40,7 @@ class HostelCard extends StatefulWidget {
     this.units,
     this.extraCharges,
     this.isFull = false,
+    this.videoUrl,
   });
 
   @override
@@ -101,6 +104,7 @@ class _HostelCardState extends State<HostelCard> {
         'lng': widget.longitude,
         'units': widget.units,
         'extraCharges': widget.extraCharges,
+        'videoUrl': widget.videoUrl,
       }),
       child: Container(
         width: 280,
@@ -136,9 +140,9 @@ class _HostelCardState extends State<HostelCard> {
     Widget imageWidget;
     if (widget.image == null) {
       imageWidget = _buildPlaceholder(colorScheme);
-    } else if (widget.image!.startsWith('http')) {
+    } else if (widget.image!.startsWith('http') || widget.image!.startsWith('/')) {
       imageWidget = CachedNetworkImage(
-        imageUrl: widget.image!,
+        imageUrl: ImageUtils.formatUrl(widget.image),
         fit: BoxFit.cover,
         placeholder: (context, url) => Center(child: CircularProgressIndicator(color: colorScheme.primary)),
         errorWidget: (context, url, error) => _buildPlaceholder(colorScheme),

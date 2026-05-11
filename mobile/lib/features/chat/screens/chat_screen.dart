@@ -9,6 +9,7 @@ import 'dart:io';
 import '../../../services/socket_service.dart';
 import '../../../services/api_service.dart';
 import '../../../services/auth_service.dart';
+import '../../../core/utils/image_utils.dart';
 
 class ChatScreen extends StatefulWidget {
   final String conversationId;
@@ -210,7 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
             CircleAvatar(
               radius: 18,
               backgroundColor: colorScheme.primary.withOpacity(0.1),
-              backgroundImage: widget.otherUserAvatar != null ? NetworkImage(widget.otherUserAvatar!) : null,
+              backgroundImage: widget.otherUserAvatar != null ? NetworkImage(ImageUtils.formatUrl(widget.otherUserAvatar!)) : null,
               child: widget.otherUserAvatar == null 
                   ? Text(widget.otherUserName[0], style: TextStyle(color: colorScheme.primary, fontSize: 14, fontWeight: FontWeight.bold))
                   : null,
@@ -428,7 +429,7 @@ class _ChatBubble extends StatelessWidget {
             CircleAvatar(
               radius: 14,
               backgroundColor: colorScheme.primary.withOpacity(0.1),
-              backgroundImage: avatar != null ? NetworkImage(avatar) : null,
+              backgroundImage: avatar != null ? NetworkImage(ImageUtils.formatUrl(avatar)) : null,
               child: avatar == null 
                   ? Text(sender['name']?[0] ?? '?', style: TextStyle(fontSize: 10, color: colorScheme.primary, fontWeight: FontWeight.bold)) 
                   : null,
@@ -459,7 +460,7 @@ class _ChatBubble extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.network(
-                          imageUrl,
+                          ImageUtils.formatUrl(imageUrl),
                           fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
@@ -491,7 +492,7 @@ class _ChatBubble extends StatelessWidget {
             CircleAvatar(
               radius: 14,
               backgroundColor: colorScheme.primary.withOpacity(0.2),
-              backgroundImage: sender['avatar'] != null ? NetworkImage(sender['avatar']) : null,
+              backgroundImage: sender['avatar'] != null ? NetworkImage(ImageUtils.formatUrl(sender['avatar'])) : null,
               child: sender['avatar'] == null 
                   ? Text('Me', style: const TextStyle(fontSize: 8, color: Colors.white, fontWeight: FontWeight.bold)) 
                   : null,

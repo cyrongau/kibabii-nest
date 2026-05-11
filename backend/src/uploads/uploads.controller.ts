@@ -12,6 +12,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import * as express from 'express';
+import { Response } from 'express';
 import { S3Service } from './s3.service';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 
@@ -32,12 +33,19 @@ export class UploadsController {
   }
 
   @Get('proxy/:bucket/*')
-  async proxyFile(@Param('bucket') bucket: string, @Param('0') key: string, @Res() res: any) {
-    console.log(`🔍 Proxying request for bucket: ${bucket}, key: ${key}`);
+  async proxyFile(@Param() params: any, @Res() res: Response) {
+    const { bucket, '0': key } = params;
+    let finalKey = key;
+    // Handle double-bucket nesting if S3_PUBLIC_URL was misconfigured
+    if (key.startsWith(`${bucket}/`)) {
+      finalKey = key.substring(bucket.length + 1);
+    }
+    console.log('📦 All params:', params);
+    console.log(`🔍 Proxying request for bucket: ${bucket}, key: ${finalKey}`);
     try {
       const command = new GetObjectCommand({
         Bucket: bucket,
-        Key: key,
+        Key: finalKey,
       });
       const response = await this.s3ProxyClient.send(command);
       const contentType = response.ContentType || 'application/octet-stream';
@@ -46,12 +54,19 @@ export class UploadsController {
       const stream = response.Body as any;
       stream.pipe(res);
     } catch (error: any) {
+      console.error(`❌ Proxy error for ${bucket}/${finalKey}:`, error.message);
       if (error.$metadata?.httpStatusCode === 404) {
         res.status(404).json({ error: 'File not found' });
       } else {
         res.status(500).json({ error: 'Failed to retrieve file' });
       }
     }
+  }
+
+  // Fallback for URLs missing the /proxy prefix
+  @Get(':bucket/*')
+  async proxyFileFallback(@Param() params: any, @Res() res: Response) {
+    return this.proxyFile(params, res);
   }
 
   @Post('image')

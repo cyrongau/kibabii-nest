@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import '../../../services/api_service.dart';
+import '../../../core/utils/image_utils.dart';
 
 class LandlordDashboardScreen extends StatefulWidget {
   const LandlordDashboardScreen({super.key});
@@ -119,7 +120,7 @@ class _LandlordDashboardScreenState extends State<LandlordDashboardScreen> {
               CircleAvatar(
                 radius: 28,
                 backgroundColor: colorScheme.primary.withOpacity(0.1),
-                backgroundImage: _profile?['avatar'] != null ? NetworkImage(_profile!['avatar']) : null,
+                backgroundImage: _profile?['avatar'] != null ? NetworkImage(ImageUtils.formatUrl(_profile!['avatar'])) : null,
                 child: _profile?['avatar'] == null ? Icon(LucideIcons.user, color: colorScheme.primary) : null,
               ),
               const SizedBox(width: 16),

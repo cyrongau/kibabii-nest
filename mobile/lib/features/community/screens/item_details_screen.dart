@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../../../core/utils/image_utils.dart';
 import '../../../services/api_service.dart';
 import '../../chat/screens/chat_screen.dart';
 import '../../chat/screens/chat_list_screen.dart';
@@ -67,7 +68,7 @@ class _MarketplaceItemDetailsScreenState extends State<MarketplaceItemDetailsScr
               conversationId: conversation['id'],
               otherUserId: sellerId,
               otherUserName: _item['seller']?['name'] ?? 'Seller',
-              otherUserAvatar: _item['seller']?['avatar'],
+              otherUserAvatar: ImageUtils.formatUrl(_item['seller']?['avatar'] ?? ''),
             ),
           ),
         );
@@ -140,7 +141,7 @@ class _MarketplaceItemDetailsScreenState extends State<MarketplaceItemDetailsScr
                             margin: const EdgeInsets.only(right: 8),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(image: NetworkImage(img), fit: BoxFit.cover),
+                              image: DecorationImage(image: NetworkImage(ImageUtils.formatUrl(img)), fit: BoxFit.cover),
                             ),
                           ),
                           Positioned(
@@ -325,7 +326,7 @@ class _MarketplaceItemDetailsScreenState extends State<MarketplaceItemDetailsScr
                         PageView.builder(
                           itemCount: images.length,
                           onPageChanged: (idx) => setState(() => _currentImageIndex = idx),
-                          itemBuilder: (context, idx) => Image.network(images[idx], fit: BoxFit.cover),
+                          itemBuilder: (context, idx) => Image.network(ImageUtils.formatUrl(images[idx]), fit: BoxFit.cover),
                         )
                       else
                         Container(color: colorScheme.onSurface.withOpacity(0.05), child: Center(child: Icon(LucideIcons.image, size: 64, color: colorScheme.onSurface.withOpacity(0.1)))),
@@ -414,7 +415,7 @@ class _MarketplaceItemDetailsScreenState extends State<MarketplaceItemDetailsScr
                           children: [
                             CircleAvatar(
                               radius: 24,
-                              backgroundImage: _item['seller']?['avatar'] != null ? NetworkImage(_item['seller']['avatar']) : null,
+                              backgroundImage: _item['seller']?['avatar'] != null ? NetworkImage(ImageUtils.formatUrl(_item['seller']['avatar'])) : null,
                               backgroundColor: colorScheme.onSurface.withOpacity(0.1),
                               child: _item['seller']?['avatar'] == null ? Icon(LucideIcons.user, color: colorScheme.onSurface.withOpacity(0.3)) : null,
                             ),
