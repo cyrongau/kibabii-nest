@@ -49,6 +49,15 @@ export class LegacyS3Controller {
       res.setHeader('Content-Type', contentType);
       res.setHeader('Cache-Control', 'public, max-age=31536000');
       const stream = response.Body as any;
+      
+      // Handle stream errors
+      stream.on('error', (err: any) => {
+        console.error('❌ Legacy stream error during proxy:', err.message);
+        if (!res.headersSent) {
+          res.status(502).json({ error: 'Upstream connection to S3 failed' });
+        }
+      });
+
       stream.pipe(res);
     } catch (error: any) {
       console.error(`❌ Legacy proxy error for ${bucket}/${finalKey}:`, error.message);
