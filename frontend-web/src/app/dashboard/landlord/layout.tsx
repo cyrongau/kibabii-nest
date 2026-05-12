@@ -79,9 +79,13 @@ export default function LandlordLayout({
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/stats/landlord`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const data = await response.json();
         if (response.ok) {
+          const data = await response.json();
           setPendingCount(data.pendingRequestsCount || 0);
+        } else if (response.status === 401) {
+          // Token expired, redirect to login
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
         }
       } catch (error) {
         console.error('Error fetching sidebar stats:', error);
@@ -108,13 +112,24 @@ export default function LandlordLayout({
           if (statsRes.ok) {
             const statsData = await statsRes.json();
             setPendingCount(statsData.pendingRequestsCount || 0);
+          } else if (statsRes.status === 401) {
+            localStorage.clear();
+            window.location.href = '/auth/landlord';
+            return;
           }
+          
           if (userRes.ok) {
             const freshUser = await userRes.json();
             setUser(freshUser);
             localStorage.setItem('user', JSON.stringify(freshUser));
+          } else if (userRes.status === 401) {
+            localStorage.clear();
+            window.location.href = '/auth/landlord';
+            return;
           }
-        } catch (e) {}
+        } catch (e) {
+          console.error('Error refreshing dashboard data:', e);
+        }
       }
     }, 30000);
     
