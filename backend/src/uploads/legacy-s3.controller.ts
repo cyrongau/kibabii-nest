@@ -34,7 +34,16 @@ export class LegacyS3Controller {
     }
 
     let finalKey = key;
-    // Handle double-bucket nesting if S3_PUBLIC_URL was misconfigured
+
+    // HEALER: Strip redundant prefixes that might have been double-added
+    const redundantPrefixes = ['uploads/proxy/', 's3/', 'proxy/'];
+    for (const prefix of redundantPrefixes) {
+      if (finalKey.startsWith(prefix)) {
+        finalKey = finalKey.substring(prefix.length);
+      }
+    }
+
+    // Handle double-bucket nesting
     if (finalKey.startsWith(`${bucket}/`)) {
       finalKey = finalKey.substring(bucket.length + 1);
     }
