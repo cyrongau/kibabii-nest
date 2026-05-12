@@ -22,20 +22,27 @@ export class LegacyS3Controller {
   async proxyLegacyFile(@Param() params: any, @Res() res: express.Response) {
     console.log('📦 Legacy params:', params);
     const bucket = params.bucket;
-    let key = params['0'] || params['*'] || params['path'] || '';
+    const key = params['0'] || params['*'] || params['path'] || '';
     
-    if (Array.isArray(key)) {
-      key = key.join('/');
-    }
-    
-    if (!key) {
-      console.error('❌ No key provided in legacy proxy request');
-      return res.status(400).json({ error: 'No key provided' });
-    }
-
+    let realBucket = bucket;
     let finalKey = key;
+    
+    if (Array.isArray(finalKey)) {
+      finalKey = finalKey.join('/');
+    }
 
-    // HEALER: Strip redundant prefixes that might have been double-added
+    // HEALER: If the bucket is a generic prefix, extract the real bucket from the key
+    const genericPrefixes = ['uploads', 's3', 'proxy'];
+    if (genericPrefixes.includes(realBucket)) {
+      const segments = finalKey.split('/').filter(s => s && !genericPrefixes.includes(s));
+      if (segments.length >= 2) {
+        realBucket = segments[0];
+        finalKey = segments.slice(1).join('/');
+        console.log(`♻️ Healed Legacy Bucket/Key: ${realBucket} / ${finalKey}`);
+      }
+    }
+
+    // Secondary cleanup for double-prefixing
     const redundantPrefixes = ['uploads/proxy/', 's3/', 'proxy/'];
     for (const prefix of redundantPrefixes) {
       if (finalKey.startsWith(prefix)) {
@@ -44,13 +51,14 @@ export class LegacyS3Controller {
     }
 
     // Handle double-bucket nesting
-    if (finalKey.startsWith(`${bucket}/`)) {
-      finalKey = finalKey.substring(bucket.length + 1);
+    if (finalKey.startsWith(`${realBucket}/`)) {
+      finalKey = finalKey.substring(realBucket.length + 1);
     }
-    console.log(`🔍 Legacy proxying for bucket: ${bucket}, key: ${finalKey}`);
+    
+    console.log(`🔍 Final Legacy Proxy Request -> Bucket: ${realBucket}, Key: ${finalKey}`);
     try {
       const command = new GetObjectCommand({
-        Bucket: bucket,
+        Bucket: realBucket,
         Key: finalKey,
       });
       const response = await this.s3ProxyClient.send(command);

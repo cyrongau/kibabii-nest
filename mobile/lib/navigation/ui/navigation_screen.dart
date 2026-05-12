@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
+import 'package:turf/helpers.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/navigation_controller.dart';
+import '../models/route_model.dart';
 import '../models/trip_state_model.dart';
 
 class NavigationScreen extends ConsumerStatefulWidget {
@@ -25,6 +27,9 @@ class NavigationScreen extends ConsumerStatefulWidget {
 
 class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   mbx.MapboxMap? _mapboxMap;
+  mbx.PolylineAnnotationManager? _polylineAnnotationManager;
+  mbx.PolylineAnnotation? _routePolyline;
+  bool _isMapReady = false;
   bool _isFollowingUser = true;
 
   @override
@@ -34,17 +39,68 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   }
 
   Future<void> _startNavigation() async {
-    await ref.read(navigationControllerProvider.notifier).startNavigation(
-      destinationLat: widget.destinationLat,
-      destinationLng: widget.destinationLng,
-      destinationName: widget.destinationName,
-    );
+    await ref
+        .read(navigationControllerProvider.notifier)
+        .startNavigation(
+          destinationLat: widget.destinationLat,
+          destinationLng: widget.destinationLng,
+          destinationName: widget.destinationName,
+        );
   }
 
-  void _onMapCreated(mbx.MapboxMap mapboxMap) {
+  void _onMapCreated(mbx.MapboxMap mapboxMap) async {
     setState(() {
       _mapboxMap = mapboxMap;
+      _isMapReady = true;
     });
+
+    _polylineAnnotationManager = await mapboxMap.annotations
+        .createPolylineAnnotationManager();
+    _syncRouteToMap(ref.read(navigationControllerProvider));
+  }
+
+  Future<void> _syncRouteToMap(TripStateModel tripState) async {
+    if (!_isMapReady || _polylineAnnotationManager == null) return;
+
+    if (!tripState.hasRoute || tripState.currentRoute!.geometry.isEmpty) {
+      await _polylineAnnotationManager?.deleteAll();
+      _routePolyline = null;
+      return;
+    }
+
+    await _renderRouteLine(tripState.currentRoute!);
+  }
+
+  Future<void> _renderRouteLine(RouteModel route) async {
+    if (_polylineAnnotationManager == null || _mapboxMap == null) return;
+
+    final positions = route.geometry
+        .map((point) => Position(point[0], point[1]))
+        .toList();
+
+    if (positions.length < 2) return;
+
+    final lineGeoJson = LineString(coordinates: positions).toJson();
+
+    if (_routePolyline == null) {
+      _routePolyline = await _polylineAnnotationManager!.create(
+        mbx.PolylineAnnotationOptions(
+          geometry: lineGeoJson,
+          lineColor: Colors.blue.value,
+          lineWidth: 5,
+        ),
+      );
+    } else {
+      _routePolyline!.geometry = lineGeoJson;
+      await _polylineAnnotationManager!.update(_routePolyline!);
+    }
+
+    _mapboxMap!.setCamera(
+      mbx.CameraOptions(
+        center: mbx.Point(coordinates: positions.first).toJson(),
+        zoom: 15.0,
+      ),
+    );
   }
 
   @override
@@ -54,7 +110,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final isDark = theme.brightness == Brightness.dark;
 
     ref.listen(navigationControllerProvider, (previous, next) {
-      // Camera follow will be added after API compatibility check
+      _syncRouteToMap(next);
     });
 
     return Scaffold(
@@ -67,12 +123,12 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                 accessToken: dotenv.get('MAPBOX_PUBLIC_TOKEN', fallback: ''),
               ),
               onMapCreated: _onMapCreated,
-              styleUri: isDark 
-                  ? "mapbox://styles/mapbox/dark-v11" 
+              styleUri: isDark
+                  ? "mapbox://styles/mapbox/dark-v11"
                   : "mapbox://styles/mapbox/streets-v11",
             ),
           ),
-          
+
           if (tripState.state == TripState.loading)
             Container(
               color: Colors.black54,
@@ -80,19 +136,17 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                 child: CircularProgressIndicator(color: Colors.white),
               ),
             ),
-          
+
           if (tripState.hasError)
             _buildErrorBanner(tripState.errorMessage ?? 'Navigation error'),
-          
-          if (tripState.isOffRoute)
-            _buildOffRouteBanner(),
-          
+
+          if (tripState.isOffRoute) _buildOffRouteBanner(),
+
           _buildNavigationCard(tripState),
-          
+
           _buildControlButtons(tripState),
-          
-          if (tripState.hasArrived)
-            _buildArrivedOverlay(),
+
+          if (tripState.hasArrived) _buildArrivedOverlay(),
         ],
       ),
     );
@@ -116,7 +170,10 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
             Expanded(
               child: Text(
                 message,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -143,7 +200,10 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
             Expanded(
               child: Text(
                 'Recalculating route...',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -154,7 +214,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
   Widget _buildNavigationCard(TripStateModel tripState) {
     final theme = Theme.of(context);
-    
+
     return Positioned(
       bottom: 0,
       left: 0,
@@ -213,8 +273,10 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                   ),
                 ],
               ),
-              
-              if (tripState.hasRoute && tripState.currentManeuverIndex < tripState.currentRoute!.maneuvers.length) ...[
+
+              if (tripState.hasRoute &&
+                  tripState.currentManeuverIndex <
+                      tripState.currentRoute!.maneuvers.length) ...[
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -231,7 +293,12 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
-                          _getManeuverIcon(tripState.currentRoute!.maneuvers[tripState.currentManeuverIndex].type),
+                          _getManeuverIcon(
+                            tripState
+                                .currentRoute!
+                                .maneuvers[tripState.currentManeuverIndex]
+                                .type,
+                          ),
                           color: Colors.white,
                           size: 20,
                         ),
@@ -239,7 +306,10 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: Text(
-                          tripState.currentRoute!.maneuvers[tripState.currentManeuverIndex].fullInstruction,
+                          tripState
+                              .currentRoute!
+                              .maneuvers[tripState.currentManeuverIndex]
+                              .fullInstruction,
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w500,
                           ),
@@ -285,7 +355,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
             child: IconButton(
               icon: const Icon(Icons.close),
               onPressed: () {
-                ref.read(navigationControllerProvider.notifier).stopNavigation();
+                ref
+                    .read(navigationControllerProvider.notifier)
+                    .stopNavigation();
                 Navigator.pop(context);
               },
             ),
@@ -298,7 +370,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
               child: IconButton(
                 icon: const Icon(Icons.pause),
                 onPressed: () {
-                  ref.read(navigationControllerProvider.notifier).pauseNavigation();
+                  ref
+                      .read(navigationControllerProvider.notifier)
+                      .pauseNavigation();
                 },
               ),
             ),
@@ -309,7 +383,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
               child: IconButton(
                 icon: const Icon(Icons.play_arrow),
                 onPressed: () {
-                  ref.read(navigationControllerProvider.notifier).resumeNavigation();
+                  ref
+                      .read(navigationControllerProvider.notifier)
+                      .resumeNavigation();
                 },
               ),
             ),
@@ -348,7 +424,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  ref.read(navigationControllerProvider.notifier).stopNavigation();
+                  ref
+                      .read(navigationControllerProvider.notifier)
+                      .stopNavigation();
                   Navigator.pop(context);
                 },
                 child: const Text('Done'),
