@@ -35,7 +35,11 @@ export class UploadsController {
   async proxyFile(@Param() params: any, @Res() res: express.Response) {
     console.log('📦 All params:', params);
     const bucket = params.bucket;
-    const key = params['0'] || params['*'] || '';
+    let key = params['0'] || params['*'] || params['path'] || '';
+
+    if (Array.isArray(key)) {
+      key = key.join('/');
+    }
 
     if (!key) {
       console.error('❌ No key provided in proxy request');

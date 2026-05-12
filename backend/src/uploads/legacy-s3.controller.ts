@@ -22,7 +22,11 @@ export class LegacyS3Controller {
   async proxyLegacyFile(@Param() params: any, @Res() res: express.Response) {
     console.log('📦 Legacy params:', params);
     const bucket = params.bucket;
-    const key = params['0'] || params['*'] || '';
+    let key = params['0'] || params['*'] || params['path'] || '';
+    
+    if (Array.isArray(key)) {
+      key = key.join('/');
+    }
     
     if (!key) {
       console.error('❌ No key provided in legacy proxy request');
