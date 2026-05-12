@@ -33,13 +33,20 @@ export class UploadsController {
 
   @Get('proxy/:bucket/*')
   async proxyFile(@Param() params: any, @Res() res: express.Response) {
-    const { bucket, '0': key } = params;
+    console.log('📦 All params:', params);
+    const bucket = params.bucket;
+    const key = params['0'] || params['*'] || '';
+
+    if (!key) {
+      console.error('❌ No key provided in proxy request');
+      return res.status(400).json({ error: 'No key provided' });
+    }
+
     let finalKey = key;
     // Handle double-bucket nesting if S3_PUBLIC_URL was misconfigured
-    if (key.startsWith(`${bucket}/`)) {
-      finalKey = key.substring(bucket.length + 1);
+    if (finalKey.startsWith(`${bucket}/`)) {
+      finalKey = finalKey.substring(bucket.length + 1);
     }
-    console.log('📦 All params:', params);
     console.log(`🔍 Proxying request for bucket: ${bucket}, key: ${finalKey}`);
     try {
       const command = new GetObjectCommand({
