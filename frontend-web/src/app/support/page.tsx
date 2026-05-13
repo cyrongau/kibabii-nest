@@ -36,11 +36,18 @@ export default function SupportPage() {
         body: JSON.stringify({ subject, description, category })
       });
 
-      if (response.ok) {
-        setIsSuccess(true);
-        setSubject('');
-        setDescription('');
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
       }
+
+      setIsSuccess(true);
+      setSubject('');
+      setDescription('');
     } catch (e) {
       console.error('Error submitting ticket:', e);
     } finally {

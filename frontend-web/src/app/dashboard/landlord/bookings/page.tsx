@@ -14,10 +14,21 @@ export default function BookingsPage() {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/bookings/landlord`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.clear();
+            window.location.href = '/auth/landlord';
+            return;
+          }
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
         const data = await response.json();
-        if (response.ok) setBookings(Array.isArray(data) ? data : []);
+        setBookings(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error fetching bookings:', error);
+        setBookings([]);
       } finally {
         setIsLoading(false);
       }

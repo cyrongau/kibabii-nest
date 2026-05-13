@@ -39,11 +39,12 @@ export function NotificationBell() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
-      if (response.ok) {
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          setNotifications(data);
-        }
+      if (!response.ok) {
+        return;
+      }
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setNotifications(data);
       }
     } catch (error) {
       // Quietly fail to prevent Next.js error overlays during polling

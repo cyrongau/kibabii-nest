@@ -15,14 +15,25 @@ export default function LandlordTenantsPage() {
 
   const fetchTenancies = async () => {
     try {
+      const token = localStorage.getItem('access_token');
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/tenancy/landlord`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (response.ok) {
-        setTenancies(await response.json());
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
       }
+      
+      const data = await response.json();
+      setTenancies(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error('Failed to fetch tenancies', e);
+      setTenancies([]);
     } finally {
       setIsLoading(false);
     }

@@ -28,12 +28,14 @@ function HostelsContent() {
     const fetchHostels = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties`);
-        const data = await response.json();
-        if (response.ok) {
-          setHostels(Array.isArray(data) ? data : []);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
         }
+        const data = await response.json();
+        setHostels(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Failed to fetch hostels', error);
+        setHostels([]);
       } finally {
         setIsLoading(false);
       }

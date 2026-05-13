@@ -79,6 +79,14 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/messages/conversation/${conversationId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.reload();
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
       const data = await response.json();
       setMessages(data);
       scrollToBottom();

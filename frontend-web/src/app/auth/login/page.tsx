@@ -26,11 +26,11 @@ export default function AuthLoginRedirect() {
         body: JSON.stringify({ email, password, requiredRole: role }),
       });
 
+      const isJson = response.headers.get('content-type')?.includes('application/json');
+      const data = isJson ? await response.json().catch(() => null) : null;
+
       if (response.ok) {
-        const data = await response.json();
-        
-        // Deny student/tenant on web
-        if (data.user?.role === 'STUDENT' || data.user?.role === 'TENANT') {
+        if (data?.user?.role === 'STUDENT' || data?.user?.role === 'TENANT') {
           setShowMobileModal(true);
           setShowLoginOverlay(null);
           return;
@@ -40,10 +40,9 @@ export default function AuthLoginRedirect() {
         localStorage.setItem('user', JSON.stringify(data.user));
         router.push(role === 'ADMIN' ? '/dashboard/admin' : '/dashboard/landlord');
       } else {
-        const data = await response.json();
         showAlert({
           title: 'Access Denied',
-          message: data.message || 'Invalid credentials or unauthorized access.',
+          message: data?.message || `Invalid credentials or unauthorized access. (HTTP ${response.status})`,
           type: 'danger'
         });
       }

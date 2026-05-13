@@ -77,9 +77,17 @@ export default function AdminUsersPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/users?${queryParams.toString()}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
-      if (!response.ok) throw new Error('Failed to fetch users');
-      const data = await response.json();
       
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/admin';
+          return;
+        }
+        throw new Error('Failed to fetch users');
+      }
+      
+      const data = await response.json();
       setUsers(data.users);
       setTotalUsers(data.total);
       setTotalPages(data.totalPages);

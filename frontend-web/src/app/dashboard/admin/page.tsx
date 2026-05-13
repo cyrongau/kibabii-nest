@@ -49,9 +49,16 @@ function AdminDashboardContent() {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/admin/stats/overview`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
         });
-        if (response.ok) {
-          setStats(await response.json());
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.clear();
+            window.location.href = '/auth/admin';
+            return;
+          }
+          throw new Error(`HTTP ${response.status}`);
         }
+        const data = await response.json();
+        setStats(data);
       } catch (error) {
         console.error('Failed to fetch stats', error);
       } finally {

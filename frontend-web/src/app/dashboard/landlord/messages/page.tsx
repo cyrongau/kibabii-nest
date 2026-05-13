@@ -106,8 +106,18 @@ export default function MessagesPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/messages/contacts`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
       const data = await response.json();
-      if (response.ok && Array.isArray(data)) {
+      if (Array.isArray(data)) {
         const formattedContacts = data
           .filter((conv: any) => conv && conv.id)  // Filter out invalid conversations
           .map((conv: any) => ({
@@ -135,15 +145,23 @@ export default function MessagesPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/messages/conversation/${userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      const data = await response.json();
-      if (response.ok) {
-        // The endpoint returns a conversation object
-        setMessages(data.messages || []);
-        // Also set the active contact details if we're starting a new chat from search
-        if (!activeContact || activeContact?.id !== userId) {
-           const otherParticipant = data.participants?.[0];
-           if (otherParticipant) setActiveContact(otherParticipant);
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
+          return;
         }
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      // The endpoint returns a conversation object
+      setMessages(data.messages || []);
+      // Also set the active contact details if we're starting a new chat from search
+      if (!activeContact || activeContact?.id !== userId) {
+         const otherParticipant = data.participants?.[0];
+         if (otherParticipant) setActiveContact(otherParticipant);
       }
     } catch (error) {
       console.error('Error fetching conversation:', error);
@@ -157,10 +175,21 @@ export default function MessagesPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/messages/search-users?q=${searchQuery}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
       const data = await response.json();
-      if (response.ok) setSearchResults(data);
+      setSearchResults(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Search error:', error);
+      setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
@@ -192,15 +221,22 @@ export default function MessagesPage() {
         }),
       });
 
-      if (response.ok) {
-        const msg = await response.json();
-        setMessages(prev => [...prev, msg]);
-        setNewMessage('');
-        // Update contact last message
-        setContacts(prev => prev.map(c => 
-          c?.user?.id === activeContact?.id ? { ...c, lastMessage: msg } : c
-        ));
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
       }
+      
+      const msg = await response.json();
+      setMessages(prev => [...prev, msg]);
+      setNewMessage('');
+      // Update contact last message
+      setContacts(prev => prev.map(c => 
+        c?.user?.id === activeContact?.id ? { ...c, lastMessage: msg } : c
+      ));
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {

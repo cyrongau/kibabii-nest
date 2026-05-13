@@ -37,22 +37,40 @@ export default function LandlordDashboard() {
         const statsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/stats/landlord`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const statsData = await statsRes.json();
-        if (statsRes.ok) setStats(statsData);
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setStats(statsData);
+        } else if (statsRes.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
+          return;
+        }
 
         // Fetch properties
-        const propRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties?landlordId=${user.id}`, {
+        const propRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/properties/landlord/all`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const propData = await propRes.json();
-        if (propRes.ok) setProperties(Array.isArray(propData) ? propData : []);
+        if (propRes.ok) {
+          const propData = await propRes.json();
+          setProperties(Array.isArray(propData) ? propData : []);
+        } else if (propRes.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
+          return;
+        }
 
         // Fetch recent bookings
         const bookingsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/bookings/landlord`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const bookingsData = await bookingsRes.json();
-        if (bookingsRes.ok) setRecentBookings(Array.isArray(bookingsData) ? bookingsData.slice(0, 3) : []);
+        if (bookingsRes.ok) {
+          const bookingsData = await bookingsRes.json();
+          setRecentBookings(Array.isArray(bookingsData) ? bookingsData.slice(0, 3) : []);
+        } else if (bookingsRes.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/landlord';
+          return;
+        }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
