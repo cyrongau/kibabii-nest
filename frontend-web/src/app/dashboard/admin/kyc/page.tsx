@@ -29,10 +29,18 @@ export default function AdminKycPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/kyc/admin/all?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await response.json();
-      if (response.ok) {
-        setKycRequests(data);
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/admin';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
       }
+      
+      const data = await response.json();
+      setKycRequests(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching KYC:', error);
     } finally {

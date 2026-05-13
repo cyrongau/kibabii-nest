@@ -53,10 +53,21 @@ export default function AdminSupportPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/support/tickets`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/admin';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
       const data = await response.json();
       setTickets(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error('Error fetching tickets:', e);
+      setTickets([]);
     } finally {
       setIsLoading(false);
     }
@@ -69,6 +80,16 @@ export default function AdminSupportPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/support/tickets/${ticket.id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          window.location.href = '/auth/admin';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
       const data = await response.json();
       setSelectedTicket(data);
     } catch (e) {
