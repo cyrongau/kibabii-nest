@@ -72,6 +72,9 @@ model LandlordKyc {
   certificateUrl    String?
   status            KycStatus @default(PENDING)
   aiAnalysis        Json?
+  idName            String?
+  idNumber          String?
+  ownershipName     String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   user              User      @relation(fields: [userId], references: [id])

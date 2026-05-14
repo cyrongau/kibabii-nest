@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { MailService } from '../notifications/mail.service';
 import { KycStatus } from '@prisma/client';
 import { S3Service } from '../uploads/s3.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { callOpenRouter, parseAIJson } from '../common/ai-utils';
 
 @Injectable()
@@ -13,6 +14,7 @@ export class KycService {
     private prisma: PrismaService,
     private mailService: MailService,
     private s3Service: S3Service,
+    private notificationsService: NotificationsService,
   ) {}
 
   async submitKyc(userId: string, data: { idDocumentUrl: string; ownershipProofUrl: string; certificateUrl?: string }) {
@@ -30,27 +32,39 @@ export class KycService {
       aiAnalysis = { error: 'Failed to extract data via AI' };
     }
 
-    const existingKyc = await this.prisma.landlordKyc.findUnique({ where: { userId } });
-
-    if (existingKyc) {
-      return this.prisma.landlordKyc.update({
-        where: { userId },
-        data: {
-          ...data,
-          status: KycStatus.PENDING,
-          aiAnalysis,
-        }
-      });
-    }
-
-    return this.prisma.landlordKyc.create({
-      data: {
+    const kyc = await this.prisma.landlordKyc.upsert({
+      where: { userId },
+      update: {
+        ...data,
+        status: KycStatus.PENDING,
+        aiAnalysis,
+      },
+      create: {
         userId,
         ...data,
         status: KycStatus.PENDING,
         aiAnalysis,
       }
     });
+
+    // Notify Admins
+    try {
+      const admins = await this.prisma.user.findMany({ where: { role: 'ADMIN' } });
+      for (const admin of admins) {
+        await this.notificationsService.sendNotification(
+          admin.id,
+          'New KYC Submission',
+          `Landlord ${user.name} has submitted KYC documents for verification.`,
+          'kyc',
+          `/dashboard/admin/kyc?userId=${userId}`
+        );
+      }
+      this.logger.log(`Notifications sent to ${admins.length} admins for KYC submission by ${userId}`);
+    } catch (e) {
+      this.logger.warn(`Failed to send admin notifications for KYC: ${e.message}`);
+    }
+
+    return kyc;
   }
 
   async getPendingKyc() {
@@ -141,7 +155,7 @@ export class KycService {
     }).filter(Boolean);
   }
 
-  async verifyKyc(id: string, approved: boolean, reason?: string) {
+  async verifyKyc(id: string, approved: boolean, reason?: string, manualData?: { idName?: string; idNumber?: string; ownershipName?: string }) {
     const kyc = await this.prisma.landlordKyc.findUnique({
       where: { id },
       include: { user: true }
@@ -154,7 +168,12 @@ export class KycService {
     await this.prisma.$transaction(async (prisma) => {
       await prisma.landlordKyc.update({
         where: { id },
-        data: { status }
+        data: { 
+          status,
+          idName: manualData?.idName,
+          idNumber: manualData?.idNumber,
+          ownershipName: manualData?.ownershipName,
+        }
       });
 
       if (approved) {
@@ -172,9 +191,22 @@ export class KycService {
 
     if (approved) {
       await this.mailService.sendKycApprovedNotification(kyc.user.email, kyc.user.name);
+      await this.notificationsService.sendNotification(
+        kyc.userId,
+        'KYC Approved',
+        'Congratulations! Your landlord account has been verified. You can now manage properties freely.',
+        'success',
+        '/dashboard/landlord'
+      );
     } else {
-      // Optional: send rejection email if needed
       this.logger.log(`KYC rejected for ${kyc.user.email}. Reason: ${reason}`);
+      await this.notificationsService.sendNotification(
+        kyc.userId,
+        'KYC Rejected',
+        `Your verification was not successful. Reason: ${reason || 'Incomplete documents'}. Please update and resubmit.`,
+        'error',
+        '/dashboard/landlord'
+      );
     }
 
     return { success: true, status };

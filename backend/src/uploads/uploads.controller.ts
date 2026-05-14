@@ -45,17 +45,23 @@ export class UploadsController {
 
     // HEALER: If the bucket is a generic prefix, extract the real bucket from the key
     const genericPrefixes = ['uploads', 's3', 'proxy'];
+    const defaultBucket = process.env.S3_BUCKET_NAME || 'kibabii-nest';
+    
     if (genericPrefixes.includes(realBucket)) {
       const segments = finalKey.split('/').filter(s => s && !genericPrefixes.includes(s));
       if (segments.length >= 2) {
         realBucket = segments[0];
         finalKey = segments.slice(1).join('/');
         console.log(`♻️ Healed Legacy Bucket/Key: ${realBucket} / ${finalKey}`);
+      } else if (segments.length === 1) {
+        realBucket = defaultBucket;
+        finalKey = segments[0];
+        console.log(`♻️ Healed to Default Bucket: ${realBucket} / ${finalKey}`);
       }
     }
 
-    // Secondary cleanup for double-prefixing
-    const redundantPrefixes = ['uploads/proxy/', 's3/', 'proxy/'];
+    // Secondary cleanup for double-prefixing and leading slashes
+    const redundantPrefixes = ['uploads/proxy/', 's3/', 'proxy/', 'uploads/'];
     for (const prefix of redundantPrefixes) {
       if (finalKey.startsWith(prefix)) {
         finalKey = finalKey.substring(prefix.length);

@@ -1,4 +1,6 @@
-import "dotenv/config";
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
@@ -6,9 +8,11 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
+  const publicUrl = process.env.S3_PUBLIC_URL || 'https://api.kibabii.generexcom.com/uploads/proxy';
   const password = await bcrypt.hash('Password@123', 10);
 
   console.log('Seeding database with URL:', process.env.DATABASE_URL);
+  console.log('Using Public URL for assets:', publicUrl);
 
   // Admin
   await prisma.user.upsert({
@@ -71,10 +75,45 @@ async function main() {
     },
   });
 
+  // Properties for Landlord 1 (Alex Thompson / alex@landlord.com)
+  const landlord1 = await prisma.user.findUnique({ where: { email: 'alex@landlord.com' } });
+  if (landlord1) {
+    const pType = await prisma.propertyType.upsert({
+      where: { name: 'Rental' },
+      update: {},
+      create: { name: 'Rental' }
+    });
+
+    await prisma.property.create({
+      data: {
+        name: 'Kibabii Orange House',
+        description: 'Premium student residence with high security.',
+        address: 'Cardinal Otunga Road, Bungoma',
+        city: 'Bungoma',
+        lat: 0.6170124177529738,
+        lng: 34.523624254983,
+        landlordId: landlord1.id,
+        images: [`${publicUrl}/placeholder/hostel_2.png`],
+        amenities: ['WiFi', 'Water', 'Security', 'Electricity'],
+        units: {
+          create: [
+            { 
+              typeId: pType.id, 
+              price: 2500, 
+              capacity: 1, 
+              totalUnits: 20,
+              unitNames: ['Room 1', 'Room 2'] 
+            }
+          ]
+        }
+      }
+    });
+    console.log('✅ Sample property created for Landlord 1');
+  }
+
   // Properties for Landlord 2 (Alex Thompson / alexfgfgdf@landlord.com)
   const landlord2 = await prisma.user.findUnique({ where: { email: 'alexfgfgdf@landlord.com' } });
   if (landlord2) {
-    // Create a property type if it doesn't exist
     const pType = await prisma.propertyType.upsert({
       where: { name: 'Hostel' },
       update: {},
@@ -90,7 +129,7 @@ async function main() {
         lat: 0.6170124177529738,
         lng: 34.523624254983,
         landlordId: landlord2.id,
-        images: ['https://api.kibabii.generexcom.com/uploads/proxy/placeholder/hostel_1.png'],
+        images: [`${publicUrl}/placeholder/hostel_1.png`],
         amenities: ['WiFi', 'Water', 'Security', 'Electricity'],
         units: {
           create: [

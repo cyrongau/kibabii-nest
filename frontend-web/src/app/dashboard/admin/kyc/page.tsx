@@ -14,6 +14,11 @@ export default function AdminKycPage() {
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedKyc, setSelectedKyc] = useState<any>(null);
+  const [manualData, setManualData] = useState({
+    idName: '',
+    idNumber: '',
+    ownershipName: ''
+  });
 
   const fetchKyc = async () => {
     setIsLoading(true);
@@ -52,6 +57,16 @@ export default function AdminKycPage() {
     fetchKyc();
   }, [activeTab, search]);
 
+  useEffect(() => {
+    if (selectedKyc) {
+      setManualData({
+        idName: selectedKyc.idName || selectedKyc.aiAnalysis?.idName || '',
+        idNumber: selectedKyc.idNumber || selectedKyc.aiAnalysis?.idNumber || '',
+        ownershipName: selectedKyc.ownershipName || selectedKyc.aiAnalysis?.ownershipName || ''
+      });
+    }
+  }, [selectedKyc]);
+
   const handleVerify = async (id: string, approved: boolean) => {
     try {
       const token = localStorage.getItem('access_token');
@@ -61,7 +76,10 @@ export default function AdminKycPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}` 
         },
-        body: JSON.stringify({ approved })
+        body: JSON.stringify({ 
+          approved,
+          manualData: approved ? manualData : undefined
+        })
       });
 
       if (!response.ok) throw new Error('Verification failed');
@@ -262,15 +280,33 @@ export default function AdminKycPage() {
                     <div className="space-y-8 relative z-10">
                        <div className="space-y-3">
                          <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/30 block ml-1">Name on ID</span>
-                         <div className="font-black text-foreground text-sm bg-muted/30 px-6 py-4.5 rounded-2xl border border-border-subtle group-hover/card:border-primary/20 transition-all">{selectedKyc.aiAnalysis?.idName || 'PENDING'}</div>
+                         <input 
+                            type="text"
+                            value={manualData.idName}
+                            onChange={(e) => setManualData({...manualData, idName: e.target.value})}
+                            placeholder="Enter Full Name"
+                            className="w-full font-black text-foreground text-sm bg-muted/30 px-6 py-4.5 rounded-2xl border border-border-subtle focus:border-primary/40 focus:bg-muted/50 outline-none transition-all"
+                         />
                        </div>
                        <div className="space-y-3">
                          <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/30 block ml-1">ID Number</span>
-                         <div className="font-black text-foreground text-sm bg-muted/30 px-6 py-4.5 rounded-2xl border border-border-subtle group-hover/card:border-primary/20 transition-all">{selectedKyc.aiAnalysis?.idNumber || 'PENDING'}</div>
+                         <input 
+                            type="text"
+                            value={manualData.idNumber}
+                            onChange={(e) => setManualData({...manualData, idNumber: e.target.value})}
+                            placeholder="Enter ID Number"
+                            className="w-full font-black text-foreground text-sm bg-muted/30 px-6 py-4.5 rounded-2xl border border-border-subtle focus:border-primary/40 focus:bg-muted/50 outline-none transition-all"
+                         />
                        </div>
                        <div className="space-y-3">
                          <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/30 block ml-1">Ownership Name</span>
-                         <div className="font-black text-foreground text-sm bg-muted/30 px-6 py-4.5 rounded-2xl border border-border-subtle group-hover/card:border-primary/20 transition-all">{selectedKyc.aiAnalysis?.ownershipName || 'PENDING'}</div>
+                         <input 
+                            type="text"
+                            value={manualData.ownershipName}
+                            onChange={(e) => setManualData({...manualData, ownershipName: e.target.value})}
+                            placeholder="Enter Ownership Name"
+                            className="w-full font-black text-foreground text-sm bg-muted/30 px-6 py-4.5 rounded-2xl border border-border-subtle focus:border-primary/40 focus:bg-muted/50 outline-none transition-all"
+                         />
                        </div>
                        <div className="flex items-center justify-between bg-muted/30 px-7 py-5 rounded-[1.5rem] border border-border-subtle group-hover/card:border-primary/20 transition-all">
                          <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/30">Verification Status</span>

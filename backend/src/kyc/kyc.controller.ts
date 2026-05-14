@@ -39,8 +39,8 @@ export class KycController {
   @Roles('ADMIN')
   async verifyKyc(
     @Param('id') id: string,
-    @Body() data: { approved: boolean; reason?: string }
+    @Body() data: { approved: boolean; reason?: string; manualData?: { idName?: string; idNumber?: string; ownershipName?: string } }
   ) {
-    return this.kycService.verifyKyc(id, data.approved, data.reason);
+    return this.kycService.verifyKyc(id, data.approved, data.reason, data.manualData);
   }
 }
