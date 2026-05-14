@@ -197,7 +197,7 @@ export class KycService {
 
     await this.prisma.$transaction(async (prisma) => {
       await prisma.landlordKyc.update({
-        where: { id },
+        where: { id: kycId },
         data: { 
           status,
           idName: manualData?.idName,

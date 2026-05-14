@@ -578,4 +578,29 @@ export class PropertiesService {
       data: { verified: status },
     });
   }
+  async remove(id: string) {
+    const property = await this.prisma.property.findUnique({
+      where: { id },
+      include: {
+        units: {
+          include: {
+            tenancies: {
+              where: { status: { in: ['ACTIVE', 'BREAK_HOLD', 'NOTICE_GIVEN'] } }
+            }
+          }
+        }
+      }
+    });
+
+    if (!property) throw new NotFoundException('Property not found');
+
+    const hasActiveTenancies = property.units.some(u => u.tenancies.length > 0);
+    if (hasActiveTenancies) {
+      throw new InternalServerErrorException('Cannot delete property with active tenancies. Please vacate all units first.');
+    }
+
+    return this.prisma.property.delete({
+      where: { id }
+    });
+  }
 }

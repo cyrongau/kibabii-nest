@@ -10,6 +10,7 @@ import {
 import imageCompression from 'browser-image-compression';
 import { useNotifications } from '@/context/NotificationContext';
 import SystemAgreementTemplate from '@/components/SystemAgreementTemplate';
+import ConfirmationModal from '@/components/shared/ConfirmationModal';
 
 const getPublicUrl = (path: string) => {
   if (!path) return '';
@@ -38,6 +39,15 @@ export default function EditPropertyPage() {
   const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
   const [showAgreementPreview, setShowAgreementPreview] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [confirmationConfig, setConfirmationConfig] = useState({
+    isOpen: false,
+    onConfirm: () => {},
+    title: '',
+    message: '',
+    confirmText: '',
+    type: 'danger' as 'danger' | 'info'
+  });
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -413,6 +423,39 @@ export default function EditPropertyPage() {
     }
   };
 
+  const handleDeleteProperty = () => {
+    setConfirmationConfig({
+      isOpen: true,
+      title: 'Purge Listing?',
+      message: `Are you sure you want to permanently delete "${formData.name}"? This action cannot be undone and will fail if there are active tenancies.`,
+      confirmText: 'Purge Property',
+      type: 'danger',
+      onConfirm: async () => {
+        setIsDeleting(true);
+        try {
+          const token = localStorage.getItem('access_token');
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to delete property');
+          }
+
+          showToast('Property purged successfully', 'success');
+          router.push('/dashboard/landlord/properties');
+        } catch (error: any) {
+          showToast(error.message || 'Failed to purge property', 'error');
+        } finally {
+          setIsDeleting(false);
+          setConfirmationConfig(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -442,12 +485,22 @@ export default function EditPropertyPage() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-               <button 
-                 onClick={() => router.back()}
-                 className="px-6 py-3.5 rounded-2xl text-sm font-bold text-muted-foreground hover:bg-muted/50 transition-all"
-               >
-                 Cancel
-               </button>
+                <button 
+                  type="button"
+                  onClick={handleDeleteProperty}
+                  disabled={isDeleting}
+                  className="px-6 py-3.5 rounded-2xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all flex items-center gap-2 border border-red-100"
+                >
+                  {isDeleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                  Purge
+                </button>
+                <div className="h-8 w-px bg-border-subtle mx-2" />
+                <button 
+                  onClick={() => router.back()}
+                  className="px-6 py-3.5 rounded-2xl text-sm font-bold text-muted-foreground hover:bg-muted/50 transition-all"
+                >
+                  Cancel
+                </button>
                <button 
                  onClick={handleSubmit}
                  disabled={isSaving}
@@ -1082,6 +1135,17 @@ export default function EditPropertyPage() {
           </div>
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={confirmationConfig.isOpen}
+        onClose={() => setConfirmationConfig(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={confirmationConfig.onConfirm}
+        title={confirmationConfig.title}
+        message={confirmationConfig.message}
+        confirmText={confirmationConfig.confirmText}
+        type={confirmationConfig.type}
+        isLoading={isDeleting}
+      />
     </>
   );
 }

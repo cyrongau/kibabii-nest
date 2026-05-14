@@ -18,7 +18,8 @@ import {
   Trash2,
   ShieldX,
   XCircle,
-  Home
+  Home,
+  Plus
 } from 'lucide-react';
 import ConfirmationModal from '@/components/shared/ConfirmationModal';
 import { useNotifications } from '@/context/NotificationContext';
@@ -566,7 +567,7 @@ export default function AdminUsersPage() {
                 </div>
               )}
 
-              {selectedUser.role === 'LANDLORD' && selectedUser.kyc && (
+              {selectedUser.role === 'LANDLORD' && (
                 <div className="bg-muted/20 rounded-[3.5rem] p-10 border border-border-subtle space-y-10 relative overflow-hidden group/kyc">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full translate-x-32 -translate-y-32 blur-3xl pointer-events-none group-hover/kyc:bg-emerald-500/10 transition-colors"></div>
                   
@@ -576,22 +577,43 @@ export default function AdminUsersPage() {
                     </div>
                     Compliance Protocols
                   </h4>
-                  <div className="flex items-center justify-between bg-card/50 px-8 py-6 rounded-[2rem] border border-border-subtle shadow-soft-xl group-hover/kyc:border-emerald-500/20 transition-all relative z-10">
-                    <span className="text-[11px] font-black text-muted-foreground/40 uppercase tracking-[0.2em]">Affirmation Status</span>
-                    <span className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] shadow-soft-sm badge-tint ${
-                      selectedUser.kyc.status === 'APPROVED' ? 'badge-emerald' :
-                      selectedUser.kyc.status === 'REJECTED' ? 'badge-red' :
-                      'badge-orange'
-                    }`}>
-                      {selectedUser.kyc.status}
-                    </span>
-                  </div>
-                  <Link 
-                    href={`/dashboard/admin/kyc?userId=${selectedUser.id}`} 
-                    className="flex items-center justify-center gap-4 w-full py-6 bg-primary text-white rounded-[2rem] font-black text-[11px] uppercase tracking-[0.3em] shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all relative z-10 group/btn brand-shadow"
-                  >
-                    Deploy Intelligence Manager <ChevronRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
-                  </Link>
+                  
+                  {selectedUser.kyc ? (
+                    <>
+                      <div className="flex items-center justify-between bg-card/50 px-8 py-6 rounded-[2rem] border border-border-subtle shadow-soft-xl group-hover/kyc:border-emerald-500/20 transition-all relative z-10">
+                        <span className="text-[11px] font-black text-muted-foreground/40 uppercase tracking-[0.2em]">Affirmation Status</span>
+                        <span className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.25em] shadow-soft-sm badge-tint ${
+                          selectedUser.kyc.status === 'APPROVED' ? 'badge-emerald' :
+                          selectedUser.kyc.status === 'REJECTED' ? 'badge-red' :
+                          'badge-orange'
+                        }`}>
+                          {selectedUser.kyc.status}
+                        </span>
+                      </div>
+                      <Link 
+                        href={`/dashboard/admin/kyc?userId=${selectedUser.id}`} 
+                        className="flex items-center justify-center gap-4 w-full py-6 bg-primary text-white rounded-[2rem] font-black text-[11px] uppercase tracking-[0.3em] shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all relative z-10 group/btn brand-shadow"
+                      >
+                        Deploy Intelligence Manager <ChevronRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+                      </Link>
+                    </>
+                  ) : (
+                    <div className="space-y-8 relative z-10">
+                      <div className="p-8 bg-orange-500/5 rounded-[2.5rem] border border-orange-500/10 text-center space-y-4">
+                        <AlertCircle className="mx-auto text-orange-500" size={32} />
+                        <div className="space-y-1">
+                          <p className="text-foreground font-black text-xs uppercase tracking-wider">No Digital Footprint Found</p>
+                          <p className="text-[10px] text-muted-foreground/60 font-medium leading-relaxed">This entity is a legacy landlord with no uploaded KYC artifacts.</p>
+                        </div>
+                      </div>
+                      <Link 
+                        href={`/dashboard/admin/kyc?userId=synth-${selectedUser.id}`} 
+                        className="flex items-center justify-center gap-4 w-full py-6 bg-orange-500 text-white rounded-[2rem] font-black text-[11px] uppercase tracking-[0.3em] shadow-2xl shadow-orange-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all group/btn"
+                      >
+                        Initialize Manual Verification <Plus size={18} className="group-hover/btn:rotate-90 transition-transform" />
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

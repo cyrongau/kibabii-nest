@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards, Request, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, UseGuards, Request, Patch, Delete } from '@nestjs/common';
 import { PropertiesService } from './properties.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -84,5 +84,12 @@ export class PropertiesController {
   @Roles('ADMIN')
   async verifyProperty(@Param('id') id: string, @Body('status') status: boolean) {
     return this.propertiesService.verifyProperty(id, status);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('LANDLORD', 'ADMIN')
+  async remove(@Param('id') id: string) {
+    return this.propertiesService.remove(id);
   }
 }

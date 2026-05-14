@@ -2,12 +2,24 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, Plus, MapPin, MoreVertical, Loader2 } from 'lucide-react';
+import { Home, Plus, MapPin, MoreVertical, Loader2, Trash2 } from 'lucide-react';
+import ConfirmationModal from '@/components/shared/ConfirmationModal';
+import { useNotifications } from '@/context/NotificationContext';
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const { showToast } = useNotifications();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [confirmationConfig, setConfirmationConfig] = useState({
+    isOpen: false,
+    onConfirm: () => {},
+    title: '',
+    message: '',
+    confirmText: '',
+    type: 'danger' as 'danger' | 'info'
+  });
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -41,6 +53,39 @@ export default function PropertiesPage() {
 
     fetchProperties();
   }, []);
+
+  const handleDeleteProperty = (id: string, name: string) => {
+    setConfirmationConfig({
+      isOpen: true,
+      title: 'Purge Listing?',
+      message: `Are you sure you want to permanently delete "${name}"? This action cannot be undone and will fail if there are active tenancies.`,
+      confirmText: 'Purge Property',
+      type: 'danger',
+      onConfirm: async () => {
+        setIsDeleting(true);
+        try {
+          const token = localStorage.getItem('access_token');
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000'}/properties/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to delete property');
+          }
+
+          showToast('Property purged successfully', 'success');
+          setProperties(prev => prev.filter(p => p.id !== id));
+        } catch (error: any) {
+          showToast(error.message || 'Failed to purge property', 'error');
+        } finally {
+          setIsDeleting(false);
+          setConfirmationConfig(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
+  };
 
   return (
     <main className="p-8 lg:p-12">
@@ -150,12 +195,13 @@ export default function PropertiesPage() {
                         View Public Listing
                       </Link>
                       <div className="h-px bg-border my-1" />
-                      <Link 
-                        href={`/dashboard/landlord/properties/${prop.id}/edit`}
-                        className="block px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted rounded-xl transition-colors"
+                      <button 
+                        onClick={() => handleDeleteProperty(prop.id, prop.name)}
+                        className="w-full text-left px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition-colors flex items-center gap-2"
                       >
-                        Edit Property
-                      </Link>
+                        <Trash2 size={16} />
+                        Purge Listing
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -174,6 +220,17 @@ export default function PropertiesPage() {
           ))}
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={confirmationConfig.isOpen}
+        onClose={() => setConfirmationConfig(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={confirmationConfig.onConfirm}
+        title={confirmationConfig.title}
+        message={confirmationConfig.message}
+        confirmText={confirmationConfig.confirmText}
+        type={confirmationConfig.type}
+        isLoading={isDeleting}
+      />
     </main>
   );
 }
