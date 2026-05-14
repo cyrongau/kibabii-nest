@@ -156,10 +156,40 @@ export class KycService {
   }
 
   async verifyKyc(id: string, approved: boolean, reason?: string, manualData?: { idName?: string; idNumber?: string; ownershipName?: string }) {
-    const kyc = await this.prisma.landlordKyc.findUnique({
-      where: { id },
+    let kycId = id;
+    let userId: string | undefined;
+
+    // Handle synthesized IDs for legacy tenants (synth-user-id)
+    if (id.startsWith('synth-')) {
+      userId = id.replace('synth-', '');
+      // Try to find if they now have a real KYC record (perhaps submitted since the list was loaded)
+      const existingKyc = await this.prisma.landlordKyc.findUnique({ where: { userId } });
+      if (existingKyc) {
+        kycId = existingKyc.id;
+      }
+    }
+
+    let kyc = await this.prisma.landlordKyc.findUnique({
+      where: { id: kycId },
       include: { user: true }
     });
+
+    // If still not found but we have a userId (legacy), create a skeleton record
+    if (!kyc && userId) {
+      const user = await this.prisma.user.findUnique({ where: { id: userId } });
+      if (!user) throw new NotFoundException('User not found for legacy KYC');
+      
+      kyc = await this.prisma.landlordKyc.create({
+        data: {
+          userId,
+          status: KycStatus.PENDING, // Will be updated immediately below
+          idDocumentUrl: '',
+          ownershipProofUrl: '',
+        },
+        include: { user: true }
+      });
+      kycId = kyc.id;
+    }
 
     if (!kyc) throw new NotFoundException('KYC record not found');
 

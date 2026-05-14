@@ -255,36 +255,54 @@ export default function EditPropertyPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    console.log('📸 Starting image upload for:', file.name, 'Size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
     setIsSaving(true);
-    
+    showToast('Processing image...', 'info');
+
     try {
-      // Image Compression Options
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true
-      };
+      let fileToUpload: File | Blob = file;
 
-      showToast('Optimizing image...', 'info');
-      const compressedFile = await imageCompression(file, options);
-      
+      // Only attempt compression for images larger than 1MB
+      if (file.size > 1024 * 1024) {
+        try {
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          };
+          console.log('⚖️ Compressing image...');
+          const compressed = await imageCompression(file, options);
+          fileToUpload = compressed;
+          console.log('✅ Compression complete. New size:', (compressed.size / 1024 / 1024).toFixed(2), 'MB');
+        } catch (compError) {
+          console.warn('⚠️ Compression failed, falling back to original file:', compError);
+          fileToUpload = file;
+        }
+      }
+
       const data = new FormData();
-      data.append('file', compressedFile, compressedFile.name);
+      data.append('file', fileToUpload, file.name);
 
+      console.log('📤 Sending to server...');
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/uploads/image`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
         body: data,
       });
-      
-      if (!response.ok) throw new Error('Upload failed');
-      
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Server upload failed:', response.status, errorText);
+        throw new Error(`Upload failed: ${response.status}`);
+      }
+
       const result = await response.json();
+      console.log('🎉 Upload successful! URL:', result.url);
       setFormData(prev => ({ ...prev, images: [...prev.images, result.url] }));
       showToast('Image uploaded successfully', 'success');
     } catch (error) {
-      console.error('Image compression/upload error:', error);
-      showToast('Image upload failed. Please try a smaller image.', 'error');
+      console.error('❌ Image upload error:', error);
+      showToast('Image upload failed. Please check your connection or try a different image.', 'error');
     } finally {
       setIsSaving(false);
     }
