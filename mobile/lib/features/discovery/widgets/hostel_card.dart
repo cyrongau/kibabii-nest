@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:io';
 import '../../../services/api_service.dart';
 import '../../../core/utils/image_utils.dart';
 
@@ -74,15 +73,25 @@ class _HostelCardState extends State<HostelCard> {
     }
 
     final newStatus = await _apiService.toggleFavorite(widget.id);
-    if (mounted) {
-      setState(() => _isFavorited = newStatus);
+    if (!mounted) return;
+
+    if (newStatus == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(newStatus ? 'Added to favorites' : 'Removed from favorites'),
-          duration: const Duration(seconds: 1),
+        const SnackBar(
+          content: Text('Unable to update favorites. Please try again.'),
+          duration: Duration(seconds: 2),
         ),
       );
+      return;
     }
+
+    setState(() => _isFavorited = newStatus);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(newStatus ? 'Added to favorites' : 'Removed from favorites'),
+        duration: const Duration(seconds: 1),
+      ),
+    );
   }
 
   @override
