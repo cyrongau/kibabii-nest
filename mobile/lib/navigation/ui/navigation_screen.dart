@@ -30,11 +30,13 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   mbx.PolylineAnnotationManager? _polylineAnnotationManager;
   mbx.PolylineAnnotation? _routePolyline;
   bool _isMapReady = false;
-  bool _isFollowingUser = true;
 
   @override
   void initState() {
     super.initState();
+    ref.listen<TripStateModel>(navigationControllerProvider, (previous, next) {
+      _syncRouteToMap(next);
+    });
     _startNavigation();
   }
 
@@ -108,10 +110,6 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final tripState = ref.watch(navigationControllerProvider);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
-    ref.listen(navigationControllerProvider, (previous, next) {
-      _syncRouteToMap(next);
-    });
 
     return Scaffold(
       body: Stack(

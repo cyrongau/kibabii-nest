@@ -91,13 +91,8 @@ class NavigationController extends StateNotifier<TripStateModel> {
       return false;
     }
 
-    debugPrint('🏁 Navigation: Getting current position (15s timeout)...');
-    Position? currentPosition;
-    try {
-      currentPosition = await _gpsService.getCurrentPosition().timeout(const Duration(seconds: 15));
-    } catch (e) {
-      debugPrint('❌ Navigation: GPS fetch timed out or failed: $e');
-    }
+    debugPrint('🏁 Navigation: Getting current position...');
+    final currentPosition = await _gpsService.getCurrentPosition();
 
     if (currentPosition == null) {
       debugPrint('❌ Navigation: Could not get current position');

@@ -25,6 +25,7 @@ class GpsService {
   Future<bool> _checkPermissionsLogic() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      print('GpsService: Location service disabled');
       return false;
     }
 
@@ -51,38 +52,73 @@ class GpsService {
         return null;
       }
 
+      final lastKnown = await Geolocator.getLastKnownPosition();
+      if (_isValidPosition(lastKnown)) {
+        print('GpsService: Using last known position');
+        return lastKnown;
+      }
+
       print('GpsService: Fetching current position with 15s timeout...');
       final settings = LocationSettings(
         accuracy: LocationAccuracy.high,
-        forceAndroidLocationManager: Platform.isAndroid,
       );
 
       final position = await Geolocator.getCurrentPosition(
         locationSettings: settings,
       ).timeout(const Duration(seconds: 15), onTimeout: () {
-        print('GpsService: GPS lock timed out');
+        print('GpsService: GPS lock timed out (high accuracy)');
         throw TimeoutException('GPS lock timed out');
       });
 
-      if (position.latitude == 0 && position.longitude == 0) {
-        print('GpsService: Received invalid GPS coordinates');
-        return null;
+      if (_isValidPosition(position)) {
+        return position;
       }
 
-      return position;
+      print('GpsService: Received invalid GPS coordinates, trying fallback...');
+      return await _tryFallbackPosition();
     } catch (e) {
-      print('GpsService: Error getting current position: $e');
-      try {
-        final fallback = await Geolocator.getLastKnownPosition();
-        if (fallback != null) {
-          print('GpsService: Using last known position as fallback');
-          return fallback;
-        }
-      } catch (fallbackError) {
-        print('GpsService: Last known position fallback failed: $fallbackError');
-      }
-      return null;
+      print('GpsService: Primary location fetch failed: $e');
+      return await _tryFallbackPosition();
     }
+  }
+
+  Future<Position?> _tryFallbackPosition() async {
+    try {
+      final lowerSettings = LocationSettings(
+        accuracy: LocationAccuracy.medium,
+      );
+
+      print('GpsService: Trying fallback position stream (10s)...');
+      final position = await Geolocator.getPositionStream(
+        locationSettings: lowerSettings,
+      ).first.timeout(const Duration(seconds: 10));
+
+      if (_isValidPosition(position)) {
+        print('GpsService: Using fallback stream position');
+        return position;
+      }
+    } on TimeoutException catch (_) {
+      print('GpsService: Fallback position stream timed out');
+    } catch (e) {
+      print('GpsService: Fallback position stream failed: $e');
+    }
+
+    try {
+      final fallback = await Geolocator.getLastKnownPosition();
+      if (_isValidPosition(fallback)) {
+        print('GpsService: Using last known position after fallback failure');
+        return fallback;
+      }
+    } catch (fallbackError) {
+      print('GpsService: Last known position fallback failed: $fallbackError');
+    }
+
+    return null;
+  }
+
+  bool _isValidPosition(Position? position) {
+    if (position == null) return false;
+    return position.latitude.abs() > 0.000001 && position.longitude.abs() > 0.000001;
   }
 
   void startTracking({
