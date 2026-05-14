@@ -129,11 +129,31 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
             ),
           ),
 
-          if (tripState.state == TripState.loading)
+          if (tripState.state == TripState.loading || 
+              tripState.state == TripState.waitingForGps || 
+              tripState.state == TripState.fetchingRoute)
             Container(
               color: Colors.black54,
-              child: const Center(
-                child: CircularProgressIndicator(color: Colors.white),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(color: Colors.white),
+                    const SizedBox(height: 16),
+                    Text(
+                      tripState.state == TripState.waitingForGps
+                          ? 'Getting GPS Location...'
+                          : tripState.state == TripState.fetchingRoute
+                              ? 'Calculating Route...'
+                              : 'Starting Navigation...',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 

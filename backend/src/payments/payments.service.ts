@@ -2,6 +2,8 @@ import { Injectable, NotFoundException, BadRequestException, Logger, Inject, for
 import { PrismaService } from '../prisma/prisma.service';
 import { PaymentRecordStatus, TransactionType, TransactionStatus } from '@prisma/client';
 import { NotificationsService } from '../notifications/notifications.service';
+import { S3Service } from '../uploads/s3.service';
+import { callOpenRouter, parseAIJson } from '../common/ai-utils';
 import axios from 'axios';
 
 @Injectable()
@@ -11,7 +13,8 @@ export class PaymentsService {
   constructor(
     private prisma: PrismaService,
     @Inject(forwardRef(() => NotificationsService))
-    private notifications: NotificationsService
+    private notifications: NotificationsService,
+    private s3Service: S3Service
   ) {}
 
   /**
@@ -594,9 +597,6 @@ export class PaymentsService {
    * AI-scan a receipt image or SMS text.
    */
   private async scanReceiptWithAI(fileUrl?: string, rawText?: string) {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) return {};
-
     try {
       const content: any[] = [
         {
@@ -622,30 +622,30 @@ export class PaymentsService {
       }
 
       if (fileUrl) {
-        // If it's a URL to an image, include it
-        content.push({
-          type: 'image_url',
-          image_url: { url: fileUrl }
-        });
+        let base64File = '';
+        try {
+          // Attempt to fetch file as base64 string
+          base64File = await this.s3Service.getFileBase64(fileUrl);
+        } catch (e: any) {
+          this.logger.error('Failed to fetch image base64 from S3 proxy', e.message);
+        }
+
+        if (base64File) {
+          // Assume common mime types, or derive from extension if needed. Default to jpeg.
+          let mimeType = 'image/jpeg';
+          if (fileUrl.toLowerCase().endsWith('.png')) mimeType = 'image/png';
+          if (fileUrl.toLowerCase().endsWith('.webp')) mimeType = 'image/webp';
+          if (fileUrl.toLowerCase().endsWith('.pdf')) mimeType = 'application/pdf';
+
+          content.push({
+            type: 'image_url',
+            image_url: { url: `data:${mimeType};base64,${base64File}` }
+          });
+        }
       }
 
-      const response = await axios.post(
-        'https://openrouter.ai/api/v1/chat/completions',
-        {
-          model: 'google/gemini-2.0-flash-exp:free',
-          messages: [{ role: 'user', content }],
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-          }
-        }
-      );
-
-      const aiContent = response.data.choices[0].message.content;
-      const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
-      const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+      const rawResponse = await callOpenRouter(content, { responseFormat: 'json_object' });
+      const parsed = parseAIJson<any>(rawResponse) || {};
 
       return {
         transactionId: parsed?.transactionId || null,
@@ -654,7 +654,7 @@ export class PaymentsService {
         senderName: parsed?.senderName || null,
         senderPhone: parsed?.senderPhone || null,
         confidence: parsed?.confidence || 0,
-        rawResponse: aiContent,
+        rawResponse: rawResponse,
       };
     } catch (error: any) {
       this.logger.error('AI Receipt Scan Error:', error.message);

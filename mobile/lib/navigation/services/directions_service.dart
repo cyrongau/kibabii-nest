@@ -49,9 +49,10 @@ class DirectionsService {
         },
       );
 
-      if (response.statusCode == 200 && response.data['routes'] != null) {
+      final responseData = response.data;
+      if (response.statusCode == 200 && responseData is Map<String, dynamic> && responseData['routes'] != null) {
         print('✅ DirectionsService: Route received successfully');
-        final routes = response.data['routes'] as List;
+        final routes = responseData['routes'] as List;
         if (routes.isEmpty) {
           print('⚠️ DirectionsService: Empty routes list');
           return null;
@@ -102,6 +103,7 @@ class DirectionsService {
         return route;
       }
       print('❌ DirectionsService: Failed with status ${response.statusCode}');
+      print('❌ DirectionsService: Response payload: $responseData');
       return null;
     } catch (e) {
       if (e is DioException) {

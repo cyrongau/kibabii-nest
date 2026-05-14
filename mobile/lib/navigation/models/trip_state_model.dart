@@ -3,7 +3,9 @@ import 'route_model.dart';
 
 enum TripState {
   idle,
-  loading,
+  waitingForGps,
+  fetchingRoute,
+  loading, // generic fallback
   navigating,
   paused,
   arrived,

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { S3Service } from '../uploads/s3.service';
-import axios from 'axios';
+import { callOpenRouter, parseAIJson } from '../common/ai-utils';
 
 @Injectable()
 export class ContractsService {
@@ -10,7 +10,7 @@ export class ContractsService {
     // 1. Upload to S3
     const url = await this.s3Service.uploadFile(file, 'contracts');
 
-    // 2. Extract data using AI (OpenRouter + Gemini 1.5 Pro)
+    // 2. Extract data using AI
     const extractedData = await this.extractWithAI(file);
 
     return { url, extractedData };
@@ -22,59 +22,46 @@ export class ContractsService {
 
     try {
       console.log(`Starting AI extraction for file type: ${mimeType}`);
-      const response = await axios.post(
-        'https://openrouter.ai/api/v1/chat/completions',
+      const messages = [
         {
-          model: 'google/gemini-2.0-flash-exp:free',
-          messages: [
+          role: 'user',
+          content: [
             {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text: `Analyze this tenancy agreement carefully and extract details for a property listing. 
-                  
-                  1. Monthly Rent: Look for "Monthly rent" or "Rent". Capture the numeric value only.
-                  2. Security Deposit: Look for "refundable deposit" or "Security Deposit". Capture the numeric value only.
-                  3. Rules: Extract a concise list of rules and tenant obligations.
-                  4. Signatures: Check if there are signature lines or signed names for both "Landlord" and "Tenant".
-                  
-                  Return ONLY a valid JSON object:
-                  {
-                    "rent": number,
-                    "deposit": number,
-                    "rules": ["rule 1", "rule 2", ...],
-                    "suggestedName": "A catchy name for this property",
-                    "suggestedDescription": "A professional description",
-                    "signaturesDetected": boolean,
-                    "partiesIdentified": string[]
-                  }
-                  
-                  If any value is missing, use default values.`,
-                },
-                {
-                  type: 'image_url',
-                  image_url: {
-                    url: `data:${mimeType};base64,${base64File}`,
-                  },
-                },
-              ],
+              type: 'text',
+              text: `Analyze this tenancy agreement carefully and extract details for a property listing. 
+              
+              1. Monthly Rent: Look for "Monthly rent" or "Rent". Capture the numeric value only.
+              2. Security Deposit: Look for "refundable deposit" or "Security Deposit". Capture the numeric value only.
+              3. Rules: Extract a concise list of rules and tenant obligations.
+              4. Signatures: Check if there are signature lines or signed names for both "Landlord" and "Tenant".
+              
+              Return ONLY a valid JSON object:
+              {
+                "rent": number,
+                "deposit": number,
+                "rules": ["rule 1", "rule 2", ...],
+                "suggestedName": "A catchy name for this property",
+                "suggestedDescription": "A professional description",
+                "signaturesDetected": boolean,
+                "partiesIdentified": string[]
+              }
+              
+              If any value is missing, use default values.`,
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: `data:${mimeType};base64,${base64File}`,
+              },
             },
           ],
         },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
+      ];
 
-      const content = response.data.choices[0].message.content;
-      console.log('AI Raw Response:', content);
+      const rawResponse = await callOpenRouter(messages, { responseFormat: 'json_object' });
+      console.log('AI Raw Response:', rawResponse);
       
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+      const parsed = parseAIJson<any>(rawResponse);
       
       return {
         rent: parsed?.rent || 0,
@@ -85,8 +72,8 @@ export class ContractsService {
         signaturesDetected: parsed?.signaturesDetected || false,
         partiesIdentified: parsed?.partiesIdentified || []
       };
-    } catch (error) {
-      console.error('AI Extraction Error:', error.response?.data || error.message);
+    } catch (error: any) {
+      console.error('AI Extraction Error:', error.message);
       return {
         rent: 0,
         deposit: 0,

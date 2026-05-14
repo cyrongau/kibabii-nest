@@ -91,9 +91,34 @@ export class S3Service implements OnModuleInit {
       await upload.done();
       console.log(`✅ File uploaded successfully to S3: ${fileName}`);
       return `${process.env.S3_PUBLIC_URL}/${this.bucketName}/${fileName}`;
-    } catch (error) {
+    } catch (error: any) {
       console.error(`❌ S3 Upload Error for file ${fileName}:`, error.message);
       console.error(`Bucket: ${this.bucketName}, Endpoint: ${process.env.S3_ENDPOINT}`);
+      throw error;
+    }
+  }
+
+  async uploadBuffer(buffer: Buffer, originalName: string, mimetype: string, folder: string = 'uploads'): Promise<string> {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const safeOriginalName = originalName.replace(/[^a-zA-Z0-9.\-_]/g, '');
+    const fileName = `${folder}/${uniqueSuffix}-${safeOriginalName}`;
+
+    try {
+      const upload = new Upload({
+        client: this.s3Client,
+        params: {
+          Bucket: this.bucketName,
+          Key: fileName,
+          Body: buffer,
+          ContentType: mimetype,
+        },
+      });
+
+      await upload.done();
+      console.log(`✅ Buffer uploaded successfully to S3: ${fileName}`);
+      return `${process.env.S3_PUBLIC_URL}/${this.bucketName}/${fileName}`;
+    } catch (error: any) {
+      console.error(`❌ S3 Upload Error for buffer ${fileName}:`, error.message);
       throw error;
     }
   }

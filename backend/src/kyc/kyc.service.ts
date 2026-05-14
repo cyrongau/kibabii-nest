@@ -2,8 +2,8 @@ import { Injectable, Logger, NotFoundException, BadRequestException } from '@nes
 import { PrismaService } from '../prisma/prisma.service';
 import { MailService } from '../notifications/mail.service';
 import { KycStatus } from '@prisma/client';
-import axios from 'axios';
 import { S3Service } from '../uploads/s3.service';
+import { callOpenRouter, parseAIJson } from '../common/ai-utils';
 
 @Injectable()
 export class KycService {
@@ -181,9 +181,6 @@ export class KycService {
   }
 
   private async scanKycDocumentsWithAI(urls: string[]) {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) return { error: 'No AI Key' };
-
     try {
       const content: any[] = [
         {
@@ -216,38 +213,28 @@ export class KycService {
                 url: `data:${mimeType};base64,${base64}` 
               } 
             });
-          } catch (e) {
+          } catch (e: any) {
             this.logger.warn(`Failed to get base64 for ${url}: ${e.message}`);
           }
         }
       }
 
-      const response = await axios.post(
-        'https://openrouter.ai/api/v1/chat/completions',
-        {
-          model: 'google/gemini-2.0-flash-exp:free',
-          messages: [{ role: 'user', content }],
-          response_format: { type: 'json_object' }
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': 'https://kibabiinest.com',
-            'X-Title': 'Kibabii Nest KYC'
-          },
-          timeout: 30000 // 30 seconds timeout
-        }
-      );
+      const rawResponse = await callOpenRouter(content, { responseFormat: 'json_object' });
+      const parsed = parseAIJson<any>(rawResponse);
 
-      const aiContent = response.data.choices[0].message.content;
-      const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
-      const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+      if (parsed) {
+        // Flag for manual review if confidence is low, names don't match, or there are flags
+        parsed.needsManualReview = 
+          (parsed.confidence < 0.7) || 
+          (parsed.namesMatch === false) || 
+          (Array.isArray(parsed.flags) && parsed.flags.length > 0);
+        return parsed;
+      }
 
-      return parsed || { rawResponse: aiContent };
+      return { rawResponse, needsManualReview: true, error: 'Failed to parse AI response' };
     } catch (error: any) {
       this.logger.error('AI KYC Scan Error:', error.message);
-      return { error: error.message };
+      return { error: error.message, needsManualReview: true };
     }
   }
 }

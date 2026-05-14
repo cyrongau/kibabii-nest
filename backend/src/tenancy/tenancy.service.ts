@@ -1,12 +1,18 @@
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TenancyStatus } from '@prisma/client';
+import { PdfService } from './pdf.service';
+import { S3Service } from '../uploads/s3.service';
 
 @Injectable()
 export class TenancyService {
   private readonly logger = new Logger(TenancyService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private pdfService: PdfService,
+    private s3Service: S3Service,
+  ) {}
 
   /**
    * Create a tenancy from an approved booking.
@@ -200,9 +206,34 @@ export class TenancyService {
   /**
    * Capture student signature (uploaded signed document).
    */
-  async signAgreement(id: string, agreementUrl: string) {
-    const tenancy = await this.prisma.tenancy.findUnique({ where: { id } });
+  async signAgreement(id: string, signatureBase64: string) {
+    const tenancy = await this.prisma.tenancy.findUnique({ 
+      where: { id },
+      include: {
+        tenant: true,
+        propertyUnit: { include: { type: true, property: { include: { landlord: true } } } }
+      }
+    });
     if (!tenancy) throw new NotFoundException('Tenancy not found');
+
+    // Generate the PDF Buffer
+    const pdfBuffer = await this.pdfService.generateTenancyAgreement({
+      tenantName: tenancy.tenant.name,
+      landlordName: tenancy.propertyUnit.property.landlord.name,
+      propertyName: tenancy.propertyUnit.property.name,
+      unitName: tenancy.unitName || tenancy.propertyUnit.type?.name || 'Unit',
+      rentAmount: tenancy.monthlyRent,
+      depositAmount: tenancy.depositAmount,
+      signatureBase64,
+    });
+
+    // Upload the PDF Buffer to S3
+    const agreementUrl = await this.s3Service.uploadBuffer(
+      pdfBuffer,
+      `Tenancy_Agreement_${tenancy.id}.pdf`,
+      'application/pdf',
+      'agreements'
+    );
 
     return this.prisma.tenancy.update({
       where: { id },

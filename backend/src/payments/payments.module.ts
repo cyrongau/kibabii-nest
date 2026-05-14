@@ -3,9 +3,10 @@ import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { UploadsModule } from '../uploads/uploads.module';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => NotificationsModule)],
+  imports: [PrismaModule, forwardRef(() => NotificationsModule), UploadsModule],
   providers: [PaymentsService],
   controllers: [PaymentsController],
   exports: [PaymentsService],

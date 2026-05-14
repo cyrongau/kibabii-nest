@@ -19,8 +19,18 @@ class ApiConstants {
     return iosSimulatorIp;
   }
 
-  // Allow manual override for physical device testing easily in one place
-  static const bool usePhysicalIp = true; 
+  // Allow manual override for physical device testing in assets/.env.
+  // Defaults to emulator-friendly host selection unless USE_PHYSICAL_IP is explicitly set.
+  static bool get usePhysicalIp {
+    final envValue = dotenv.env['USE_PHYSICAL_IP']?.toLowerCase();
+    if (envValue == 'true' || envValue == '1' || envValue == 'yes') {
+      return true;
+    }
+    if (envValue == 'false' || envValue == '0' || envValue == 'no') {
+      return false;
+    }
+    return false;
+  }
 
   static String get host => usePhysicalIp ? physicalDeviceIp : devHost;
   

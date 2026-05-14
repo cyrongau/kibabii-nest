@@ -51,7 +51,7 @@ export class TenancyController {
   }
 
   @Post(':id/sign')
-  async signAgreement(@Param('id') id: string, @Body('agreementUrl') agreementUrl: string) {
-    return this.tenancyService.signAgreement(id, agreementUrl);
+  async signAgreement(@Param('id') id: string, @Body('signature') signature: string) {
+    return this.tenancyService.signAgreement(id, signature);
   }
 }
