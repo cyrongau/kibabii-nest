@@ -60,7 +60,7 @@ async function main() {
 
   // Student 2
   const student2Password = await bcrypt.hash('Cyro@#4001', 10);
-  await prisma.user.upsert({
+  const userCyro = await prisma.user.upsert({
     where: { email: 'cyrongau@gmail.com' },
     update: {},
     create: {
@@ -70,6 +70,43 @@ async function main() {
       role: 'STUDENT',
     },
   });
+
+  // Properties for Landlord 2 (Alex Thompson / alexfgfgdf@landlord.com)
+  const landlord2 = await prisma.user.findUnique({ where: { email: 'alexfgfgdf@landlord.com' } });
+  if (landlord2) {
+    // Create a property type if it doesn't exist
+    const pType = await prisma.propertyType.upsert({
+      where: { name: 'Hostel' },
+      update: {},
+      create: { name: 'Hostel' }
+    });
+
+    await prisma.property.create({
+      data: {
+        name: 'Elite Kibabii Hostel',
+        description: 'Modern student housing with high-speed internet and 24/7 security.',
+        address: 'Kibabii University, Bungoma',
+        city: 'Bungoma',
+        lat: 0.6170124177529738,
+        lng: 34.523624254983,
+        landlordId: landlord2.id,
+        images: ['https://api.kibabii.generexcom.com/uploads/proxy/placeholder/hostel_1.png'],
+        amenities: ['WiFi', 'Water', 'Security', 'Electricity'],
+        units: {
+          create: [
+            { 
+              typeId: pType.id, 
+              price: 5000, 
+              capacity: 1, 
+              totalUnits: 10,
+              unitNames: ['Room A1', 'Room A2', 'Room A3'] 
+            }
+          ]
+        }
+      }
+    });
+    console.log('✅ Sample property created for Landlord 2');
+  }
 
   console.log('Seed data created successfully!');
   console.log('--- LOGIN CREDENTIALS ---');

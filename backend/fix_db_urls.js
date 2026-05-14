@@ -6,10 +6,12 @@ async function fixUrls() {
     '192.168.0.207:9000',
     'localhost:3000',
     '127.0.0.1:3000',
-    '192.168.0.207:3000'
+    '192.168.0.207:3000',
+    'https://api.kibabii.generexcom.com/s3',
+    'api.kibabii.generexcom.com/s3'
   ];
   // Note: S3_PUBLIC_URL in docker is https://api.kibabii.generexcom.com/s3
-  const newBase = 'https://api.kibabii.generexcom.com/s3';
+  const newBase = 'http://localhost:9000/uploads/proxy';
 
   console.log(`Starting URL migration to: ${newBase}`);
 
