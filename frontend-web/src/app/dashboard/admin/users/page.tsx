@@ -389,6 +389,14 @@ export default function AdminUsersPage() {
                                     </button>
                                     
                                     <Link 
+                                      href={`/dashboard/admin/users/${user.id}/edit`}
+                                      className="w-full flex items-center gap-4 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 hover:bg-muted hover:text-foreground transition-all relative z-10"
+                                    >
+                                      <Home size={18} />
+                                      Edit Landlord
+                                    </Link>
+
+                                    <Link 
                                       href={`/dashboard/admin/properties?landlordId=${user.id}`}
                                       className="w-full flex items-center gap-4 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 hover:bg-muted hover:text-foreground transition-all relative z-10"
                                     >
@@ -607,7 +615,7 @@ export default function AdminUsersPage() {
                         </div>
                       </div>
                       <Link 
-                        href={`/dashboard/admin/kyc?userId=synth-${selectedUser.id}`} 
+                        href={`/dashboard/admin/kyc?userId=${selectedUser.id}`} 
                         className="flex items-center justify-center gap-4 w-full py-6 bg-orange-500 text-white rounded-[2rem] font-black text-[11px] uppercase tracking-[0.3em] shadow-2xl shadow-orange-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all group/btn"
                       >
                         Initialize Manual Verification <Plus size={18} className="group-hover/btn:rotate-90 transition-transform" />

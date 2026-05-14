@@ -79,8 +79,50 @@ export class KycService {
 
   async getAllKyc(filters: { status?: KycStatus; search?: string; userId?: string }) {
     this.logger.log(`Fetching all KYC with filters: ${JSON.stringify(filters)}`);
-    const { status, search, userId } = filters;
-    
+    let { status, search, userId } = filters;
+
+    if (userId?.startsWith('synth-')) {
+      userId = userId.replace('synth-', '');
+    }
+
+    // If caller is requesting a specific user, allow legacy landlords without a KYC row to still appear.
+    if (userId) {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        include: { kyc: true }
+      });
+
+      if (!user || user.role !== 'LANDLORD') {
+        return [];
+      }
+
+      if (!user.kyc) {
+        if (status === 'APPROVED' && !user.isVerifiedLandlord) {
+          return [];
+        }
+        if (status === 'REJECTED') {
+          return [];
+        }
+
+        return [{
+          id: `synth-${user.id}`,
+          userId: user.id,
+          status: status === 'APPROVED' && user.isVerifiedLandlord ? 'APPROVED' : 'PENDING',
+          idDocumentUrl: '',
+          ownershipProofUrl: '',
+          createdAt: user.createdAt,
+          updatedAt: user.createdAt,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            avatar: user.avatar
+          }
+        }];
+      }
+    }
+
     // 1. Build where clause
     const where: any = {
       role: 'LANDLORD',

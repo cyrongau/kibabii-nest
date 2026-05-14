@@ -195,6 +195,13 @@ export default function PropertiesPage() {
                         View Public Listing
                       </Link>
                       <div className="h-px bg-border my-1" />
+                      <Link 
+                        href={`/dashboard/landlord/properties/${prop.id}/edit`}
+                        className="block px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted rounded-xl transition-colors"
+                      >
+                        Edit Property
+                      </Link>
+                      <div className="h-px bg-border my-1" />
                       <button 
                         onClick={() => handleDeleteProperty(prop.id, prop.name)}
                         className="w-full text-left px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition-colors flex items-center gap-2"

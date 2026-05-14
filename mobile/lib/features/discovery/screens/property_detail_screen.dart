@@ -180,18 +180,27 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       }
       return;
     }
-    
+
     final status = await _apiService.toggleFavorite(widget.id);
-    if (mounted) {
-      setState(() => _isFavorited = status);
-      AppModals.showInfo(
+    if (!mounted) return;
+
+    if (status == null) {
+      AppModals.showError(
         context: context,
-        title: status ? 'Added to Favorites' : 'Removed',
-        message: status 
-          ? '${widget.name} has been added to your favorites list.'
-          : '${widget.name} has been removed from your favorites.',
+        title: 'Favorite update failed',
+        message: 'Unable to update your saved list. Please try again.',
       );
+      return;
     }
+
+    setState(() => _isFavorited = status);
+    AppModals.showInfo(
+      context: context,
+      title: status ? 'Added to Favorites' : 'Removed',
+      message: status 
+        ? '${widget.name} has been added to your favorites list.'
+        : '${widget.name} has been removed from your favorites.',
+    );
   }
   void _scheduleTour() {
     AppModals.showSuccess(

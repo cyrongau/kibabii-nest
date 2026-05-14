@@ -51,17 +51,36 @@ class GpsService {
         return null;
       }
 
-      print('GpsService: Fetching current position with 10s timeout...');
-      return await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      ).timeout(const Duration(seconds: 10), onTimeout: () {
+      print('GpsService: Fetching current position with 15s timeout...');
+      final settings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        forceAndroidLocationManager: Platform.isAndroid,
+      );
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: settings,
+      ).timeout(const Duration(seconds: 15), onTimeout: () {
         print('GpsService: GPS lock timed out');
         throw TimeoutException('GPS lock timed out');
       });
+
+      if (position.latitude == 0 && position.longitude == 0) {
+        print('GpsService: Received invalid GPS coordinates');
+        return null;
+      }
+
+      return position;
     } catch (e) {
       print('GpsService: Error getting current position: $e');
+      try {
+        final fallback = await Geolocator.getLastKnownPosition();
+        if (fallback != null) {
+          print('GpsService: Using last known position as fallback');
+          return fallback;
+        }
+      } catch (fallbackError) {
+        print('GpsService: Last known position fallback failed: $fallbackError');
+      }
       return null;
     }
   }

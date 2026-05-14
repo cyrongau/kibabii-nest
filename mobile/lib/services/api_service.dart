@@ -463,20 +463,26 @@ class ApiService {
 
   // ── Favorites ──
 
-  Future<bool> toggleFavorite(String propertyId) async {
+  Future<bool?> toggleFavorite(String propertyId) async {
     final token = await getToken();
-    if (token == null) return false;
+    if (token == null) return null;
 
-    final response = await http.post(
-      Uri.parse('$baseUrl/favorites/toggle/$propertyId'),
-      headers: _authHeaders(token),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/favorites/toggle/$propertyId'),
+        headers: _authHeaders(token),
+      );
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['favorited'] ?? false;
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['favorited'] ?? false;
+      }
+
+      print('Favorites toggle failed: ${response.statusCode} ${response.body}');
+    } catch (e) {
+      print('Favorites toggle error: $e');
     }
-    return false;
+    return null;
   }
 
   Future<List<dynamic>> getMyFavorites() async {

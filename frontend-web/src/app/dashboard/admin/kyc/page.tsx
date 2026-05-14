@@ -55,7 +55,7 @@ export default function AdminKycPage() {
 
   useEffect(() => {
     fetchKyc();
-  }, [activeTab, search]);
+  }, [activeTab, search, searchParams.get('userId')]);
 
   useEffect(() => {
     if (selectedKyc) {
