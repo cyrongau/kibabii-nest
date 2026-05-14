@@ -32,16 +32,22 @@ export default function KycModal({ onClose }: { onClose: () => void }) {
 
       const result = await res.json();
       if (!res.ok) throw new Error(result.message || 'Upload failed');
+      if (!result?.url) throw new Error('Upload succeeded but no URL was returned');
 
       setFormData(prev => ({ ...prev, [field]: result.url }));
     } catch (err: any) {
-      showToast(err.message, 'error');
+      showToast(err.message || 'Upload failed', 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.idDocumentUrl || !formData.ownershipProofUrl) {
+      showToast('Please upload both your ID document and proof of ownership before submitting.', 'error');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const token = localStorage.getItem('access_token');
@@ -55,14 +61,14 @@ export default function KycModal({ onClose }: { onClose: () => void }) {
       });
 
       if (!res.ok) {
-        const result = await res.json();
-        throw new Error(result.message || 'Failed to submit KYC');
+        const result = await res.json().catch(() => null);
+        throw new Error(result?.message || 'Failed to submit KYC');
       }
 
       showToast('Verification documents submitted successfully! Our team will review them shortly.', 'success');
       onClose();
     } catch (err: any) {
-      showToast(err.message, 'error');
+      showToast(err.message || 'Failed to submit KYC', 'error');
     } finally {
       setIsLoading(false);
     }
