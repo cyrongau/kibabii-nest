@@ -39,6 +39,13 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    // Ensure all background tracking and TTS stop when leaving the screen
+    ref.read(navigationControllerProvider.notifier).stopNavigation();
+    super.dispose();
+  }
+
   Future<void> _startNavigation() async {
     await ref
         .read(navigationControllerProvider.notifier)
@@ -54,6 +61,13 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
       _mapboxMap = mapboxMap;
       _isMapReady = true;
     });
+
+    await _mapboxMap?.location.updateSettings(
+      mbx.LocationComponentSettings(
+        enabled: true,
+        pulsingEnabled: true,
+      ),
+    );
 
     _polylineAnnotationManager = await mapboxMap.annotations
         .createPolylineAnnotationManager();
@@ -87,27 +101,39 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
       _routePolyline = await _polylineAnnotationManager!.create(
         mbx.PolylineAnnotationOptions(
           geometry: lineGeoJson,
-          lineColor: Colors.blue.value,
-          lineWidth: 5,
+          lineColor: Theme.of(context).colorScheme.primary.value,
+          lineWidth: 8.0,
+          lineJoin: mbx.LineJoin.ROUND,
         ),
       );
     } else {
       _routePolyline!.geometry = lineGeoJson;
       await _polylineAnnotationManager!.update(_routePolyline!);
     }
-
-    _mapboxMap!.setCamera(
-      mbx.CameraOptions(
-        center: mbx.Point(coordinates: positions.first).toJson(),
-        zoom: 15.0,
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen<TripStateModel>(navigationControllerProvider, (previous, next) {
-      _syncRouteToMap(next);
+      if (previous?.currentRoute != next.currentRoute) {
+        _syncRouteToMap(next);
+      }
+      
+      if (next.currentPosition != null && _mapboxMap != null) {
+        _mapboxMap!.setCamera(
+          mbx.CameraOptions(
+            center: mbx.Point(
+              coordinates: mbx.Position(
+                next.currentPosition!.longitude,
+                next.currentPosition!.latitude,
+              ),
+            ).toJson(),
+            zoom: 17.5,
+            bearing: next.currentPosition!.heading > 0 ? next.currentPosition!.heading : null,
+            pitch: 45.0, // Give it a 3D navigation perspective
+          ),
+        );
+      }
     });
 
     final tripState = ref.watch(navigationControllerProvider);

@@ -229,7 +229,7 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
     final distanceToDestination = _rerouteService.calculateDistanceToDestination(
       position,
-      state.currentRoute!.geometry,
+      state.currentRoute!,
     );
 
     final newManeuverIndex = _findCurrentManeuverIndex(position);

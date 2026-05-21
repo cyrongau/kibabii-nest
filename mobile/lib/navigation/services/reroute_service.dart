@@ -91,17 +91,35 @@ class RerouteService {
   double _toRadians(double degrees) => degrees * pi / 180;
   double _toDegrees(double radians) => radians * 180 / pi;
 
-  double calculateDistanceToDestination(Position currentPosition, List<List<double>> routeGeometry) {
-    if (routeGeometry.isEmpty) return 0;
+  double calculateDistanceToDestination(Position currentPosition, RouteModel route) {
+    if (route.geometry.isEmpty) return 0;
 
-    final lastPoint = routeGeometry.last;
-    if (lastPoint.length < 2) return 0;
+    int closestIndex = findClosestPointIndex(currentPosition, route);
+    double remainingDistance = 0;
 
-    return Geolocator.distanceBetween(
-      currentPosition.latitude,
-      currentPosition.longitude,
-      lastPoint[1],
-      lastPoint[0],
-    );
+    final closestPoint = route.geometry[closestIndex];
+    if (closestPoint.length >= 2) {
+      remainingDistance += Geolocator.distanceBetween(
+        currentPosition.latitude,
+        currentPosition.longitude,
+        closestPoint[1],
+        closestPoint[0],
+      );
+    }
+
+    for (int i = closestIndex; i < route.geometry.length - 1; i++) {
+      final point1 = route.geometry[i];
+      final point2 = route.geometry[i + 1];
+      if (point1.length >= 2 && point2.length >= 2) {
+        remainingDistance += Geolocator.distanceBetween(
+          point1[1],
+          point1[0],
+          point2[1],
+          point2[0],
+        );
+      }
+    }
+
+    return remainingDistance;
   }
 }
