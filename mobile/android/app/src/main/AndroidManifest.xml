@@ -41,6 +41,11 @@
             android:exported="false"
             android:foregroundServiceType="location" />
 
+        <!-- Fix for Android 14+ flutter_background_service crash -->
+        <service
+            android:name="id.flutter.flutter_background_service.BackgroundService"
+            android:foregroundServiceType="location" />
+
         <meta-data
             android:name="com.mapbox.token"
             android:value="@string/mapbox_access_token" />
