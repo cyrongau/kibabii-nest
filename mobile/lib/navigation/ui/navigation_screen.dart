@@ -34,10 +34,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    ref.listen<TripStateModel>(navigationControllerProvider, (previous, next) {
-      _syncRouteToMap(next);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startNavigation();
     });
-    _startNavigation();
   }
 
   Future<void> _startNavigation() async {
@@ -107,6 +106,10 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<TripStateModel>(navigationControllerProvider, (previous, next) {
+      _syncRouteToMap(next);
+    });
+
     final tripState = ref.watch(navigationControllerProvider);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;

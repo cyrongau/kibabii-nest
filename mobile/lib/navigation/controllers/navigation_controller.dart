@@ -71,86 +71,95 @@ class NavigationController extends StateNotifier<TripStateModel> {
   }) async {
     debugPrint('🏁 Navigation: startNavigation called for $destinationLat, $destinationLng');
     
-    // 1. Waiting for GPS phase
-    state = state.copyWith(
-      state: TripState.waitingForGps,
-      destinationLat: destinationLat,
-      destinationLng: destinationLng,
-      destinationName: destinationName,
-      errorMessage: null,
-    );
-
-    debugPrint('🏁 Navigation: Checking permissions...');
-    final hasPermission = await _gpsService.checkPermissions();
-    if (!hasPermission) {
-      debugPrint('❌ Navigation: Location permission denied');
-      state = state.copyWith(
-        state: TripState.error,
-        errorMessage: 'Location permission denied. Please enable location access in settings.',
-      );
-      return false;
-    }
-
-    debugPrint('🏁 Navigation: Getting current position...');
-    final currentPosition = await _gpsService.getCurrentPosition();
-
-    if (currentPosition == null) {
-      debugPrint('❌ Navigation: Could not get current position');
-      state = state.copyWith(
-        state: TripState.error,
-        errorMessage: 'Could not get GPS lock. Try moving to an open area and ensure Location is enabled.',
-      );
-      return false;
-    }
-
-    debugPrint('🏁 Navigation: Current position: ${currentPosition.latitude}, ${currentPosition.longitude}');
-    state = state.copyWith(
-      currentPosition: currentPosition,
-      state: TripState.fetchingRoute,
-    );
-
-    // 2. Fetching Route phase
-    debugPrint('🏁 Navigation: Fetching route from DirectionsService (15s timeout)...');
-    RouteModel? route;
     try {
-      route = await _directionsService.getWalkingRoute(
-        startLng: currentPosition.longitude,
-        startLat: currentPosition.latitude,
-        endLng: destinationLng,
-        endLat: destinationLat,
-      ).timeout(const Duration(seconds: 15));
-    } catch (e) {
-      debugPrint('❌ Navigation: Route fetch timed out or failed: $e');
-    }
+      // 1. Waiting for GPS phase
+      state = state.copyWith(
+        state: TripState.waitingForGps,
+        destinationLat: destinationLat,
+        destinationLng: destinationLng,
+        destinationName: destinationName,
+        errorMessage: null,
+      );
 
-    if (route == null) {
-      debugPrint('❌ Navigation: Route fetching failed');
+      debugPrint('🏁 Navigation: Checking permissions...');
+      final hasPermission = await _gpsService.checkPermissions();
+      if (!hasPermission) {
+        debugPrint('❌ Navigation: Location permission denied');
+        state = state.copyWith(
+          state: TripState.error,
+          errorMessage: 'Location permission denied. Please enable location access in settings.',
+        );
+        return false;
+      }
+
+      debugPrint('🏁 Navigation: Getting current position...');
+      final currentPosition = await _gpsService.getCurrentPosition();
+
+      if (currentPosition == null) {
+        debugPrint('❌ Navigation: Could not get current position');
+        state = state.copyWith(
+          state: TripState.error,
+          errorMessage: 'Could not get GPS lock. Try moving to an open area and ensure Location is enabled.',
+        );
+        return false;
+      }
+
+      debugPrint('🏁 Navigation: Current position: ${currentPosition.latitude}, ${currentPosition.longitude}');
+      state = state.copyWith(
+        currentPosition: currentPosition,
+        state: TripState.fetchingRoute,
+      );
+
+      // 2. Fetching Route phase
+      debugPrint('🏁 Navigation: Fetching route from DirectionsService (15s timeout)...');
+      RouteModel? route;
+      try {
+        route = await _directionsService.getWalkingRoute(
+          startLng: currentPosition.longitude,
+          startLat: currentPosition.latitude,
+          endLng: destinationLng,
+          endLat: destinationLat,
+        ).timeout(const Duration(seconds: 15));
+      } catch (e) {
+        debugPrint('❌ Navigation: Route fetch timed out or failed: $e');
+      }
+
+      if (route == null) {
+        debugPrint('❌ Navigation: Route fetching failed');
+        state = state.copyWith(
+          state: TripState.error,
+          errorMessage: 'Could not find a walking route. Please check your internet connection and try again.',
+        );
+        return false;
+      }
+
+      debugPrint('✅ Navigation: Route found! Distance: ${route.distance}m');
+
+      state = state.copyWith(
+        state: TripState.navigating,
+        currentRoute: route,
+        distanceRemaining: route.distance,
+        durationRemaining: route.duration,
+        currentManeuverIndex: 0,
+        isOffRoute: false,
+      );
+
+      _startLocationTracking();
+      _speakInstruction('Navigation started. Follow the route to your destination.');
+      _checkManeuverDistance();
+      
+      // Start background tracking
+      _startBackgroundTracking();
+
+      return true;
+    } catch (e, stackTrace) {
+      debugPrint('❌ Critical unhandled error in startNavigation: $e\n$stackTrace');
       state = state.copyWith(
         state: TripState.error,
-        errorMessage: 'Could not find a walking route. Please check your internet connection and try again.',
+        errorMessage: 'An unexpected error occurred: ${e.toString()}',
       );
       return false;
     }
-
-    debugPrint('✅ Navigation: Route found! Distance: ${route.distance}m');
-
-    state = state.copyWith(
-      state: TripState.navigating,
-      currentRoute: route,
-      distanceRemaining: route.distance,
-      durationRemaining: route.duration,
-      currentManeuverIndex: 0,
-      isOffRoute: false,
-    );
-
-    _startLocationTracking();
-    _speakInstruction('Navigation started. Follow the route to your destination.');
-    _checkManeuverDistance();
-    
-    // Start background tracking
-    _startBackgroundTracking();
-
-    return true;
   }
 
   void _startBackgroundTracking() async {
@@ -323,7 +332,11 @@ class NavigationController extends StateNotifier<TripStateModel> {
   }
 
   void _speakInstruction(String text) {
-    _ttsService.speak(text);
+    try {
+      _ttsService.speak(text);
+    } catch (e) {
+      debugPrint('TTS Error (ignored): $e');
+    }
   }
 
   Future<void> _triggerReroute() async {

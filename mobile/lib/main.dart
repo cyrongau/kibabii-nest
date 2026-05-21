@@ -8,6 +8,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'services/notification_service.dart';
 import 'core/providers/theme_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'navigation/services/background_tracking_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,7 @@ void main() async {
       Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ).then((_) => debugPrint('Firebase initialized')),
+      BackgroundTrackingService.initialize().then((_) => debugPrint('Background service initialized')),
     ]).timeout(const Duration(seconds: 8), onTimeout: () {
       debugPrint('Warning: Startup initialization timed out after 8s');
       return [];

@@ -27,11 +27,21 @@ export class NavigationService {
       return response.data;
     } catch (error: any) {
       this.logger.error(`❌ Failed to fetch directions for ${coordinates}: ${error.message}`);
+      require('fs').writeFileSync('error_log.txt', `Error: ${error.message}\nStack: ${error.stack}\nToken exists: ${!!process.env.MAPBOX_PUBLIC_TOKEN}`);
+      
       if (error.response) {
         this.logger.error(`Mapbox error response: ${JSON.stringify(error.response.data)}`);
-        throw new InternalServerErrorException(error.response.data);
+        throw new InternalServerErrorException({
+          message: 'Mapbox API Error',
+          details: error.response.data,
+        });
       }
-      throw new InternalServerErrorException('Failed to fetch directions from Mapbox');
+      throw new InternalServerErrorException({
+        message: 'Failed to fetch directions from Mapbox',
+        error: error.message,
+        stack: error.stack,
+        tokenExists: !!process.env.MAPBOX_PUBLIC_TOKEN
+      });
     }
   }
 }
