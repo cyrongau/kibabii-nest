@@ -43,28 +43,33 @@ export class KycService {
       aiAnalysis = { error: 'Failed to extract data via AI' };
     }
 
+    const allowedData = {
+      idDocumentUrl: data.idDocumentUrl,
+      ownershipProofUrl: data.ownershipProofUrl,
+    };
+    if (data.certificateUrl) {
+      (allowedData as any).certificateUrl = data.certificateUrl;
+    }
+
     let kyc;
     try {
       kyc = await this.prisma.landlordKyc.upsert({
         where: { userId },
         update: {
-          ...data,
+          ...allowedData,
           status: KycStatus.PENDING,
           aiAnalysis,
         },
         create: {
           userId,
-          ...data,
+          ...allowedData,
           status: KycStatus.PENDING,
           aiAnalysis,
         }
       });
     } catch (error: any) {
       this.logger.error('Database error saving KYC documents', error);
-      this.logger.error('Full error details:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
-      throw new InternalServerErrorException(
-        `Failed to save KYC documents: ${error?.message || 'Unknown database error'}`,
-      );
+      throw new InternalServerErrorException('Failed to save KYC documents');
     }
 
     // Notify Admins
