@@ -24,6 +24,7 @@ class TripStateModel {
   final double? destinationLat;
   final double? destinationLng;
   final String? destinationName;
+  final double? bearing;
 
   TripStateModel({
     this.state = TripState.idle,
@@ -37,6 +38,7 @@ class TripStateModel {
     this.destinationLat,
     this.destinationLng,
     this.destinationName,
+    this.bearing,
   });
 
   TripStateModel copyWith({
@@ -51,6 +53,7 @@ class TripStateModel {
     double? destinationLat,
     double? destinationLng,
     String? destinationName,
+    double? bearing,
   }) {
     return TripStateModel(
       state: state ?? this.state,
@@ -64,6 +67,7 @@ class TripStateModel {
       destinationLat: destinationLat ?? this.destinationLat,
       destinationLng: destinationLng ?? this.destinationLng,
       destinationName: destinationName ?? this.destinationName,
+      bearing: bearing ?? this.bearing,
     );
   }
 

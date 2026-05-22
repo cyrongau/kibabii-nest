@@ -48,8 +48,11 @@ class NavigationController extends StateNotifier<TripStateModel> {
   
   StreamSubscription<Position>? _positionSubscription;
   Timer? _rerouteTimer;
-  Timer? _locationPollingTimer;
-  int _currentPollingInterval = 5;
+  Position? _previousPosition;
+  String? _lastSpokenInstruction;
+  DateTime? _lastSpokenTime;
+  DateTime? _lastRerouteTime;
+  bool _isRerouting = false;
 
   NavigationController(
     this._directionsService,
@@ -147,6 +150,7 @@ class NavigationController extends StateNotifier<TripStateModel> {
       _startLocationTracking();
       _speakInstruction('Navigation started. Follow the route to your destination.');
       _checkManeuverDistance();
+      _previousPosition = currentPosition;
       
       // Start background tracking
       _startBackgroundTracking();
@@ -186,51 +190,53 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
   void _startLocationTracking() {
     _positionSubscription?.cancel();
-    _locationPollingTimer?.cancel();
     _gpsService.stopTracking();
     
-    _pollLocation();
-  }
-
-  Future<void> _pollLocation() async {
-    if (!state.isNavigating) return;
-
-    final position = await _gpsService.getCurrentPosition();
-    if (position != null) {
-      _updatePosition(position);
-    }
-
-    // Adaptive polling: 5s interval when close, 10s when further
-    if (state.distanceRemaining < 200) {
-      _currentPollingInterval = 5;
-    } else {
-      _currentPollingInterval = 10;
-    }
-
-    _locationPollingTimer = Timer(Duration(seconds: _currentPollingInterval), _pollLocation);
+    _gpsService.startTracking(distanceFilter: 3);
+    
+    _positionSubscription = _gpsService.positionStream.listen(
+      (Position position) {
+        _updatePosition(position);
+      },
+      onError: (error) {
+        debugPrint('Navigation: Position stream error: $error');
+      },
+      onDone: () {
+        debugPrint('Navigation: Position stream closed');
+      },
+      cancelOnError: false,
+    );
   }
 
   void _updatePosition(Position position) {
     if (!state.hasRoute) return;
 
-    final isOffRoute = _rerouteService.isOffRoute(position, state.currentRoute!);
-    
-    if (isOffRoute && !state.isOffRoute) {
-      state = state.copyWith(isOffRoute: true);
-      _speakInstruction('You have gone off route. Recalculating...');
-      _triggerReroute();
-      return;
-    }
-
-    if (state.isOffRoute && !isOffRoute) {
-      state = state.copyWith(isOffRoute: false);
-      _speakInstruction('Route recalculated. Continuing navigation.');
-    }
-
     final distanceToDestination = _rerouteService.calculateDistanceToDestination(
       position,
       state.currentRoute!,
     );
+
+    if (distanceToDestination < 20) {
+      _arrived();
+      return;
+    }
+
+    final isOffRoute = _rerouteService.isOffRoute(position, state.currentRoute!);
+
+    if (isOffRoute && !_isRerouting) {
+      if (!state.isOffRoute) {
+        state = state.copyWith(isOffRoute: true);
+      }
+      final now = DateTime.now();
+      if (_lastRerouteTime == null ||
+          now.difference(_lastRerouteTime!) > const Duration(seconds: 20)) {
+        _rerouteTimer?.cancel();
+        _speakInstruction('You have gone off route. Recalculating...');
+        _triggerReroute();
+      }
+    } else if (state.isOffRoute) {
+      state = state.copyWith(isOffRoute: false);
+    }
 
     final newManeuverIndex = _findCurrentManeuverIndex(position);
 
@@ -239,17 +245,32 @@ class NavigationController extends StateNotifier<TripStateModel> {
       _speakCurrentManeuver();
     }
 
-    final remainingDuration = _calculateRemainingDuration(position);
+    final remainingDuration = _calculateRemainingDuration(
+      position,
+      distanceToDestination,
+    );
+    
+    double? bearing;
+    if (_previousPosition != null) {
+      final movement = Geolocator.distanceBetween(
+        _previousPosition!.latitude, _previousPosition!.longitude,
+        position.latitude, position.longitude,
+      );
+      if (movement > 2) {
+        bearing = _rerouteService.calculateBearing(
+          _previousPosition!.latitude, _previousPosition!.longitude,
+          position.latitude, position.longitude,
+        );
+      }
+    }
+    _previousPosition = position;
 
     state = state.copyWith(
       currentPosition: position,
       distanceRemaining: distanceToDestination,
       durationRemaining: remainingDuration,
+      bearing: bearing,
     );
-
-    if (distanceToDestination < 20) {
-      _arrived();
-    }
   }
 
   int _findCurrentManeuverIndex(Position position) {
@@ -259,8 +280,9 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
     final route = state.currentRoute!;
     final maneuvers = route.maneuvers;
+    final startIndex = state.currentManeuverIndex.clamp(0, maneuvers.length - 1);
     
-    for (int i = 0; i < maneuvers.length; i++) {
+    for (int i = startIndex; i < maneuvers.length; i++) {
       final maneuver = maneuvers[i];
       if (maneuver.location.isEmpty) continue;
 
@@ -278,35 +300,30 @@ class NavigationController extends StateNotifier<TripStateModel> {
     return state.currentManeuverIndex;
   }
 
-  double _calculateRemainingDuration(Position position) {
-    if (!state.hasRoute) return 0;
+  double _calculateRemainingDuration(Position position, double remainingDistance) {
+    if (!state.hasRoute || state.currentRoute!.distance <= 0) return 0;
 
-    final totalDuration = state.currentRoute!.duration;
-    final routeLength = state.currentRoute!.geometry.length;
-    
-    if (routeLength == 0) return totalDuration;
-
-    final closestIndex = _rerouteService.findClosestPointIndex(
-      position,
-      state.currentRoute!,
-    );
-
-    final progress = closestIndex / routeLength;
-    return totalDuration * (1 - progress);
+    final totalDistance = state.currentRoute!.distance;
+    return (remainingDistance / totalDistance) * state.currentRoute!.duration;
   }
 
   void _checkManeuverDistance() {
     _rerouteTimer?.cancel();
     _rerouteTimer = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (!state.isNavigating || !state.hasRoute || state.currentPosition == null) {
+      if (!state.isNavigating || !state.hasRoute || state.currentPosition == null || _isRerouting) {
         return;
       }
 
-      final currentManeuver = state.currentRoute!.maneuvers[state.currentManeuverIndex];
+      final maneuvers = state.currentRoute!.maneuvers;
+      if (state.currentManeuverIndex >= maneuvers.length) return;
+
+      final currentManeuver = maneuvers[state.currentManeuverIndex];
+      if (currentManeuver.type == 'depart' || currentManeuver.location.isEmpty) return;
+
       final distanceToManeuver = _gpsService.calculateDistanceFromPosition(
         state.currentPosition!,
-        currentManeuver.location.isNotEmpty ? currentManeuver.location[1] : 0,
-        currentManeuver.location.isNotEmpty ? currentManeuver.location[0] : 0,
+        currentManeuver.location[1],
+        currentManeuver.location[0],
       );
 
       if (distanceToManeuver < 100 && distanceToManeuver > 50) {
@@ -332,8 +349,15 @@ class NavigationController extends StateNotifier<TripStateModel> {
   }
 
   void _speakInstruction(String text) {
+    if (text == _lastSpokenInstruction &&
+        _lastSpokenTime != null &&
+        DateTime.now().difference(_lastSpokenTime!) < const Duration(seconds: 15)) {
+      return;
+    }
     try {
       _ttsService.speak(text);
+      _lastSpokenInstruction = text;
+      _lastSpokenTime = DateTime.now();
     } catch (e) {
       debugPrint('TTS Error (ignored): $e');
     }
@@ -344,12 +368,18 @@ class NavigationController extends StateNotifier<TripStateModel> {
       return;
     }
 
+    _isRerouting = true;
+    _lastRerouteTime = DateTime.now();
+
     final newRoute = await _directionsService.getWalkingRoute(
       startLng: state.currentPosition!.longitude,
       startLat: state.currentPosition!.latitude,
       endLng: state.destinationLng!,
       endLat: state.destinationLat!,
+      useCache: false,
     );
+
+    _isRerouting = false;
 
     if (newRoute != null) {
       state = state.copyWith(
@@ -359,23 +389,27 @@ class NavigationController extends StateNotifier<TripStateModel> {
         currentManeuverIndex: 0,
         isOffRoute: false,
       );
+      _checkManeuverDistance();
       _speakInstruction('New route calculated. Distance ${newRoute.formattedDistance}.');
     }
   }
 
   void _arrived() {
     _positionSubscription?.cancel();
-    _locationPollingTimer?.cancel();
     _rerouteTimer?.cancel();
+    _gpsService.stopTracking();
     _ttsService.stop();
     _stopBackgroundTracking();
+    _isRerouting = false;
+    _lastRerouteTime = null;
     
     state = state.copyWith(state: TripState.arrived);
     _speakInstruction('You have arrived at your destination.');
   }
 
   void pauseNavigation() {
-    _locationPollingTimer?.cancel();
+    _positionSubscription?.cancel();
+    _rerouteTimer?.cancel();
     _gpsService.stopTracking();
     _ttsService.pause();
     state = state.copyWith(state: TripState.paused);
@@ -383,25 +417,34 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
   void resumeNavigation() {
     _startLocationTracking();
+    _checkManeuverDistance();
     state = state.copyWith(state: TripState.navigating);
     _speakInstruction('Navigation resumed.');
   }
 
   void stopNavigation() {
     _positionSubscription?.cancel();
-    _locationPollingTimer?.cancel();
     _rerouteTimer?.cancel();
     _gpsService.stopTracking();
     _ttsService.stop();
     _stopBackgroundTracking();
+    _previousPosition = null;
+    _lastSpokenInstruction = null;
+    _lastSpokenTime = null;
+    _lastRerouteTime = null;
+    _isRerouting = false;
     state = TripStateModel(state: TripState.idle);
   }
 
   @override
   void dispose() {
     _positionSubscription?.cancel();
-    _locationPollingTimer?.cancel();
     _rerouteTimer?.cancel();
+    _previousPosition = null;
+    _lastSpokenInstruction = null;
+    _lastSpokenTime = null;
+    _lastRerouteTime = null;
+    _isRerouting = false;
     super.dispose();
   }
 }

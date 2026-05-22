@@ -7,6 +7,7 @@ import {
   UploadedFile,
   Res,
   BadRequestException,
+  InternalServerErrorException,
   Query
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -130,8 +131,13 @@ export class UploadsController {
   }))
   async uploadImage(@UploadedFile() file: Express.Multer.File, @Query('folder') folder: string) {
     if (!file) throw new BadRequestException('No file uploaded');
-    const url = await this.s3Service.uploadFile(file, folder || 'images');
-    return { url };
+    try {
+      const url = await this.s3Service.uploadFile(file, folder || 'images');
+      return { url };
+    } catch (error: any) {
+      console.error('Image upload failed:', error.message);
+      throw new InternalServerErrorException('Failed to upload image. Please check storage service and try again.');
+    }
   }
 
   @Post('document')
@@ -149,8 +155,13 @@ export class UploadsController {
   }))
   async uploadDocument(@UploadedFile() file: Express.Multer.File, @Query('folder') folder: string) {
     if (!file) throw new BadRequestException('No file uploaded');
-    const url = await this.s3Service.uploadFile(file, folder || 'documents');
-    return { url };
+    try {
+      const url = await this.s3Service.uploadFile(file, folder || 'documents');
+      return { url };
+    } catch (error: any) {
+      console.error('Document upload failed:', error.message);
+      throw new InternalServerErrorException('Failed to upload document. Please check storage service and try again.');
+    }
   }
 
   @Post('video')
@@ -168,7 +179,12 @@ export class UploadsController {
   }))
   async uploadVideo(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('No file uploaded');
-    const url = await this.s3Service.uploadFile(file, 'videos');
-    return { url };
+    try {
+      const url = await this.s3Service.uploadFile(file, 'videos');
+      return { url };
+    } catch (error: any) {
+      console.error('Video upload failed:', error.message);
+      throw new InternalServerErrorException('Failed to upload video. Please check storage service and try again.');
+    }
   }
 }

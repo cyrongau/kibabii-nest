@@ -123,6 +123,7 @@ class DirectionsService {
     required double startLat,
     required double endLng,
     required double endLat,
+    bool useCache = true,
   }) async {
     return getRoute(
       startLng: startLng,
@@ -130,6 +131,7 @@ class DirectionsService {
       endLng: endLng,
       endLat: endLat,
       profile: 'walking',
+      useCache: useCache,
     );
   }
 

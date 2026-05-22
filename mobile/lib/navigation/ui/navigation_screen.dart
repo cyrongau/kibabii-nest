@@ -90,6 +90,10 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     if (_polylineAnnotationManager == null || _mapboxMap == null) return;
 
     final positions = route.geometry
+        .where((point) =>
+            point.length >= 2 &&
+            point[0].abs() <= 180 &&
+            point[1].abs() <= 90)
         .map((point) => Position(point[0], point[1]))
         .toList();
 
@@ -129,8 +133,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
               ),
             ).toJson(),
             zoom: 17.5,
-            bearing: next.currentPosition!.heading > 0 ? next.currentPosition!.heading : null,
-            pitch: 45.0, // Give it a 3D navigation perspective
+            bearing: next.bearing ?? (next.currentPosition!.heading > 0 ? next.currentPosition!.heading : null),
+            pitch: 45.0,
           ),
         );
       }
@@ -345,6 +349,10 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                                 .currentRoute!
                                 .maneuvers[tripState.currentManeuverIndex]
                                 .type,
+                            tripState
+                                .currentRoute!
+                                .maneuvers[tripState.currentManeuverIndex]
+                                .modifier,
                           ),
                           color: Colors.white,
                           size: 20,
@@ -373,18 +381,25 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     );
   }
 
-  IconData _getManeuverIcon(String type) {
+  IconData _getManeuverIcon(String type, String modifier) {
     switch (type) {
       case 'turn':
+        if (modifier == 'left' || modifier == 'slight left' || modifier == 'sharp left') {
+          return LucideIcons.arrowLeft;
+        }
         return LucideIcons.arrowRight;
       case 'arrive':
         return LucideIcons.mapPin;
       case 'continue':
+        if (modifier == 'straight') return LucideIcons.arrowUp;
         return LucideIcons.arrowRight;
       case 'merge':
         return LucideIcons.gitBranch;
       case 'fork':
-        return LucideIcons.gitFork;
+        if (modifier == 'left') return LucideIcons.arrowLeft;
+        return LucideIcons.arrowRight;
+      case 'depart':
+        return LucideIcons.arrowUp;
       default:
         return LucideIcons.navigation;
     }
