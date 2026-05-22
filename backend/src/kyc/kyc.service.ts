@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MailService } from '../notifications/mail.service';
 import { KycStatus } from '@prisma/client';
@@ -18,7 +18,18 @@ export class KycService {
   ) {}
 
   async submitKyc(userId: string, data: { idDocumentUrl: string; ownershipProofUrl: string; certificateUrl?: string }) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!data.idDocumentUrl || !data.ownershipProofUrl) {
+      throw new BadRequestException('Both ID document and ownership proof are required');
+    }
+
+    let user;
+    try {
+      user = await this.prisma.user.findUnique({ where: { id: userId } });
+    } catch (error: any) {
+      this.logger.error('Database error fetching user for KYC submission', error);
+      throw new InternalServerErrorException('Failed to verify user');
+    }
+
     if (!user) throw new NotFoundException('User not found');
     if (user.role !== 'LANDLORD') throw new BadRequestException('Only landlords can submit KYC');
 
@@ -32,20 +43,26 @@ export class KycService {
       aiAnalysis = { error: 'Failed to extract data via AI' };
     }
 
-    const kyc = await this.prisma.landlordKyc.upsert({
-      where: { userId },
-      update: {
-        ...data,
-        status: KycStatus.PENDING,
-        aiAnalysis,
-      },
-      create: {
-        userId,
-        ...data,
-        status: KycStatus.PENDING,
-        aiAnalysis,
-      }
-    });
+    let kyc;
+    try {
+      kyc = await this.prisma.landlordKyc.upsert({
+        where: { userId },
+        update: {
+          ...data,
+          status: KycStatus.PENDING,
+          aiAnalysis,
+        },
+        create: {
+          userId,
+          ...data,
+          status: KycStatus.PENDING,
+          aiAnalysis,
+        }
+      });
+    } catch (error: any) {
+      this.logger.error('Database error saving KYC documents', error);
+      throw new InternalServerErrorException('Failed to save KYC documents');
+    }
 
     // Notify Admins
     try {

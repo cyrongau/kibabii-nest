@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -48,34 +48,37 @@ export class UsersService {
   }
 
   async findOneById(id: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        phone: true,
-        avatar: true,
-        isVerifiedLandlord: true,
-        isSuspended: true,
-        createdAt: true,
-        updatedAt: true,
-        studentIdentity: true,
-        kyc: true,
-        _count: {
-          select: {
-            properties: true,
-            bookings: true,
-            reviews: true,
-            tenancies: true,
-            serviceRequests: true,
-          }
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          phone: true,
+          avatar: true,
+          isVerifiedLandlord: true,
+          isSuspended: true,
+          createdAt: true,
+          updatedAt: true,
+          studentIdentity: true,
+          kyc: true,
+          _count: {
+            select: {
+              properties: true,
+              bookings: true,
+              reviews: true,
+            }
+          },
         },
-      },
-    });
-    if (!user) throw new NotFoundException('User not found');
-    return user;
+      });
+      if (!user) throw new NotFoundException('User not found');
+      return user;
+    } catch (error: any) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to fetch user details');
+    }
   }
 
   async getStats() {

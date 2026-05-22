@@ -4,6 +4,8 @@ dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma/prisma.service';
+import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './common/http-exception.filter';
 import * as bcrypt from 'bcrypt';
 
 async function bootstrap() {
@@ -16,6 +18,14 @@ async function bootstrap() {
     exposedHeaders: ['Authorization'],
     credentials: true,
   });
+
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: false,
+    transform: true,
+  }));
+  app.useGlobalFilters(new HttpExceptionFilter());
+
   await app.init();
 
   try {
