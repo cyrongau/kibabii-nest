@@ -61,7 +61,10 @@ export class KycService {
       });
     } catch (error: any) {
       this.logger.error('Database error saving KYC documents', error);
-      throw new InternalServerErrorException('Failed to save KYC documents');
+      this.logger.error('Full error details:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+      throw new InternalServerErrorException(
+        `Failed to save KYC documents: ${error?.message || 'Unknown database error'}`,
+      );
     }
 
     // Notify Admins
