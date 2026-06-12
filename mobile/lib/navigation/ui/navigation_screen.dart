@@ -28,6 +28,7 @@ class NavigationScreen extends ConsumerStatefulWidget {
 class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   mbx.MapboxMap? _mapboxMap;
   mbx.PolylineAnnotationManager? _polylineAnnotationManager;
+  mbx.CircleAnnotationManager? _circleAnnotationManager;
   mbx.PolylineAnnotation? _routePolyline;
   bool _isMapReady = false;
 
@@ -67,25 +68,49 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
         enabled: true,
         pulsingEnabled: true,
         puckBearingEnabled: true,
-        puckBearing: mbx.PuckBearing.HEADING,
       ),
     );
 
     _polylineAnnotationManager = await mapboxMap.annotations
         .createPolylineAnnotationManager();
+    _circleAnnotationManager = await mapboxMap.annotations
+        .createCircleAnnotationManager();
     _syncRouteToMap(ref.read(navigationControllerProvider));
   }
 
   Future<void> _syncRouteToMap(TripStateModel tripState) async {
-    if (!_isMapReady || _polylineAnnotationManager == null) return;
+    if (!_isMapReady || _polylineAnnotationManager == null || _circleAnnotationManager == null) return;
 
     if (!tripState.hasRoute || tripState.currentRoute!.geometry.isEmpty) {
       await _polylineAnnotationManager?.deleteAll();
+      await _circleAnnotationManager?.deleteAll();
       _routePolyline = null;
       return;
     }
 
     await _renderRouteLine(tripState.currentRoute!);
+    await _renderManeuvers(tripState.currentRoute!);
+  }
+
+  Future<void> _renderManeuvers(RouteModel route) async {
+    if (_circleAnnotationManager == null) return;
+
+    await _circleAnnotationManager!.deleteAll();
+    
+    final theme = Theme.of(context);
+
+    for (var maneuver in route.maneuvers) {
+      if (maneuver.location.length >= 2 && maneuver.type != 'arrive' && maneuver.type != 'depart') {
+        final point = Point(coordinates: Position(maneuver.location[0], maneuver.location[1])).toJson();
+        await _circleAnnotationManager!.create(mbx.CircleAnnotationOptions(
+          geometry: point,
+          circleColor: theme.colorScheme.primary.value,
+          circleRadius: 6.0,
+          circleStrokeWidth: 3.0,
+          circleStrokeColor: 0xFFFFFFFF,
+        ));
+      }
+    }
   }
 
   Future<void> _renderRouteLine(RouteModel route) async {
@@ -108,7 +133,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
         mbx.PolylineAnnotationOptions(
           geometry: lineGeoJson,
           lineColor: Theme.of(context).colorScheme.primary.value,
-          lineWidth: 8.0,
+          lineWidth: 5.0,
           lineJoin: mbx.LineJoin.ROUND,
         ),
       );

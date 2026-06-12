@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import '../models/route_model.dart';
 
 class RerouteService {
-  static const double defaultThresholdMeters = 20.0;
+  static const double defaultThresholdMeters = 35.0;
   final double _threshold;
 
   RerouteService({double thresholdMeters = defaultThresholdMeters}) 

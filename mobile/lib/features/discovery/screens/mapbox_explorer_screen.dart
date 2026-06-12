@@ -39,6 +39,7 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
   String? _errorMessage;
   dynamic _selectedProperty;
   final TextEditingController _searchController = TextEditingController();
+  Position? _userPosition;
 
   @override
   void dispose() {
@@ -61,6 +62,7 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
           _hasPermission = true;
           _isLoading = false;
         });
+        _getUserLocation();
       } else if (status.isPermanentlyDenied) {
         setState(() {
           _errorMessage = "Location permission is permanently denied. Please enable it in settings.";
@@ -77,6 +79,19 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
         _errorMessage = "Error requesting permissions: $e";
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _getUserLocation() async {
+    try {
+      final pos = await Geolocator.getCurrentPosition();
+      if (mounted) {
+        setState(() {
+          _userPosition = pos;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error getting user location: $e");
     }
   }
 
@@ -483,11 +498,17 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
   }
 
   Widget _buildPropertySheet() {
+    final isGate = _selectedProperty != null && _selectedProperty['id'] == 'gate_id';
+    
     return DraggableScrollableSheet(
-      initialChildSize: 0.5,
+      initialChildSize: isGate ? 0.45 : 0.5,
       minChildSize: 0.2,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
+        if (isGate) {
+          return _buildGateSheet(scrollController);
+        }
+
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
@@ -574,6 +595,143 @@ class _MapboxExplorerScreenState extends State<MapboxExplorerScreen> implements 
           ),
         );
       },
+    );
+  }
+
+  Widget _buildGateSheet(ScrollController scrollController) {
+    String distanceText = 'Calculating distance...';
+    if (_userPosition != null) {
+      final dist = Geolocator.distanceBetween(
+        _userPosition!.latitude, _userPosition!.longitude,
+        0.6170124177529738, 34.523624254983,
+      );
+      if (dist < 1000) {
+        distanceText = '${dist.round()}m away from you';
+      } else {
+        distanceText = '${(dist / 1000).toStringAsFixed(1)}km away from you';
+      }
+    }
+
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: ListView(
+        controller: scrollController,
+        padding: const EdgeInsets.all(24),
+        children: [
+          Stack(
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: -10,
+                child: IconButton(
+                  icon: const Icon(Icons.close_rounded, color: Colors.grey),
+                  onPressed: () => setState(() => _selectedProperty = null),
+                ),
+              ),
+            ],
+          ),
+          
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [const Color(0xFF10B981).withOpacity(0.1), const Color(0xFF10B981).withOpacity(0.05)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: const Color(0xFF10B981).withOpacity(0.2)),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF10B981).withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(LucideIcons.school, size: 40, color: Color(0xFF10B981)),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Kibabii University Main Gate',
+                  style: GoogleFonts.outfit(fontSize: 22, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(LucideIcons.navigation, size: 16, color: colorScheme.onSurface.withOpacity(0.6)),
+                    const SizedBox(width: 4),
+                    Text(
+                      distanceText,
+                      style: GoogleFonts.outfit(color: colorScheme.onSurface.withOpacity(0.6), fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'The central reference point for all off-campus residences and properties.',
+                  style: GoogleFonts.outfit(fontSize: 14, color: colorScheme.onSurface.withOpacity(0.8), height: 1.5),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: _startNavigation,
+            icon: const Icon(Icons.directions, color: Colors.white),
+            label: Text(
+              'NAVIGATE TO GATE',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF10B981),
+              foregroundColor: Colors.white,
+              minimumSize: const Size(200, 60),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              elevation: 8,
+              shadowColor: const Color(0xFF10B981).withOpacity(0.4),
+            ),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton(
+            onPressed: () => setState(() => _selectedProperty = null),
+            child: const Text('CLOSE'),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(200, 50),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
