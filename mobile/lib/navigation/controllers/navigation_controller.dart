@@ -138,6 +138,11 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
       debugPrint('✅ Navigation: Route found! Distance: ${route.distance}m');
 
+      // Bridge the gap: inject current position to start of route line
+      if (route.geometry.isNotEmpty) {
+        route.geometry.insert(0, [currentPosition.longitude, currentPosition.latitude]);
+      }
+
       state = state.copyWith(
         state: TripState.navigating,
         currentRoute: route,
@@ -301,10 +306,37 @@ class NavigationController extends StateNotifier<TripStateModel> {
   }
 
   double _calculateRemainingDuration(Position position, double remainingDistance) {
-    if (!state.hasRoute || state.currentRoute!.distance <= 0) return 0;
+    if (!state.hasRoute || state.currentRoute!.maneuvers.isEmpty) return 0;
 
-    final totalDistance = state.currentRoute!.distance;
-    return (remainingDistance / totalDistance) * state.currentRoute!.duration;
+    final maneuvers = state.currentRoute!.maneuvers;
+    double remainingTime = 0;
+
+    // Add full duration for upcoming maneuvers
+    for (int i = state.currentManeuverIndex + 1; i < maneuvers.length; i++) {
+      remainingTime += maneuvers[i].duration;
+    }
+
+    // For the current maneuver, estimate based on distance to the next maneuver's location
+    if (state.currentManeuverIndex < maneuvers.length) {
+      final currentManeuver = maneuvers[state.currentManeuverIndex];
+      // Next maneuver location is the END of the current maneuver
+      int nextIndex = state.currentManeuverIndex + 1;
+      if (nextIndex < maneuvers.length && maneuvers[nextIndex].location.isNotEmpty) {
+        final distToNext = _gpsService.calculateDistanceFromPosition(
+          position,
+          maneuvers[nextIndex].location[1],
+          maneuvers[nextIndex].location[0],
+        );
+        if (currentManeuver.distance > 0) {
+          final fraction = (distToNext / currentManeuver.distance).clamp(0.0, 1.0);
+          remainingTime += currentManeuver.duration * fraction;
+        }
+      } else {
+         remainingTime += currentManeuver.duration;
+      }
+    }
+
+    return remainingTime;
   }
 
   void _checkManeuverDistance() {

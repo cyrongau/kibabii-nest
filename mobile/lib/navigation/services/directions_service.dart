@@ -46,6 +46,7 @@ class DirectionsService {
           'steps': true,
           'geometries': 'geojson',
           'overview': 'full',
+          'alternatives': true,
         },
       );
 

@@ -66,6 +66,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
       mbx.LocationComponentSettings(
         enabled: true,
         pulsingEnabled: true,
+        puckBearingEnabled: true,
+        puckBearing: mbx.PuckBearing.HEADING,
       ),
     );
 
