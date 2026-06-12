@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { PaymentsService } from '../payments/payments.service';
 import { MailService } from './mail.service';
 import { NotificationsService } from './notifications.service';
+import { BackupService } from '../prisma/backup.service';
 
 @Injectable()
 export class SchedulerService {
@@ -15,6 +16,7 @@ export class SchedulerService {
     private paymentsService: PaymentsService,
     private mailService: MailService,
     private notificationsService: NotificationsService,
+    private backupService: BackupService,
   ) {}
 
   /**
@@ -251,6 +253,20 @@ export class SchedulerService {
       this.logger.log(`✅ Found ${staleProperties.length} stale pending properties`);
     } catch (error: any) {
       this.logger.error('❌ Pending property reminder cron failed:', error.message);
+    }
+  }
+
+  /**
+   * DAILY at 02:00 AM — Run automated database backup.
+   */
+  @Cron('0 2 * * *')
+  async handleDailyDatabaseBackup() {
+    this.logger.log('⏰ Cron: Starting automated daily database backup...');
+    try {
+      const backupUrl = await this.backupService.runBackup();
+      this.logger.log(`✅ Automated daily database backup completed: ${backupUrl}`);
+    } catch (error: any) {
+      this.logger.error('❌ Automated daily database backup failed:', error.message);
     }
   }
 }

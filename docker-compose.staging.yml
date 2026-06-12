@@ -1,0 +1,71 @@
+services:
+  # Staging Database
+  db-staging:
+    image: postgres:15-alpine
+    container_name: kibabii-db-staging
+    restart: always
+    environment:
+      POSTGRES_USER: nestuser_staging
+      POSTGRES_PASSWORD: nestpassword_staging
+      POSTGRES_DB: kibabiinest_staging
+    volumes:
+      - postgres_data_staging:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  # Staging Object Storage (MinIO)
+  minio-staging:
+    image: minio/minio
+    container_name: kibabii-minio-staging
+    restart: always
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data_staging:/data
+    command: server /data --console-address ":9001"
+    ports:
+      - "9012:9000"
+      - "9011:9001"
+
+  # Staging Backend (NestJS)
+  backend-staging:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kibabii-backend-staging
+    restart: always
+    depends_on:
+      - db-staging
+      - minio-staging
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://nestuser_staging:nestpassword_staging@db-staging:5432/kibabiinest_staging?schema=public
+      PORT: 9000
+      S3_ENDPOINT: http://minio-staging:9000
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      S3_BUCKET_NAME: kibabii-nest-staging
+      S3_PUBLIC_URL: https://api-staging.kibabii.generexcom.com/s3
+    ports:
+      - "9010:9000"
+    volumes:
+      - ./backend/uploads-staging:/app/uploads
+
+  # Staging Frontend (Next.js)
+  frontend-staging:
+    build:
+      context: ./frontend-web
+      dockerfile: Dockerfile
+    container_name: kibabii-frontend-staging
+    restart: always
+    depends_on:
+      - backend-staging
+    environment:
+      NEXT_PUBLIC_API_URL: https://api-staging.kibabii.generexcom.com
+    ports:
+      - "3010:3000"
+
+volumes:
+  postgres_data_staging:
+  minio_data_staging:
