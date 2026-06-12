@@ -1,6 +1,17 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+import * as Sentry from '@sentry/nestjs';
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV || 'development',
+    tracesSampleRate: 1.0,
+  });
+  console.log('🏁 Sentry initialized');
+}
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma/prisma.service';

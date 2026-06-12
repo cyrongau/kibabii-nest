@@ -9,36 +9,62 @@ import 'services/notification_service.dart';
 import 'core/providers/theme_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'navigation/services/background_tracking_service.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   
   debugPrint('--- APP STARTUP ---');
   
+  // 1. Load env configuration first so it is available for Sentry and other services
   try {
-    // Wrap initialization in a timeout to prevent permanent splash screen hangs
-    await Future.wait([
-      dotenv.load(fileName: "assets/.env").then((_) => debugPrint('Dotenv loaded')),
-      Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ).then((_) => debugPrint('Firebase initialized')),
-      BackgroundTrackingService.initialize().then((_) => debugPrint('Background service initialized')),
-    ]).timeout(const Duration(seconds: 8), onTimeout: () {
-      debugPrint('Warning: Startup initialization timed out after 8s');
-      return [];
-    });
-    
+    await dotenv.load(fileName: "assets/.env");
+    debugPrint('Dotenv loaded');
   } catch (e) {
-    debugPrint('Startup initialization error: $e');
+    debugPrint('Failed to load dotenv: $e');
   }
+
+  final sentryDsn = dotenv.env['SENTRY_DSN'];
   
-  debugPrint('Launching KibabiiNestApp');
-  runApp(
-    const ProviderScope(
-      child: KibabiiNestApp(),
-    ),
-  );
+  // Helper function to run the app with other initializations
+  Future<void> initAndRun() async {
+    try {
+      await Future.wait([
+        Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ).then((_) => debugPrint('Firebase initialized')),
+        BackgroundTrackingService.initialize().then((_) => debugPrint('Background service initialized')),
+      ]).timeout(const Duration(seconds: 8), onTimeout: () {
+        debugPrint('Warning: Startup initialization timed out after 8s');
+        return [];
+      });
+    } catch (e) {
+      debugPrint('Startup initialization error: $e');
+      if (sentryDsn != null && sentryDsn.isNotEmpty) {
+        Sentry.captureException(e);
+      }
+    }
+
+    debugPrint('Launching KibabiiNestApp');
+    runApp(
+      const ProviderScope(
+        child: KibabiiNestApp(),
+      ),
+    );
+  }
+
+  // 2. Initialize Sentry if DSN is set
+  if (sentryDsn != null && sentryDsn.isNotEmpty) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = sentryDsn;
+        options.tracesSampleRate = 1.0;
+      },
+      appRunner: () => initAndRun(),
+    );
+  } else {
+    await initAndRun();
+  }
 }
 
 class KibabiiNestApp extends ConsumerStatefulWidget {

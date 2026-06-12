@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+import * as Sentry from '@sentry/nestjs';
+
 function redactSensitive(body: any): any {
   if (!body || typeof body !== 'object') return body;
   const sensitiveKeys = ['password', 'token', 'accessToken', 'idToken', 'secret', 'code', 'pin', 'key'];
@@ -66,6 +68,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
       this.logger.error(`💥 Internal Exception Context: ${JSON.stringify(logPayload, null, 2)}`);
+      if (process.env.SENTRY_DSN) {
+        Sentry.captureException(exception, {
+          extra: {
+            url: request.url,
+            method: request.method,
+            userId: logPayload.userId,
+            ip: logPayload.ip,
+            body: logPayload.body,
+          },
+        });
+      }
     } else {
       this.logger.warn(`⚠️ Warning Exception Context: ${JSON.stringify(logPayload, null, 2)}`);
     }

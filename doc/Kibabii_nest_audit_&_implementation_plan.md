@@ -296,13 +296,13 @@ Kibabii Nest is a **multi-tenant student housing platform** serving Kibabii Univ
 ### Phase 1: Foundation Hardening (Weeks 1–2)
 **Goal:** Production stability and safety nets
 
-- [ ] Set up GitHub Actions CI/CD (lint → test → build → deploy)
-- [ ] Write real unit tests for critical backend services (Auth, Payments, Bookings, Tenancy)
-- [ ] Implement database backup strategy (pg_dump cron + S3 upload)
-- [ ] Add Sentry/error monitoring to backend + mobile
-- [ ] Implement rate limiting on auth endpoints
-- [ ] Create staging environment (docker-compose.staging.yml)
-- [ ] Wire Firebase push notifications end-to-end (backend → mobile)
+- [x] Set up GitHub Actions CI/CD (lint → test → build → deploy)
+- [x] Write real unit tests for critical backend services (Auth, Payments, Bookings, Tenancy)
+- [x] Implement database backup strategy (pg_dump cron + S3 upload)
+- [x] Add Sentry/error monitoring to backend + mobile
+- [x] Implement rate limiting on auth endpoints
+- [x] Create staging environment (docker-compose.staging.yml)
+- [x] Wire Firebase push notifications end-to-end (backend → mobile)
 
 **Completion Target:** Platform moves from 70% → **78%**
 

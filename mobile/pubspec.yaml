@@ -69,6 +69,7 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   video_player: ^2.11.1
   chewie: ^1.14.0
+  sentry_flutter: ^8.14.2
 
 dev_dependencies:
   flutter_test:
