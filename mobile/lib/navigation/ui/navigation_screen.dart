@@ -28,6 +28,8 @@ class NavigationScreen extends ConsumerStatefulWidget {
 class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   mbx.MapboxMap? _mapboxMap;
   mbx.PolylineAnnotationManager? _polylineAnnotationManager;
+  mbx.PolylineAnnotationManager? _alternateSolidAnnotationManager;
+  mbx.PolylineAnnotationManager? _alternateDottedAnnotationManager;
   mbx.CircleAnnotationManager? _circleAnnotationManager;
   mbx.PolylineAnnotation? _routePolyline;
   bool _isMapReady = false;
@@ -73,23 +75,101 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
     _polylineAnnotationManager = await mapboxMap.annotations
         .createPolylineAnnotationManager();
+    _alternateSolidAnnotationManager = await mapboxMap.annotations
+        .createPolylineAnnotationManager();
+    _alternateDottedAnnotationManager = await mapboxMap.annotations
+        .createPolylineAnnotationManager();
+
+    await _alternateDottedAnnotationManager?.setLineDasharray([3.0, 3.0]);
+
     _circleAnnotationManager = await mapboxMap.annotations
         .createCircleAnnotationManager();
     _syncRouteToMap(ref.read(navigationControllerProvider));
   }
 
   Future<void> _syncRouteToMap(TripStateModel tripState) async {
-    if (!_isMapReady || _polylineAnnotationManager == null || _circleAnnotationManager == null) return;
+    if (!_isMapReady || 
+        _polylineAnnotationManager == null || 
+        _alternateSolidAnnotationManager == null ||
+        _alternateDottedAnnotationManager == null ||
+        _circleAnnotationManager == null) return;
 
-    if (!tripState.hasRoute || tripState.currentRoute!.geometry.isEmpty) {
-      await _polylineAnnotationManager?.deleteAll();
-      await _circleAnnotationManager?.deleteAll();
-      _routePolyline = null;
+    await _polylineAnnotationManager!.deleteAll();
+    await _alternateSolidAnnotationManager!.deleteAll();
+    await _alternateDottedAnnotationManager!.deleteAll();
+    await _circleAnnotationManager!.deleteAll();
+    _routePolyline = null;
+
+    if (!tripState.hasRoute || tripState.availableRoutes.isEmpty) {
       return;
     }
 
-    await _renderRouteLine(tripState.currentRoute!);
-    await _renderManeuvers(tripState.currentRoute!);
+    final availableRoutes = tripState.availableRoutes;
+    final selectedIdx = tripState.selectedRouteIndex;
+    final originalRoute = availableRoutes[0];
+
+    // 1. Render inactive alternate routes first (so active route renders on top)
+    for (int i = 0; i < availableRoutes.length; i++) {
+      if (i == selectedIdx) continue;
+
+      final route = availableRoutes[i];
+      final positions = route.geometry
+          .where((point) =>
+              point.length >= 2 &&
+              point[0].abs() <= 180 &&
+              point[1].abs() <= 90)
+          .map((point) => Position(point[0], point[1]))
+          .toList();
+
+      if (positions.length < 2) continue;
+      final lineGeoJson = LineString(coordinates: positions).toJson();
+
+      final isLonger = route.distance > originalRoute.distance;
+      if (isLonger) {
+        await _alternateDottedAnnotationManager!.create(
+          mbx.PolylineAnnotationOptions(
+            geometry: lineGeoJson,
+            lineColor: Colors.grey.value,
+            lineWidth: 4.0,
+            lineJoin: mbx.LineJoin.ROUND,
+          ),
+        );
+      } else {
+        await _alternateSolidAnnotationManager!.create(
+          mbx.PolylineAnnotationOptions(
+            geometry: lineGeoJson,
+            lineColor: Colors.grey.withOpacity(0.7).value,
+            lineWidth: 4.0,
+            lineJoin: mbx.LineJoin.ROUND,
+          ),
+        );
+      }
+    }
+
+    // 2. Render the active route
+    final activeRoute = availableRoutes[selectedIdx];
+    final activePositions = activeRoute.geometry
+        .where((point) =>
+            point.length >= 2 &&
+            point[0].abs() <= 180 &&
+            point[1].abs() <= 90)
+        .map((point) => Position(point[0], point[1]))
+        .toList();
+
+    if (activePositions.length >= 2) {
+      final activeLineGeoJson = LineString(coordinates: activePositions).toJson();
+      _routePolyline = await _polylineAnnotationManager!.create(
+        mbx.PolylineAnnotationOptions(
+          geometry: activeLineGeoJson,
+          lineColor: Theme.of(context).colorScheme.primary.value,
+          lineWidth: 6.0,
+          lineJoin: mbx.LineJoin.ROUND,
+        ),
+      );
+    }
+
+    // 3. Render maneuvers for the active route
+    await _renderManeuvers(activeRoute);
   }
 
   Future<void> _renderManeuvers(RouteModel route) async {
@@ -110,36 +190,6 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
           circleStrokeColor: 0xFFFFFFFF,
         ));
       }
-    }
-  }
-
-  Future<void> _renderRouteLine(RouteModel route) async {
-    if (_polylineAnnotationManager == null || _mapboxMap == null) return;
-
-    final positions = route.geometry
-        .where((point) =>
-            point.length >= 2 &&
-            point[0].abs() <= 180 &&
-            point[1].abs() <= 90)
-        .map((point) => Position(point[0], point[1]))
-        .toList();
-
-    if (positions.length < 2) return;
-
-    final lineGeoJson = LineString(coordinates: positions).toJson();
-
-    if (_routePolyline == null) {
-      _routePolyline = await _polylineAnnotationManager!.create(
-        mbx.PolylineAnnotationOptions(
-          geometry: lineGeoJson,
-          lineColor: Theme.of(context).colorScheme.primary.value,
-          lineWidth: 5.0,
-          lineJoin: mbx.LineJoin.ROUND,
-        ),
-      );
-    } else {
-      _routePolyline!.geometry = lineGeoJson;
-      await _polylineAnnotationManager!.update(_routePolyline!);
     }
   }
 
@@ -351,6 +401,99 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                   ),
                 ],
               ),
+
+              if (tripState.hasRoute && tripState.availableRoutes.length > 1) ...[
+                const SizedBox(height: 16),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(tripState.availableRoutes.length, (index) {
+                      final route = tripState.availableRoutes[index];
+                      final isSelected = index == tripState.selectedRouteIndex;
+                      final isOriginal = index == 0;
+
+                      final durationMin = (route.duration / 60).round();
+                      final originalDurationMin = (tripState.availableRoutes[0].duration / 60).round();
+                      final diffMin = durationMin - originalDurationMin;
+
+                      String title = '';
+                      if (isOriginal) {
+                        title = 'Route 1 (Fastest)';
+                      } else {
+                        title = 'Route ${index + 1} (${diffMin >= 0 ? "+$diffMin" : "$diffMin"}m)';
+                      }
+
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: GestureDetector(
+                          onTap: () {
+                            ref.read(navigationControllerProvider.notifier).selectRoute(index);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isSelected
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.outline.withOpacity(0.2),
+                                width: 1.5,
+                              ),
+                              boxShadow: isSelected
+                                  ? [
+                                      BoxShadow(
+                                        color: theme.colorScheme.primary.withOpacity(0.3),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 3),
+                                      )
+                                    ]
+                                  : [],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  isSelected ? LucideIcons.checkCircle2 : LucideIcons.circle,
+                                  size: 16,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : theme.colorScheme.onSurfaceVariant,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  title,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 14,
+                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '${(route.distance / 1000).toStringAsFixed(1)} km',
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: isSelected
+                                        ? Colors.white.withOpacity(0.8)
+                                        : theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
 
               if (tripState.hasRoute &&
                   tripState.currentManeuverIndex <

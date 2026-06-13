@@ -14,7 +14,40 @@ class DirectionsService {
     sendTimeout: const Duration(seconds: 15),
   ));
 
-  Future<RouteModel?> getRoute({
+  RouteModel _parseRoute(Map<String, dynamic> routeData) {
+    final geometry = routeData['geometry']['coordinates'] as List;
+    final duration = (routeData['duration'] ?? 0).toDouble();
+    final distance = (routeData['distance'] ?? 0).toDouble();
+    
+    final legs = routeData['legs'] as List;
+    final List<ManeuverModel> maneuvers = [];
+    
+    for (var leg in legs) {
+      final steps = leg['steps'] as List;
+      for (var step in steps) {
+        final maneuver = step['maneuver'];
+        if (maneuver != null) {
+          maneuvers.add(ManeuverModel(
+            type: maneuver['type'] ?? '',
+            modifier: maneuver['modifier'] ?? '',
+            instruction: step['name'] ?? '',
+            distance: (step['distance'] ?? 0).toDouble(),
+            duration: (step['duration'] ?? 0).toDouble(),
+            location: List<double>.from(maneuver['location'] ?? []),
+          ));
+        }
+      }
+    }
+
+    return RouteModel(
+      geometry: geometry.map((e) => List<double>.from(e)).toList(),
+      distance: distance,
+      duration: duration,
+      maneuvers: maneuvers,
+    );
+  }
+
+  Future<List<RouteModel>> getRoutes({
     required double startLng,
     required double startLat,
     required double endLng,
@@ -31,14 +64,14 @@ class DirectionsService {
     if (useCache) {
       final cachedRoute = await RouteCacheService.getCachedRoute(cacheKey);
       if (cachedRoute != null) {
-        return cachedRoute;
+        return [cachedRoute];
       }
     }
 
     // Make API call only once (optimization #1)
     try {
       final url = '$_baseUrl/$profile/$startLng,$startLat;$endLng,$endLat';
-      print('🚗 DirectionsService: Fetching route from $url');
+      print('🚗 DirectionsService: Fetching routes from $url');
       
       final response = await _dio.get(
         url,
@@ -52,60 +85,33 @@ class DirectionsService {
 
       final responseData = response.data;
       if (response.statusCode == 200 && responseData is Map<String, dynamic> && responseData['routes'] != null) {
-        print('✅ DirectionsService: Route received successfully');
+        print('✅ DirectionsService: Routes received successfully');
         final routes = responseData['routes'] as List;
         if (routes.isEmpty) {
           print('⚠️ DirectionsService: Empty routes list');
-          return null;
+          return [];
         }
 
-        final routeData = routes[0];
-        final geometry = routeData['geometry']['coordinates'] as List;
-        final duration = (routeData['duration'] ?? 0).toDouble();
-        final distance = (routeData['distance'] ?? 0).toDouble();
-        
-        final legs = routeData['legs'] as List;
-        final List<ManeuverModel> maneuvers = [];
-        
-        for (var leg in legs) {
-          final steps = leg['steps'] as List;
-          for (var step in steps) {
-            final maneuver = step['maneuver'];
-            if (maneuver != null) {
-              maneuvers.add(ManeuverModel(
-                type: maneuver['type'] ?? '',
-                modifier: maneuver['modifier'] ?? '',
-                instruction: step['name'] ?? '',
-                distance: (step['distance'] ?? 0).toDouble(),
-                duration: (step['duration'] ?? 0).toDouble(),
-                location: List<double>.from(maneuver['location'] ?? []),
-              ));
-            }
-          }
+        final List<RouteModel> parsedRoutes = [];
+        for (var r in routes) {
+          parsedRoutes.add(_parseRoute(Map<String, dynamic>.from(r)));
         }
 
-        final route = RouteModel(
-          geometry: geometry.map((e) => List<double>.from(e)).toList(),
-          distance: distance,
-          duration: duration,
-          maneuvers: maneuvers,
-        );
-
-        // Cache the route (optimization #5)
-        if (useCache) {
+        // Cache the primary route (optimization #5)
+        if (useCache && parsedRoutes.isNotEmpty) {
           await RouteCacheService.cacheRoute(
             originKey: cacheKey,
-            route: route,
+            route: parsedRoutes[0],
             isUrban: true,
             isStaticProperty: true, // Properties don't move
           );
         }
 
-        return route;
+        return parsedRoutes;
       }
       print('❌ DirectionsService: Failed with status ${response.statusCode}');
       print('❌ DirectionsService: Response payload: $responseData');
-      return null;
+      return [];
     } catch (e) {
       if (e is DioException) {
         print('❌ DirectionsService: Network error: ${e.type} - ${e.message}');
@@ -115,8 +121,27 @@ class DirectionsService {
       } else {
         print('❌ DirectionsService: Unexpected error: $e');
       }
-      return null;
+      return [];
     }
+  }
+
+  Future<RouteModel?> getRoute({
+    required double startLng,
+    required double startLat,
+    required double endLng,
+    required double endLat,
+    String profile = 'driving',
+    bool useCache = true,
+  }) async {
+    final routes = await getRoutes(
+      startLng: startLng,
+      startLat: startLat,
+      endLng: endLng,
+      endLat: endLat,
+      profile: profile,
+      useCache: useCache,
+    );
+    return routes.isNotEmpty ? routes[0] : null;
   }
 
   Future<RouteModel?> getWalkingRoute({
@@ -127,6 +152,23 @@ class DirectionsService {
     bool useCache = true,
   }) async {
     return getRoute(
+      startLng: startLng,
+      startLat: startLat,
+      endLng: endLng,
+      endLat: endLat,
+      profile: 'walking',
+      useCache: useCache,
+    );
+  }
+
+  Future<List<RouteModel>> getWalkingRoutes({
+    required double startLng,
+    required double startLat,
+    required double endLng,
+    required double endLat,
+    bool useCache = true,
+  }) async {
+    return getRoutes(
       startLng: startLng,
       startLat: startLat,
       endLng: endLng,

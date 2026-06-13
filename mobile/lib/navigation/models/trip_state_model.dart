@@ -25,6 +25,8 @@ class TripStateModel {
   final double? destinationLng;
   final String? destinationName;
   final double? bearing;
+  final List<RouteModel> availableRoutes;
+  final int selectedRouteIndex;
 
   TripStateModel({
     this.state = TripState.idle,
@@ -39,6 +41,8 @@ class TripStateModel {
     this.destinationLng,
     this.destinationName,
     this.bearing,
+    this.availableRoutes = const [],
+    this.selectedRouteIndex = 0,
   });
 
   TripStateModel copyWith({
@@ -54,6 +58,8 @@ class TripStateModel {
     double? destinationLng,
     String? destinationName,
     double? bearing,
+    List<RouteModel>? availableRoutes,
+    int? selectedRouteIndex,
   }) {
     return TripStateModel(
       state: state ?? this.state,
@@ -68,6 +74,8 @@ class TripStateModel {
       destinationLng: destinationLng ?? this.destinationLng,
       destinationName: destinationName ?? this.destinationName,
       bearing: bearing ?? this.bearing,
+      availableRoutes: availableRoutes ?? this.availableRoutes,
+      selectedRouteIndex: selectedRouteIndex ?? this.selectedRouteIndex,
     );
   }
 

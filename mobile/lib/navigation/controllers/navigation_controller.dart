@@ -115,9 +115,9 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
       // 2. Fetching Route phase
       debugPrint('🏁 Navigation: Fetching route from DirectionsService (15s timeout)...');
-      RouteModel? route;
+      List<RouteModel> routes = [];
       try {
-        route = await _directionsService.getWalkingRoute(
+        routes = await _directionsService.getWalkingRoutes(
           startLng: currentPosition.longitude,
           startLat: currentPosition.latitude,
           endLng: destinationLng,
@@ -127,7 +127,7 @@ class NavigationController extends StateNotifier<TripStateModel> {
         debugPrint('❌ Navigation: Route fetch timed out or failed: $e');
       }
 
-      if (route == null) {
+      if (routes.isEmpty) {
         debugPrint('❌ Navigation: Route fetching failed');
         state = state.copyWith(
           state: TripState.error,
@@ -136,18 +136,23 @@ class NavigationController extends StateNotifier<TripStateModel> {
         return false;
       }
 
-      debugPrint('✅ Navigation: Route found! Distance: ${route.distance}m');
+      debugPrint('✅ Navigation: ${routes.length} route(s) found! Primary distance: ${routes[0].distance}m');
 
-      // Bridge the gap: inject current position to start of route line
-      if (route.geometry.isNotEmpty) {
-        route.geometry.insert(0, [currentPosition.longitude, currentPosition.latitude]);
+      // Bridge the gap: inject current position to start of all route lines
+      for (var r in routes) {
+        if (r.geometry.isNotEmpty) {
+          r.geometry.insert(0, [currentPosition.longitude, currentPosition.latitude]);
+        }
       }
 
+      final primaryRoute = routes[0];
       state = state.copyWith(
         state: TripState.navigating,
-        currentRoute: route,
-        distanceRemaining: route.distance,
-        durationRemaining: route.duration,
+        availableRoutes: routes,
+        selectedRouteIndex: 0,
+        currentRoute: primaryRoute,
+        distanceRemaining: primaryRoute.distance,
+        durationRemaining: primaryRoute.duration,
         currentManeuverIndex: 0,
         isOffRoute: false,
       );
@@ -403,7 +408,7 @@ class NavigationController extends StateNotifier<TripStateModel> {
     _isRerouting = true;
     _lastRerouteTime = DateTime.now();
 
-    final newRoute = await _directionsService.getWalkingRoute(
+    final newRoutes = await _directionsService.getWalkingRoutes(
       startLng: state.currentPosition!.longitude,
       startLat: state.currentPosition!.latitude,
       endLng: state.destinationLng!,
@@ -413,8 +418,18 @@ class NavigationController extends StateNotifier<TripStateModel> {
 
     _isRerouting = false;
 
-    if (newRoute != null) {
+    if (newRoutes.isNotEmpty) {
+      // Bridge the gap for all new routes
+      for (var r in newRoutes) {
+        if (r.geometry.isNotEmpty) {
+          r.geometry.insert(0, [state.currentPosition!.longitude, state.currentPosition!.latitude]);
+        }
+      }
+
+      final newRoute = newRoutes[0];
       state = state.copyWith(
+        availableRoutes: newRoutes,
+        selectedRouteIndex: 0,
         currentRoute: newRoute,
         distanceRemaining: newRoute.distance,
         durationRemaining: newRoute.duration,
@@ -424,6 +439,38 @@ class NavigationController extends StateNotifier<TripStateModel> {
       _checkManeuverDistance();
       _speakInstruction('New route calculated. Distance ${newRoute.formattedDistance}.');
     }
+  }
+
+  void selectRoute(int index) {
+    if (index < 0 || index >= state.availableRoutes.length) {
+      debugPrint('⚠️ NavigationController: Invalid route index: $index');
+      return;
+    }
+
+    final selectedRoute = state.availableRoutes[index];
+    debugPrint('🏁 NavigationController: Switching to route $index. Distance: ${selectedRoute.distance}m');
+
+    final currentPos = state.currentPosition;
+    final double distRemaining = currentPos != null
+        ? _rerouteService.calculateDistanceToDestination(currentPos, selectedRoute)
+        : selectedRoute.distance;
+
+    final double durRemaining = currentPos != null
+        ? _calculateRemainingDuration(currentPos, distRemaining)
+        : selectedRoute.duration;
+
+    state = state.copyWith(
+      selectedRouteIndex: index,
+      currentRoute: selectedRoute,
+      distanceRemaining: distRemaining,
+      durationRemaining: durRemaining,
+      currentManeuverIndex: 0,
+      isOffRoute: false,
+    );
+
+    _checkManeuverDistance();
+    _speakInstruction('Route changed. Follow the new path.');
+    _speakCurrentManeuver();
   }
 
   void _arrived() {
