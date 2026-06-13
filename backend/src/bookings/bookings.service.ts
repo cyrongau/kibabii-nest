@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { BookingStatus } from '@prisma/client';
+import { BookingStatus, TransactionType, TransactionStatus } from '@prisma/client';
 
 @Injectable()
 export class BookingsService {
@@ -193,10 +193,39 @@ export class BookingsService {
           });
         }
 
+        // Deduct 5% commission
+        const grossAmount = booking.amount;
+        const commission = grossAmount * 0.05;
+        const netAmount = grossAmount - commission;
+
         // Update Landlord Balance
         await tx.user.update({
           where: { id: booking.propertyUnit.property.landlordId },
-          data: { balance: { increment: booking.amount } }
+          data: { balance: { increment: netAmount } }
+        });
+
+        // Create positive TRANSFER transaction
+        await tx.walletTransaction.create({
+          data: {
+            userId: booking.propertyUnit.property.landlordId,
+            amount: grossAmount,
+            type: TransactionType.TRANSFER,
+            status: TransactionStatus.COMPLETED,
+            reference: `BK-TRF-${booking.id}`,
+            description: `Booking approval gross transfer: ${booking.propertyUnit.property.name}`
+          }
+        });
+
+        // Create negative COMMISSION transaction
+        await tx.walletTransaction.create({
+          data: {
+            userId: booking.propertyUnit.property.landlordId,
+            amount: -commission,
+            type: TransactionType.COMMISSION,
+            status: TransactionStatus.COMPLETED,
+            reference: `BK-COM-${booking.id}`,
+            description: `Booking approval platform commission (5%)`
+          }
         });
 
         // Return updated booking with same structure as before

@@ -3,6 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import '../../../services/api_service.dart';
 
 class PaymentHistoryScreen extends StatelessWidget {
   final List<dynamic> payments;
@@ -111,12 +115,67 @@ class PaymentHistoryScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      if (isPaid) ...[
+                        const SizedBox(width: 12),
+                        IconButton(
+                          icon: Icon(LucideIcons.share2, color: colorScheme.primary),
+                          onPressed: () => _downloadAndShareReceipt(context, p),
+                        ),
+                      ],
                     ],
                   ),
                 );
               },
             ),
     );
+  }
+
+  Future<void> _downloadAndShareReceipt(BuildContext context, Map<String, dynamic> payment) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(color: Color(0xFF3B82F6)),
+      ),
+    );
+
+    try {
+      final api = ApiService();
+      final bytes = await api.downloadReceiptPdf(payment['id']);
+      
+      // Dismiss loading dialog safely
+      if (context.mounted) Navigator.of(context).pop();
+
+      if (bytes == null || bytes.isEmpty) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to download receipt.')),
+          );
+        }
+        return;
+      }
+
+      // Save the PDF locally
+      final tempDir = await getTemporaryDirectory();
+      final dateStr = DateFormat('yyyy_MM').format(DateTime.parse(payment['dueDate']));
+      final filePath = '${tempDir.path}/Receipt_$dateStr.pdf';
+      final file = File(filePath);
+      await file.writeAsBytes(bytes);
+
+      // Share the PDF
+      await Share.shareXFiles(
+        [XFile(filePath, mimeType: 'application/pdf')],
+        text: 'Receipt for Rent Payment - ${DateFormat('MMMM yyyy').format(DateTime.parse(payment['dueDate']))}',
+      );
+    } catch (e) {
+      if (context.mounted) {
+        // Dismiss loading dialog if still open
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error downloading receipt: $e')),
+        );
+      }
+    }
   }
 
   Widget _buildEmptyState(ColorScheme colorScheme) {

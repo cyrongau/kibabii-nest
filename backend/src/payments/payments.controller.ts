@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Param, Body, UseGuards, Request, Query } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Param, Body, UseGuards, Request, Query, Res } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -103,6 +103,42 @@ export class PaymentsController {
   @UseGuards(JwtAuthGuard)
   async createManualPayment(@Request() req: any, @Body() data: any) {
     return this.paymentsService.createManualPayment(req.user.userId, data);
+  }
+
+  @Get('export/csv')
+  @UseGuards(JwtAuthGuard)
+  async exportCsv(@Request() req: any, @Res() res: any) {
+    const buffer = await this.paymentsService.exportCsv(req.user.userId, req.user.role);
+    res.set({
+      'Content-Type': 'text/csv',
+      'Content-Disposition': 'attachment; filename="payments-report.csv"',
+      'Content-Length': buffer.length,
+    });
+    res.end(buffer);
+  }
+
+  @Get('export/pdf')
+  @UseGuards(JwtAuthGuard)
+  async exportPdf(@Request() req: any, @Res() res: any) {
+    const buffer = await this.paymentsService.exportPdf(req.user.userId, req.user.role);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename="payments-report.pdf"',
+      'Content-Length': buffer.length,
+    });
+    res.end(buffer);
+  }
+
+  @Get(':id/receipt-pdf')
+  @UseGuards(JwtAuthGuard)
+  async getReceiptPdf(@Param('id') id: string, @Res() res: any) {
+    const buffer = await this.paymentsService.getReceiptPdf(id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename="payment-receipt.pdf"',
+      'Content-Length': buffer.length,
+    });
+    res.end(buffer);
   }
 
   @Get('history')

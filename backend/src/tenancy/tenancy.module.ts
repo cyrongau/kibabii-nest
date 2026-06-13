@@ -9,6 +9,6 @@ import { UploadsModule } from '../uploads/uploads.module';
   imports: [PrismaModule, UploadsModule],
   providers: [TenancyService, PdfService],
   controllers: [TenancyController],
-  exports: [TenancyService],
+  exports: [TenancyService, PdfService],
 })
 export class TenancyModule {}

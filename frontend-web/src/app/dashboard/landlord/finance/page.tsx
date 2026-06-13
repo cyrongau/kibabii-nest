@@ -48,6 +48,27 @@ export default function LandlordFinancePage() {
     fetchData();
   }, []);
 
+  const handleExport = async (type: 'csv' | 'pdf') => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/payments/export/${type}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Export failed');
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `finance-report.${type}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.error('Failed to export:', error);
+      alert('Export failed. Please try again.');
+    }
+  };
+
   const handleWithdrawRequest = async () => {
     if (!withdrawAmount || parseFloat(withdrawAmount) <= 0) return;
     setIsWithdrawing(true);
@@ -142,6 +163,20 @@ export default function LandlordFinancePage() {
               <h1 className="text-3xl font-black text-foreground tracking-tight">Finance Dashboard</h1>
               <p className="text-muted-foreground text-sm font-medium">Track payments, revenue, and tenant finances</p>
             </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => handleExport('csv')}
+              className="bg-card text-foreground border border-border-subtle px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-all"
+            >
+              Export CSV
+            </button>
+            <button 
+              onClick={() => handleExport('pdf')}
+              className="bg-primary text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all brand-shadow"
+            >
+              Export PDF
+            </button>
           </div>
         </div>
       </div>
@@ -280,8 +315,9 @@ export default function LandlordFinancePage() {
                       <th className="text-left px-8 py-6">Tenant</th>
                       <th className="text-left px-8 py-6">Property</th>
                       <th className="text-left px-8 py-6">Period</th>
-                      <th className="text-right px-8 py-6">Amount Due</th>
-                      <th className="text-right px-8 py-6">Penalty</th>
+                      <th className="text-right px-8 py-6">Gross Paid / Due</th>
+                      <th className="text-right px-8 py-6">Commission (5%)</th>
+                      <th className="text-right px-8 py-6">Net Payout</th>
                       <th className="text-center px-8 py-6">Status</th>
                       <th className="text-center px-8 py-6">Actions</th>
                     </tr>
@@ -315,14 +351,21 @@ export default function LandlordFinancePage() {
                           </div>
                         </td>
                         <td className="px-8 py-6 text-right">
-                          <div className="font-black text-foreground text-sm tracking-tight">Ksh {payment.amountDue.toLocaleString()}</div>
+                          <div className="font-black text-foreground text-sm tracking-tight">Ksh {(payment.amountPaid || payment.amountDue).toLocaleString()}</div>
                           {payment.discountAmount > 0 && (
                             <div className="text-xs text-emerald-500 font-bold">-Ksh {payment.discountAmount.toLocaleString()} discount</div>
                           )}
                         </td>
                         <td className="px-8 py-6 text-right">
-                          {payment.penaltyAmount > 0 ? (
-                            <span className="font-bold text-red-500 text-sm">+Ksh {payment.penaltyAmount.toLocaleString()}</span>
+                          {payment.status === 'PAID' || payment.status === 'VERIFIED' ? (
+                            <span className="font-bold text-red-500 text-sm">Ksh {((payment.amountPaid) * 0.05).toLocaleString()}</span>
+                          ) : (
+                            <span className="text-muted-foreground/30">—</span>
+                          )}
+                        </td>
+                        <td className="px-8 py-6 text-right">
+                          {payment.status === 'PAID' || payment.status === 'VERIFIED' ? (
+                            <span className="font-black text-emerald-500 text-sm">Ksh {((payment.amountPaid) * 0.95).toLocaleString()}</span>
                           ) : (
                             <span className="text-muted-foreground/30">—</span>
                           )}

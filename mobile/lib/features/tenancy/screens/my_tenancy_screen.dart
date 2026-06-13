@@ -25,6 +25,7 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
   Map<String, dynamic>? _tenancy;
   List<dynamic> _announcements = [];
   bool _isLoading = true;
+  bool _isTogglingBreakHold = false;
 
   @override
   void initState() {
@@ -185,6 +186,9 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
               _buildStatusCard(colorScheme, isDark),
               const SizedBox(height: 24),
 
+              // 2b. Break Period Hold Toggle
+              _buildBreakPeriodToggle(colorScheme, isDark),
+
               // 3. Quick Actions
               _buildQuickActions(colorScheme, isDark),
               const SizedBox(height: 32),
@@ -329,6 +333,130 @@ class _MyTenancyScreenState extends State<MyTenancyScreen> {
         const SizedBox(height: 4),
         Text(value, style: GoogleFonts.outfit(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
       ],
+    );
+  }
+
+  Widget _buildBreakPeriodToggle(ColorScheme colorScheme, bool isDark) {
+    if (_tenancy == null || _tenancy!['breakPeriodEnabled'] != true) {
+      return const SizedBox.shrink();
+    }
+
+    final String status = _tenancy!['status'] ?? 'ACTIVE';
+    final bool isOnHold = status == 'BREAK_HOLD';
+    final bool isEligible = status == 'ACTIVE' || status == 'BREAK_HOLD';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: colorScheme.onSurface.withOpacity(0.05)),
+        boxShadow: isDark ? [] : [
+          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF6366F1).withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(LucideIcons.calendarOff, color: Color(0xFF6366F1), size: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Long Break Rent Hold',
+                  style: GoogleFonts.outfit(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  isOnHold 
+                      ? 'Currently active. Rent reduced to ${_tenancy!['breakPeriodRentPct']}%.'
+                      : 'Reduce rent to ${_tenancy!['breakPeriodRentPct']}% during long holidays.',
+                  style: GoogleFonts.outfit(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onSurface.withOpacity(0.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (_isTogglingBreakHold)
+            const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF6366F1)),
+            )
+          else
+            Switch.adaptive(
+              value: isOnHold,
+              activeColor: const Color(0xFF6366F1),
+              onChanged: !isEligible ? null : (bool value) async {
+                setState(() => _isTogglingBreakHold = true);
+                try {
+                  final String tenancyId = _tenancy!['id'];
+                  bool success;
+                  if (value) {
+                    success = await _api.breakHold(tenancyId);
+                  } else {
+                    success = await _api.endBreakHold(tenancyId);
+                  }
+
+                  if (success) {
+                    await _loadTenancy();
+                    if (mounted) {
+                      AppModals.showCustom(
+                        context: context,
+                        title: 'Success',
+                        child: Text(
+                          value 
+                              ? 'Break period hold activated. Your rent has been adjusted for the break months.'
+                              : 'Break period hold deactivated. Normal rent rates restored.',
+                          style: GoogleFonts.outfit(),
+                        ),
+                      );
+                    }
+                  } else {
+                    if (mounted) {
+                      AppModals.showCustom(
+                        context: context,
+                        title: 'Error',
+                        child: Text(
+                          'Could not modify break period hold. Please verify tenancy status.',
+                          style: GoogleFonts.outfit(),
+                        ),
+                      );
+                    }
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    AppModals.showCustom(
+                      context: context,
+                      title: 'Error',
+                      child: Text('An unexpected error occurred: $e', style: GoogleFonts.outfit()),
+                    );
+                  }
+                } finally {
+                  if (mounted) {
+                    setState(() => _isTogglingBreakHold = false);
+                  }
+                }
+              },
+            ),
+        ],
+      ),
     );
   }
 

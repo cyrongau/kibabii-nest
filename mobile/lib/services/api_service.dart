@@ -606,6 +606,52 @@ class ApiService {
     return response.statusCode == 201 || response.statusCode == 200;
   }
 
+  Future<bool> breakHold(String tenancyId) async {
+    final token = await getToken();
+    if (token == null) return false;
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/tenancy/$tenancyId/break-hold'),
+      headers: _authHeaders(token),
+    );
+
+    return response.statusCode == 201 || response.statusCode == 200;
+  }
+
+  Future<bool> endBreakHold(String tenancyId) async {
+    final token = await getToken();
+    if (token == null) return false;
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/tenancy/$tenancyId/end-break-hold'),
+      headers: _authHeaders(token),
+    );
+
+    return response.statusCode == 201 || response.statusCode == 200;
+  }
+
+  Future<List<int>?> downloadReceiptPdf(String paymentId) async {
+    final token = await getToken();
+    if (token == null) return null;
+
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/payments/$paymentId/receipt-pdf'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 20));
+
+      if (response.statusCode == 200) {
+        return response.bodyBytes;
+      }
+    } catch (e) {
+      print('Download receipt error: $e');
+    }
+    return null;
+  }
+
+
   Future<bool> createServiceRequest({
     required String propertyId,
     required String title,

@@ -95,6 +95,26 @@ export default function AdminFinanceOverwatch() {
   const [isApproveOpen, setIsApproveOpen] = useState(false);
   const [isRejectOpen, setIsRejectOpen] = useState(false);
 
+  const handleExport = async (type: 'csv' | 'pdf') => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/payments/export/${type}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Export failed');
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `admin-finance-report.${type}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      showToast('Failed to export financial report', 'error');
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -196,16 +216,26 @@ export default function AdminFinanceOverwatch() {
           <h1 className="text-4xl font-black text-foreground tracking-tighter">Finance Overwatch Matrix</h1>
           <p className="text-muted-foreground font-medium max-w-2xl leading-relaxed text-sm lg:text-base">Audit global revenue flows, payout distributions, and cross-sector transaction integrity.</p>
         </div>
-        <div className="flex gap-6 w-full md:w-auto">
-           <button className="flex-1 md:flex-none px-10 py-5 bg-foreground text-background rounded-[1.75rem] text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:bg-primary hover:text-white transition-all duration-500 shadow-soft-2xl brand-shadow group">
-             <Download size={20} className="group-hover:translate-y-1 transition-transform" />
-             Export Financial Intelligence
+        <div className="flex gap-4 w-full md:w-auto">
+           <button 
+             onClick={() => handleExport('csv')}
+             className="px-8 py-5 bg-card text-foreground border border-border-subtle rounded-[1.75rem] text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-muted transition-all shadow-soft-sm group"
+           >
+             <Download size={16} />
+             Export CSV
+           </button>
+           <button 
+             onClick={() => handleExport('pdf')}
+             className="px-8 py-5 bg-primary text-white rounded-[1.75rem] text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-primary/90 transition-all shadow-soft-2xl brand-shadow group"
+           >
+             <Download size={16} />
+             Export PDF
            </button>
         </div>
       </header>
 
       {/* Summary Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
         <StatCard 
           label="Cumulative Revenue" 
           value={`Ksh ${(summary?.totalRevenue || 0).toLocaleString()}`} 
@@ -213,6 +243,14 @@ export default function AdminFinanceOverwatch() {
           positive={true}
           icon={<TrendingUp size={24} />} 
           badgeClass="badge-emerald"
+        />
+        <StatCard 
+          label="Platform Commission (5%)" 
+          value={`Ksh ${(summary?.totalCommission || 0).toLocaleString()}`} 
+          trend="REVENUE SHARE" 
+          positive={true}
+          icon={<TrendingUp size={24} />} 
+          badgeClass="badge-blue"
         />
         <StatCard 
           label="Risk Exposure" 
@@ -303,7 +341,9 @@ export default function AdminFinanceOverwatch() {
                 <tr className="bg-muted/50 text-muted-foreground/60">
                   <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle">Sovereign Entity / Node</th>
                   <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle">Accounting Cycle</th>
-                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle">Valuation Matrix</th>
+                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle">Gross Paid</th>
+                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle">Comm. (5%)</th>
+                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle">Landlord Payout</th>
                   <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle">Credential Signature</th>
                   <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle">Integrity Status</th>
                   <th className="px-12 py-8 text-[10px] font-black uppercase tracking-widest border-b border-border-subtle text-right">Surveillance</th>
@@ -331,6 +371,12 @@ export default function AdminFinanceOverwatch() {
                     <td className="px-12 py-8">
                       <div className="text-base font-black text-foreground tracking-tight group-hover:text-primary transition-colors">Ksh {(p.amountPaid || p.amountDue).toLocaleString()}</div>
                       <div className="text-[10px] font-black text-muted-foreground/30 uppercase tracking-[0.2em] mt-1 italic">Due: {new Date(p.dueDate).toLocaleDateString()}</div>
+                    </td>
+                    <td className="px-12 py-8 text-[11px] font-black text-red-500">
+                      {p.status === 'PAID' || p.status === 'VERIFIED' ? `Ksh ${(p.amountPaid * 0.05).toLocaleString()}` : '—'}
+                    </td>
+                    <td className="px-12 py-8 text-[11px] font-black text-emerald-500">
+                      {p.status === 'PAID' || p.status === 'VERIFIED' ? `Ksh ${(p.amountPaid * 0.95).toLocaleString()}` : '—'}
                     </td>
                     <td className="px-12 py-8 font-mono text-[11px] text-muted-foreground/40 font-black uppercase tracking-[0.2em]">
                       {p.mpesaReceiptNumber || p.receipt?.aiTransactionId || 'LEGACY_TRANS'}

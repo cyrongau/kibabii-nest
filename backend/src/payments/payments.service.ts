@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { PaymentRecordStatus, TransactionType, TransactionStatus } from '@prisma/client';
 import { NotificationsService } from '../notifications/notifications.service';
 import { S3Service } from '../uploads/s3.service';
+import { PdfService } from '../tenancy/pdf.service';
 import { callOpenRouter, parseAIJson } from '../common/ai-utils';
 import axios from 'axios';
 
@@ -14,7 +15,8 @@ export class PaymentsService {
     private prisma: PrismaService,
     @Inject(forwardRef(() => NotificationsService))
     private notifications: NotificationsService,
-    private s3Service: S3Service
+    private s3Service: S3Service,
+    private pdfService: PdfService
   ) {}
 
   /**
@@ -241,6 +243,9 @@ export class PaymentsService {
       
       if (!landlordId) throw new BadRequestException('Tenancy or property details missing');
 
+      const commission = amountPaid * 0.05;
+      const netAmount = amountPaid - commission;
+
       await this.prisma.$transaction([
         this.prisma.payment.update({
           where: { id: paymentId },
@@ -256,7 +261,27 @@ export class PaymentsService {
         }),
         this.prisma.user.update({
           where: { id: landlordId },
-          data: { balance: { increment: amountPaid } }
+          data: { balance: { increment: netAmount } }
+        }),
+        this.prisma.walletTransaction.create({
+          data: {
+            userId: landlordId,
+            amount: amountPaid,
+            type: TransactionType.TRANSFER,
+            status: TransactionStatus.COMPLETED,
+            reference: `MAN-TRF-${paymentId}`,
+            description: `Manual receipt verified gross transfer`
+          }
+        }),
+        this.prisma.walletTransaction.create({
+          data: {
+            userId: landlordId,
+            amount: -commission,
+            type: TransactionType.COMMISSION,
+            status: TransactionStatus.COMPLETED,
+            reference: `MAN-COM-${paymentId}`,
+            description: `Manual receipt verification platform commission (5%)`
+          }
         })
       ]);
 
@@ -336,9 +361,36 @@ export class PaymentsService {
 
     if (payments.length > 0) {
       const totalPaid = payments.reduce((sum, p) => sum + p.amountPaid, 0);
+      const commission = totalPaid * 0.05;
+      const netAmount = totalPaid - commission;
+
       await this.prisma.user.update({
         where: { id: landlordId },
-        data: { balance: { increment: totalPaid } }
+        data: { balance: { increment: netAmount } }
+      });
+
+      // Create gross transfer transaction
+      await this.prisma.walletTransaction.create({
+        data: {
+          userId: landlordId,
+          amount: totalPaid,
+          type: TransactionType.TRANSFER,
+          status: TransactionStatus.COMPLETED,
+          reference: `UPF-TRF-${tenancyId}-${new Date().getTime()}`,
+          description: `Upfront multi-month payment gross transfer`
+        }
+      });
+
+      // Create commission debit transaction
+      await this.prisma.walletTransaction.create({
+        data: {
+          userId: landlordId,
+          amount: -commission,
+          type: TransactionType.COMMISSION,
+          status: TransactionStatus.COMPLETED,
+          reference: `UPF-COM-${tenancyId}-${new Date().getTime()}`,
+          description: `Upfront multi-month payment platform commission (5%)`
+        }
       });
     }
 
@@ -537,6 +589,9 @@ export class PaymentsService {
               landlordId = payment.booking.propertyUnit.property.landlordId;
             }
 
+            const commission = amountPaid * 0.05;
+            const netAmount = amountPaid - commission;
+
             await this.prisma.$transaction([
               this.prisma.payment.update({
                 where: { id: payment.id },
@@ -552,7 +607,27 @@ export class PaymentsService {
               ...(landlordId ? [
                 this.prisma.user.update({
                   where: { id: landlordId },
-                  data: { balance: { increment: amountPaid } }
+                  data: { balance: { increment: netAmount } }
+                }),
+                this.prisma.walletTransaction.create({
+                  data: {
+                    userId: landlordId,
+                    amount: amountPaid,
+                    type: TransactionType.TRANSFER,
+                    status: TransactionStatus.COMPLETED,
+                    reference: `MPE-TRF-${payment.id}`,
+                    description: `M-Pesa payment gross transfer`
+                  }
+                }),
+                this.prisma.walletTransaction.create({
+                  data: {
+                    userId: landlordId,
+                    amount: -commission,
+                    type: TransactionType.COMMISSION,
+                    status: TransactionStatus.COMPLETED,
+                    reference: `MPE-COM-${payment.id}`,
+                    description: `M-Pesa payment platform commission (5%)`
+                  }
                 })
               ] : [])
             ]);
@@ -792,7 +867,7 @@ export class PaymentsService {
       ...(landlordId ? [
         this.prisma.user.update({
           where: { id: landlordId },
-          data: { balance: { increment: amountToPay } }
+          data: { balance: { increment: amountToPay - (amountToPay * 0.05) } }
         }),
         this.prisma.walletTransaction.create({
           data: {
@@ -800,8 +875,18 @@ export class PaymentsService {
             amount: amountToPay,
             type: TransactionType.TRANSFER,
             status: TransactionStatus.COMPLETED,
-            description: `Rent payment received from tenant`,
+            description: `Rent payment received from tenant (gross)`,
             reference: `REC-WAL-${payment.id}`
+          }
+        }),
+        this.prisma.walletTransaction.create({
+          data: {
+            userId: landlordId,
+            amount: -(amountToPay * 0.05),
+            type: TransactionType.COMMISSION,
+            status: TransactionStatus.COMPLETED,
+            description: `Wallet payment platform commission (5%)`,
+            reference: `COM-WAL-${payment.id}`
           }
         })
       ] : [])
@@ -846,8 +931,11 @@ export class PaymentsService {
     const overdueCount = allPayments.filter(p => p.status === 'OVERDUE').length;
     const submittedCount = allPayments.filter(p => p.status === 'SUBMITTED').length;
 
+    const totalCommission = totalRevenue * 0.05;
+
     return {
       totalRevenue,
+      totalCommission,
       overdueAmount,
       pendingCount,
       overdueCount,
@@ -935,5 +1023,94 @@ export class PaymentsService {
       this.logger.error('M-Pesa status query failed:', error.response?.data || error.message);
       return { success: false, status: 'FAILED', message: error.response?.data?.errorMessage || error.message };
     }
+  }
+
+  async exportCsv(userId: string, role: string): Promise<Buffer> {
+    let payments: any[] = [];
+    if (role === 'ADMIN') {
+      payments = await this.findAllAdmin();
+    } else {
+      payments = await this.findByLandlord(userId);
+    }
+
+    const headers = ['Date', 'Tenant Name', 'Property/Unit', 'Status', 'Amount Paid', 'Discount', 'Penalty', 'Total Paid'];
+    const rows = payments.map(p => {
+      const tenantName = p.tenancy?.tenant?.name || p.booking?.student?.name || 'N/A';
+      const propertyUnitName = p.tenancy?.propertyUnit 
+        ? `${p.tenancy.propertyUnit.property.name} - Unit ${p.tenancy.propertyUnit.name}`
+        : p.booking?.propertyUnit
+        ? `${p.booking.propertyUnit.property.name} - Unit ${p.booking.propertyUnit.name}`
+        : 'N/A';
+      const paidDate = p.paidDate ? new Date(p.paidDate).toLocaleDateString('en-GB') : 'N/A';
+      return [
+        paidDate,
+        tenantName,
+        propertyUnitName,
+        p.status,
+        p.amountPaid || 0,
+        p.discountAmount || 0,
+        p.penaltyAmount || 0,
+        (p.amountPaid || 0) + (p.penaltyAmount || 0)
+      ];
+    });
+
+    const csvContent = [headers.join(','), ...rows.map(r => r.map(val => `"${val}"`).join(','))].join('\n');
+    return Buffer.from(csvContent, 'utf-8');
+  }
+
+  async exportPdf(userId: string, role: string): Promise<Buffer> {
+    let payments: any[] = [];
+    let title = 'Financial Report';
+
+    if (role === 'ADMIN') {
+      payments = await this.findAllAdmin();
+      title = 'Platform Financial Report';
+    } else {
+      payments = await this.findByLandlord(userId);
+      title = 'Landlord Financial Report';
+    }
+
+    return this.pdfService.generateFinancialReport({
+      title,
+      payments
+    });
+  }
+
+  async getReceiptPdf(paymentId: string): Promise<Buffer> {
+    const payment = await this.prisma.payment.findUnique({
+      where: { id: paymentId },
+      include: {
+        tenancy: {
+          include: {
+            tenant: { select: { name: true } },
+            propertyUnit: { include: { property: true, type: true } }
+          }
+        },
+        booking: {
+          include: {
+            student: { select: { name: true } },
+            propertyUnit: { include: { property: true, type: true } }
+          }
+        }
+      }
+    });
+
+    if (!payment) throw new NotFoundException('Payment not found');
+
+    const tenantName = payment.tenancy?.tenant?.name || payment.booking?.student?.name || 'Tenant';
+    const propertyName = payment.tenancy?.propertyUnit?.property?.name || payment.booking?.propertyUnit?.property?.name || 'Property';
+    const unitName = payment.tenancy?.unitName || payment.tenancy?.propertyUnit?.type?.name || payment.booking?.propertyUnit?.type?.name || 'N/A';
+
+    return this.pdfService.generatePaymentReceipt({
+      receiptNumber: payment.mpesaReceiptNumber || `REC-${payment.id}`,
+      tenantName,
+      propertyName,
+      unitName,
+      amountPaid: payment.amountPaid || payment.amountDue,
+      paymentDate: payment.paidDate || new Date(),
+      month: payment.month || 1,
+      year: payment.year || 2026,
+      mpesaReceipt: payment.mpesaReceiptNumber || undefined
+    });
   }
 }

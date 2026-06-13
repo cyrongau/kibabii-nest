@@ -1,13 +1,72 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Users, Search, Filter, Mail, Phone, Home, Clock, FileText, ChevronRight, Loader2, UserCheck, History } from 'lucide-react';
+import { Users, Search, Filter, Mail, Phone, Home, Clock, FileText, ChevronRight, Loader2, UserCheck, History, Sliders, Calendar } from 'lucide-react';
 
 export default function LandlordTenantsPage() {
   const [tenancies, setTenancies] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'active' | 'archive'>('active');
+  const [selectedTenancy, setSelectedTenancy] = useState<any>(null);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+  const [isConfigSubmitting, setIsConfigSubmitting] = useState(false);
+  const [configForm, setConfigForm] = useState({
+    paymentDeadlineDay: 5,
+    latePenaltyPerDay: 0,
+    upfrontDiscountPct: 0,
+    breakPeriodEnabled: false,
+    breakPeriodRentPct: 50,
+    breakPeriodStart: '',
+    breakPeriodEnd: ''
+  });
+
+  const handleConfigureClick = (tenancy: any) => {
+    setSelectedTenancy(tenancy);
+    setConfigForm({
+      paymentDeadlineDay: tenancy.paymentDeadlineDay ?? 5,
+      latePenaltyPerDay: tenancy.latePenaltyPerDay ?? 0,
+      upfrontDiscountPct: tenancy.upfrontDiscountPct ?? 0,
+      breakPeriodEnabled: tenancy.breakPeriodEnabled ?? false,
+      breakPeriodRentPct: tenancy.breakPeriodRentPct ?? 50,
+      breakPeriodStart: tenancy.breakPeriodStart ? new Date(tenancy.breakPeriodStart).toISOString().split('T')[0] : '',
+      breakPeriodEnd: tenancy.breakPeriodEnd ? new Date(tenancy.breakPeriodEnd).toISOString().split('T')[0] : ''
+    });
+    setIsConfigModalOpen(true);
+  };
+
+  const handleConfigSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsConfigSubmitting(true);
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000"}/tenancy/${selectedTenancy.id}/config`, {
+        method: 'PATCH',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          paymentDeadlineDay: parseInt(configForm.paymentDeadlineDay.toString()),
+          latePenaltyPerDay: parseFloat(configForm.latePenaltyPerDay.toString()),
+          upfrontDiscountPct: parseFloat(configForm.upfrontDiscountPct.toString()),
+          breakPeriodEnabled: configForm.breakPeriodEnabled,
+          breakPeriodRentPct: parseFloat(configForm.breakPeriodRentPct.toString()),
+          breakPeriodStart: configForm.breakPeriodStart ? new Date(configForm.breakPeriodStart).toISOString() : null,
+          breakPeriodEnd: configForm.breakPeriodEnd ? new Date(configForm.breakPeriodEnd).toISOString() : null
+        })
+      });
+
+      if (response.ok) {
+        setIsConfigModalOpen(false);
+        fetchTenancies();
+      }
+    } catch (e) {
+      console.error('Failed to save config:', e);
+    } finally {
+      setIsConfigSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     fetchTenancies();
@@ -111,15 +170,136 @@ export default function LandlordTenantsPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {filteredTenancies.map((tenancy) => (
-            <TenantCard key={tenancy.id} tenancy={tenancy} />
+            <TenantCard key={tenancy.id} tenancy={tenancy} onConfigure={handleConfigureClick} />
           ))}
+        </div>
+      )}
+      {/* Tenancy Config Modal */}
+      {isConfigModalOpen && selectedTenancy && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="bg-popover border border-border rounded-[3rem] w-full max-w-2xl shadow-soft-2xl animate-in zoom-in-95 duration-300 overflow-hidden">
+            <header className="p-10 border-b border-border-subtle flex items-center justify-between bg-muted/30">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shadow-soft-sm">
+                  <Sliders size={24} />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black text-foreground tracking-tight">Tenancy Config</h2>
+                  <p className="text-xs text-muted-foreground font-semibold mt-0.5">Configure parameters for {selectedTenancy.tenant?.name}</p>
+                </div>
+              </div>
+              <button onClick={() => setIsConfigModalOpen(false)} className="p-3 text-muted-foreground hover:text-foreground hover:bg-muted rounded-2xl transition-all">✕</button>
+            </header>
+
+            <form onSubmit={handleConfigSubmit} className="p-10 space-y-8 max-h-[70vh] overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 mb-3 block">Deadline Day</label>
+                  <select 
+                    value={configForm.paymentDeadlineDay}
+                    onChange={(e) => setConfigForm({ ...configForm, paymentDeadlineDay: parseInt(e.target.value) })}
+                    className="w-full px-5 py-4 bg-muted/50 border border-transparent focus:border-primary/20 rounded-2xl text-sm font-bold text-foreground focus:ring-4 focus:ring-primary/5 transition-all appearance-none"
+                  >
+                    {Array.from({ length: 28 }, (_, i) => i + 1).map(day => (
+                      <option key={day} value={day}>Day {day}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 mb-3 block">Late Penalty (Ksh/day)</label>
+                  <input 
+                    type="number"
+                    value={configForm.latePenaltyPerDay}
+                    onChange={(e) => setConfigForm({ ...configForm, latePenaltyPerDay: parseFloat(e.target.value || '0') })}
+                    className="w-full px-5 py-4 bg-muted/50 border border-transparent focus:border-primary/20 rounded-2xl text-sm font-bold text-foreground focus:ring-4 focus:ring-primary/5 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 mb-3 block">Upfront Discount %</label>
+                  <input 
+                    type="number"
+                    value={configForm.upfrontDiscountPct}
+                    onChange={(e) => setConfigForm({ ...configForm, upfrontDiscountPct: parseFloat(e.target.value || '0') })}
+                    className="w-full px-5 py-4 bg-muted/50 border border-transparent focus:border-primary/20 rounded-2xl text-sm font-bold text-foreground focus:ring-4 focus:ring-primary/5 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="border-t border-border-subtle pt-6 space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-black text-foreground">Long Break Rent Hold</h3>
+                    <p className="text-xs text-muted-foreground font-semibold mt-0.5">Reduce rent during holiday periods</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={configForm.breakPeriodEnabled}
+                      onChange={(e) => setConfigForm({ ...configForm, breakPeriodEnabled: e.target.checked })}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+
+                {configForm.breakPeriodEnabled && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in slide-in-from-top-4 duration-200">
+                    <div>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 mb-3 block">Rent Percentage (e.g. 50)</label>
+                      <input 
+                        type="number"
+                        value={configForm.breakPeriodRentPct}
+                        onChange={(e) => setConfigForm({ ...configForm, breakPeriodRentPct: parseFloat(e.target.value || '0') })}
+                        className="w-full px-5 py-4 bg-muted/50 border border-transparent focus:border-primary/20 rounded-2xl text-sm font-bold text-foreground focus:ring-4 focus:ring-primary/5 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 mb-3 block">Start Date</label>
+                      <input 
+                        type="date"
+                        value={configForm.breakPeriodStart}
+                        onChange={(e) => setConfigForm({ ...configForm, breakPeriodStart: e.target.value })}
+                        className="w-full px-5 py-4 bg-muted/50 border border-transparent focus:border-primary/20 rounded-2xl text-sm font-bold text-foreground focus:ring-4 focus:ring-primary/5 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 mb-3 block">End Date</label>
+                      <input 
+                        type="date"
+                        value={configForm.breakPeriodEnd}
+                        onChange={(e) => setConfigForm({ ...configForm, breakPeriodEnd: e.target.value })}
+                        className="w-full px-5 py-4 bg-muted/50 border border-transparent focus:border-primary/20 rounded-2xl text-sm font-bold text-foreground focus:ring-4 focus:ring-primary/5 transition-all"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 flex gap-4">
+                <button 
+                  type="button"
+                  onClick={() => setIsConfigModalOpen(false)}
+                  className="flex-1 px-8 py-4 bg-muted text-muted-foreground rounded-2xl font-black hover:bg-muted/80 transition-all uppercase tracking-widest text-[10px]"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={isConfigSubmitting}
+                  className="flex-1 px-8 py-4 bg-primary text-white rounded-2xl font-black shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-[10px] brand-shadow"
+                >
+                  {isConfigSubmitting ? <Loader2 size={18} className="animate-spin" /> : 'Save Config'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-function TenantCard({ tenancy }: { tenancy: any }) {
+function TenantCard({ tenancy, onConfigure }: { tenancy: any; onConfigure: (t: any) => void }) {
   const isArchive = tenancy.status === 'VACATED';
 
   return (
@@ -185,7 +365,7 @@ function TenantCard({ tenancy }: { tenancy: any }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-6 border-t border-border-subtle">
+      <div className="flex items-center justify-between pt-6 border-t border-border-subtle flex-wrap gap-4">
         <div className="flex items-center gap-6">
           <div>
             <div className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest mb-0.5">Monthly Rent</div>
@@ -200,25 +380,37 @@ function TenantCard({ tenancy }: { tenancy: any }) {
           </div>
         </div>
         
-        {(tenancy.agreementUrl || tenancy.propertyUnit?.property?.useSystemAgreement) ? (
-          <a 
-            href={tenancy.propertyUnit?.property?.useSystemAgreement 
-              ? `/dashboard/landlord/signed_digitally_via_mobile?id=${tenancy.id}` 
-              : tenancy.agreementUrl
-            } 
-            target={tenancy.propertyUnit?.property?.useSystemAgreement ? "_self" : "_blank"} 
-            rel="noreferrer"
-            className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-xl text-xs font-black shadow-soft hover:bg-primary hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all"
-          >
-            <FileText size={16} />
-            View Agreement
-          </a>
-        ) : (
-          <div className="flex items-center gap-2 text-amber-500 text-xs font-black">
-            <Clock size={16} />
-            Waiting for Sign
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          {!isArchive && (
+            <button 
+              onClick={() => onConfigure(tenancy)}
+              className="flex items-center gap-2 bg-card text-foreground border border-border-subtle shadow-soft px-5 py-2.5 rounded-xl text-xs font-black hover:bg-muted hover:-translate-y-0.5 active:translate-y-0 transition-all"
+            >
+              <Sliders size={14} />
+              Configure
+            </button>
+          )}
+
+          {(tenancy.agreementUrl || tenancy.propertyUnit?.property?.useSystemAgreement) ? (
+            <a 
+              href={tenancy.propertyUnit?.property?.useSystemAgreement 
+                ? `/dashboard/landlord/signed_digitally_via_mobile?id=${tenancy.id}` 
+                : tenancy.agreementUrl
+              } 
+              target={tenancy.propertyUnit?.property?.useSystemAgreement ? "_self" : "_blank"} 
+              rel="noreferrer"
+              className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-xl text-xs font-black shadow-soft hover:bg-primary hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all"
+            >
+              <FileText size={16} />
+              View Agreement
+            </a>
+          ) : (
+            <div className="flex items-center gap-2 text-amber-500 text-xs font-black">
+              <Clock size={16} />
+              Waiting for Sign
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -85,36 +85,66 @@ export default function AdminAnalyticsPage() {
         <p className="text-muted-foreground font-medium max-w-2xl leading-relaxed text-sm lg:text-base">Real-time monitoring of platform performance, user growth, and revenue trends.</p>
       </header>
 
-      {/* Overview Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-        <StatCard 
-          label="Total Users" 
-          value={overview.users.total.toLocaleString()} 
-          subValue={`${overview.users.students} Students / ${overview.users.landlords} Landlords`}
-          icon={<Users className="text-primary" size={24} />} 
-          bgColor="bg-primary/10"
-        />
-        <StatCard 
-          label="Managed Assets" 
-          value={overview.properties.total.toLocaleString()} 
-          subValue={`${overview.properties.verified} Verified Properties`}
-          icon={<Building2 className="text-purple-500" size={24} />} 
-          bgColor="bg-purple-500/10"
-        />
-        <StatCard 
-          label="Total Bookings" 
-          value={overview.bookings.total.toLocaleString()} 
-          subValue={`${overview.bookings.approved} Confirmed`}
-          icon={<CalendarCheck className="text-orange-500" size={24} />} 
-          bgColor="bg-orange-500/10"
-        />
-        <StatCard 
-          label="Active Tenancies" 
-          value={overview.tenancies.active.toLocaleString()} 
-          subValue="Active Rental Agreements"
-          icon={<ShieldCheck className="text-emerald-500" size={24} />} 
-          bgColor="bg-emerald-500/10"
-        />
+      {/* Financial Intelligence Summary */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
+          <h2 className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em]">Financial Intelligence</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <StatCard 
+            label="Gross Transaction Volume" 
+            value={`Ksh ${(overview.revenue?.total || 0).toLocaleString()}`} 
+            subValue="Total transaction volume processed on the platform"
+            icon={<Banknote className="text-emerald-500" size={24} />} 
+            bgColor="bg-emerald-500/10"
+          />
+          <StatCard 
+            label="Platform Commission (5%)" 
+            value={`Ksh ${((overview.revenue?.total || 0) * 0.05).toLocaleString()}`} 
+            subValue="Total revenue generated from 5% commission fee"
+            icon={<TrendingUp className="text-primary" size={24} />} 
+            bgColor="bg-primary/10"
+          />
+        </div>
+      </div>
+
+      {/* Operational Metrics */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-6 bg-primary rounded-full" />
+          <h2 className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em]">Operational Activity</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+          <StatCard 
+            label="Total Users" 
+            value={overview.users.total.toLocaleString()} 
+            subValue={`${overview.users.students} Students / ${overview.users.landlords} Landlords`}
+            icon={<Users className="text-primary" size={24} />} 
+            bgColor="bg-primary/10"
+          />
+          <StatCard 
+            label="Managed Assets" 
+            value={overview.properties.total.toLocaleString()} 
+            subValue={`${overview.properties.verified} Verified Properties`}
+            icon={<Building2 className="text-purple-500" size={24} />} 
+            bgColor="bg-purple-500/10"
+          />
+          <StatCard 
+            label="Total Bookings" 
+            value={overview.bookings.total.toLocaleString()} 
+            subValue={`${overview.bookings.approved} Confirmed`}
+            icon={<CalendarCheck className="text-orange-500" size={24} />} 
+            bgColor="bg-orange-500/10"
+          />
+          <StatCard 
+            label="Active Tenancies" 
+            value={overview.tenancies.active.toLocaleString()} 
+            subValue="Active Rental Agreements"
+            icon={<ShieldCheck className="text-emerald-500" size={24} />} 
+            bgColor="bg-emerald-500/10"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
