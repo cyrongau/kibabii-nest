@@ -14,22 +14,51 @@ If integration/E2E tests are added in the future, you can configure GitHub Actio
 
 ---
 
-## 2. Setting Up GitHub Actions Secrets (For deployment, if configured later)
+## 2. Setting Up SSH Deployment Secrets
 
-If you decide to automate staging or production deployments using GitHub Actions (e.g. automatically building Docker images and pushing them to a server), you will need to add Secrets to your GitHub repository.
+The pipeline is pre-configured with automated deployment jobs:
+* **Staging Server Deployment**: Triggers automatically on any code push to the `main` branch.
+* **Production Server Deployment**: Triggers automatically when a version release tag (e.g. `v1.0.0`) is pushed.
 
-1. Go to your repository on GitHub.
-2. Select **Settings** (gear icon) > **Secrets and variables** > **Actions**.
-3. Click **New repository secret**.
-4. Define the following secrets if needed:
-   - `SSH_HOST`: The IP or hostname of the live/staging server.
-   - `SSH_USER`: The SSH login username (e.g., `root` or `ubuntu`).
-   - `SSH_KEY`: Your private SSH key to connect to the server.
-   - `DOCKER_USERNAME` / `DOCKER_PASSWORD`: Credentials for your container registry (Docker Hub, GitHub Container Registry, etc.).
+To enable these, you must define the following Repository Secrets in GitHub (**Settings** > **Secrets and variables** > **Actions** > **New repository secret**):
+
+### Staging Environment Secrets:
+* `STAGING_SSH_HOST`: Staging server IP or hostname.
+* `STAGING_SSH_USER`: The server username (e.g., `ubuntu` or `root`).
+* `STAGING_SSH_PRIVATE_KEY`: The private SSH key matching the key added to the server's `authorized_keys`.
+* `STAGING_SSH_PORT`: SSH port (optional, defaults to `22`).
+* `STAGING_PROJECT_PATH`: Directory path of the repository on the server (e.g., `/var/www/kibabii-nest-staging`).
+
+### Production Environment Secrets:
+* `PROD_SSH_HOST`: Production server IP or hostname.
+* `PROD_SSH_USER`: The server username (e.g., `ubuntu` or `root`).
+* `PROD_SSH_PRIVATE_KEY`: The private SSH key.
+* `PROD_SSH_PORT`: SSH port (optional, defaults to `22`).
+* `PROD_PROJECT_PATH`: Directory path of the repository on the server (e.g., `/var/www/kibabii-nest-production`).
 
 ---
 
-## 3. Local Verification
+## 3. Configuring SSH Keys on Your Server
+
+For the deployment runner to authenticate without password input, perform the following steps:
+
+1. **Generate SSH Keypair** (if you don't have one):
+   ```bash
+   ssh-keygen -t ed25519 -C "github-actions-deploy"
+   ```
+2. **Authorize the Public Key** on the host server:
+   Copy the contents of `id_ed25519.pub` and append it to your server's authorized keys file:
+   ```bash
+   echo "your-ssh-public-key-content" >> ~/.ssh/authorized_keys
+   chmod 600 ~/.ssh/authorized_keys
+   chmod 700 ~/.ssh
+   ```
+3. **Save the Private Key in GitHub**:
+   Copy the exact contents of the private key `id_ed25519` (including headers) and paste it into the `STAGING_SSH_PRIVATE_KEY` / `PROD_SSH_PRIVATE_KEY` fields on GitHub.
+
+---
+
+## 4. Local Verification
 
 Before committing changes, ensure your local build and lint check pass by running:
 
