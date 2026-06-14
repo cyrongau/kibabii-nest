@@ -124,6 +124,15 @@ export class MessagesService {
       }
     }
 
+    if (conversation) {
+      await this.markConversationMessagesAsRead(conversation.id, userId);
+      conversation.messages.forEach(m => {
+        if (m.receiverId === userId) {
+          m.isRead = true;
+        }
+      });
+    }
+
     return conversation;
   }
 
@@ -161,6 +170,8 @@ export class MessagesService {
   }
 
   async getConversationById(userId: string, conversationId: string) {
+    await this.markConversationMessagesAsRead(conversationId, userId);
+
     const conversation = await this.prisma.conversation.findUnique({
       where: { id: conversationId },
       include: {
@@ -210,6 +221,17 @@ export class MessagesService {
   async markAsRead(messageIds: string[]) {
     return this.prisma.message.updateMany({
       where: { id: { in: messageIds } },
+      data: { isRead: true },
+    });
+  }
+
+  async markConversationMessagesAsRead(conversationId: string, userId: string) {
+    return this.prisma.message.updateMany({
+      where: {
+        conversationId,
+        receiverId: userId,
+        isRead: false,
+      },
       data: { isRead: true },
     });
   }

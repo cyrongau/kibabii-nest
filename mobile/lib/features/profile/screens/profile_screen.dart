@@ -172,6 +172,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     _ThemeSection(),
                     const SizedBox(height: 24),
 
+                    // Notification Preferences
+                    _NotificationPreferencesSection(
+                      profile: _profile,
+                      onChanged: (key, value) async {
+                        setState(() {
+                          _profile?[key] = value;
+                        });
+                        await _api.updateProfile({key: value});
+                      },
+                    ),
+                    const SizedBox(height: 24),
+
                     // Wallet Section
                     _WalletSection(),
                     const SizedBox(height: 24),
@@ -779,6 +791,151 @@ class _WalletSection extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _NotificationPreferencesSection extends StatelessWidget {
+  final Map<String, dynamic>? profile;
+  final Function(String, bool) onChanged;
+
+  const _NotificationPreferencesSection({
+    required this.profile,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    final notifySupport = profile?['notifySupport'] ?? true;
+    final notifyPayment = profile?['notifyPayment'] ?? true;
+    final notifyBooking = profile?['notifyBooking'] ?? true;
+    final notifyMarketplace = profile?['notifyMarketplace'] ?? true;
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: colorScheme.onSurface.withOpacity(0.05)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 16, offset: const Offset(0, 4)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  LucideIcons.bell,
+                  color: colorScheme.primary,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Text(
+                'Notification Preferences',
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          _buildToggleRow(
+            context,
+            icon: LucideIcons.helpCircle,
+            title: 'Support Alerts',
+            description: 'Tickets, replies and support chat notifications',
+            value: notifySupport,
+            onChanged: (val) => onChanged('notifySupport', val),
+          ),
+          const Divider(height: 24),
+          _buildToggleRow(
+            context,
+            icon: LucideIcons.creditCard,
+            title: 'Payment & Rent',
+            description: 'Invoices, transaction alerts and wallet updates',
+            value: notifyPayment,
+            onChanged: (val) => onChanged('notifyPayment', val),
+          ),
+          const Divider(height: 24),
+          _buildToggleRow(
+            context,
+            icon: LucideIcons.calendar,
+            title: 'Booking Requests',
+            description: 'Property visits, tours and unit booking updates',
+            value: notifyBooking,
+            onChanged: (val) => onChanged('notifyBooking', val),
+          ),
+          const Divider(height: 24),
+          _buildToggleRow(
+            context,
+            icon: LucideIcons.shoppingBag,
+            title: 'Marketplace Deals',
+            description: 'Listing status and product chat alerts',
+            value: notifyMarketplace,
+            onChanged: (val) => onChanged('notifyMarketplace', val),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToggleRow(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String description,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: colorScheme.onSurface.withOpacity(0.6)),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              Text(
+                description,
+                style: GoogleFonts.outfit(
+                  fontSize: 11,
+                  color: colorScheme.onSurface.withOpacity(0.5),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Switch(
+          value: value,
+          onChanged: onChanged,
+          activeColor: colorScheme.primary,
+        ),
+      ],
     );
   }
 }

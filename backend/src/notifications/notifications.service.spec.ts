@@ -127,8 +127,8 @@ describe('NotificationsService', () => {
         },
       });
 
-      expect(result.id).toBe('notif-1');
-      expect(result.title).toBe('Rent Due');
+      expect(result!.id).toBe('notif-1');
+      expect(result!.title).toBe('Rent Due');
     });
   });
 

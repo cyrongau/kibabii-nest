@@ -58,6 +58,9 @@ describe('BookingsService', () => {
     user: {
       update: jest.fn(),
     },
+    walletTransaction: {
+      create: jest.fn(),
+    },
     $transaction: jest.fn(async (cb) => {
       if (typeof cb === 'function') {
         return cb(mockPrismaService);
@@ -185,7 +188,7 @@ describe('BookingsService', () => {
       expect(prisma.payment.create).toHaveBeenCalled();
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: 'landlord-123' },
-        data: { balance: { increment: 12000 } },
+        data: { balance: { increment: 11400 } }, // 12000 - 5% commission
       });
       expect(notifications.sendNotification).toHaveBeenCalledWith(
         'student-123',

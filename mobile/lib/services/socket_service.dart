@@ -70,6 +70,18 @@ class SocketService {
     _socket?.on('user_typing', callback);
   }
 
+  void readMessages(String conversationId) {
+    _socket?.emit('read_messages', {'conversationId': conversationId});
+  }
+
+  void onMessagesRead(Function(dynamic) callback) {
+    _socket?.on('messages_read', callback);
+  }
+
+  void offMessagesRead() {
+    _socket?.off('messages_read');
+  }
+
   void dispose() {
     _socket?.dispose();
   }

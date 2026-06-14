@@ -66,12 +66,12 @@ export class AuthService {
       throw new UnauthorizedException(`Access denied. This portal requires ${requiredRole} credentials.`);
     }
 
-    if (user.twoFactorEnabled && user.phone) {
-      await this.otpService.generateAndSendOtp(user.id, user.phone);
+    if (user.twoFactorEnabled) {
+      await this.otpService.generateAndSendOtp(user.id, user.phone || undefined);
       return { 
         require2FA: true, 
         userId: user.id,
-        message: 'OTP sent to your registered phone number'
+        message: 'OTP sent to your registered email/phone number'
       };
     }
 
@@ -168,6 +168,33 @@ export class AuthService {
     }
 
     return this.generateToken(user);
+  }
+
+  async forgotPassword(email: string) {
+    return this.otpService.generateAndSendPasswordResetOtp(email);
+  }
+
+  async resetPassword(data: any) {
+    const { email, code, newPassword } = data;
+    
+    const isValid = this.otpService.verifyPasswordResetOtp(email, code);
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid or expired password reset code');
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword }
+    });
+
+    return { message: 'Password has been reset successfully' };
   }
 
   private generateToken(user: any) {

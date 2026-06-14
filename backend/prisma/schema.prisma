@@ -35,6 +35,10 @@ model User {
   googleId                    String?             @unique
   twoFactorEnabled            Boolean             @default(false)
   twoFactorSecret             String?
+  notifySupport               Boolean             @default(true)
+  notifyPayment               Boolean             @default(true)
+  notifyBooking               Boolean             @default(true)
+  notifyMarketplace           Boolean             @default(true)
   isVerifiedLandlord          Boolean             @default(false)
   isSuspended                 Boolean             @default(false)
   accountName                 String?

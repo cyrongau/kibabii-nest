@@ -20,11 +20,43 @@ export class NotificationsService implements OnModuleInit {
         console.log('✅ Default system configuration created');
       }
 
+      // Auto-load Firebase credentials from file if missing in DB
+      if (!config?.firebaseConfig) {
+        const fs = require('fs');
+        const path = require('path');
+        const possiblePaths = [
+          path.join(process.cwd(), '..', 'kibabii-nest-firebase-adminsdk-fbsvc-c63aa8268e.json'),
+          path.join(process.cwd(), 'kibabii-nest-firebase-adminsdk-fbsvc-c63aa8268e.json'),
+          path.join(__dirname, '..', '..', '..', 'kibabii-nest-firebase-adminsdk-fbsvc-c63aa8268e.json'),
+          path.join(__dirname, '..', '..', 'kibabii-nest-firebase-adminsdk-fbsvc-c63aa8268e.json'),
+        ];
+        let loadedConfig = null;
+        for (const p of possiblePaths) {
+          if (fs.existsSync(p)) {
+            try {
+              const fileContent = fs.readFileSync(p, 'utf8');
+              loadedConfig = JSON.parse(fileContent);
+              console.log(`✅ Loaded Firebase credentials from file: ${p}`);
+              break;
+            } catch (err) {
+              console.error(`Failed to parse Firebase config at ${p}:`, err.message);
+            }
+          }
+        }
+        if (loadedConfig) {
+          config = await this.prisma.systemConfig.update({
+            where: { id: 'default' },
+            data: { firebaseConfig: loadedConfig }
+          });
+        }
+      }
+
       // 2. Initialize Firebase Admin if credentials exist
       if (config?.firebaseConfig && admin.apps.length === 0) {
         admin.initializeApp({
           credential: admin.credential.cert(config.firebaseConfig as any),
         });
+        console.log('🏁 Firebase Admin SDK initialized successfully');
       }
     } catch (error) {
       console.warn('System initialization warning:', error.message);
@@ -32,6 +64,37 @@ export class NotificationsService implements OnModuleInit {
   }
 
   async sendNotification(userId: string, title: string, message: string, type: string = 'info', link?: string) {
+    // Check notification preferences
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        notifySupport: true,
+        notifyPayment: true,
+        notifyBooking: true,
+        notifyMarketplace: true,
+      }
+    });
+
+    if (user) {
+      const lowerType = type.toLowerCase();
+      if ((lowerType === 'support' || lowerType === 'security' || lowerType === 'ticket') && user.notifySupport === false) {
+        console.log(`Skipping support notification for user ${userId} due to preference`);
+        return null;
+      }
+      if ((lowerType === 'payment' || lowerType === 'rent' || lowerType === 'wallet' || lowerType === 'payout') && user.notifyPayment === false) {
+        console.log(`Skipping payment notification for user ${userId} due to preference`);
+        return null;
+      }
+      if ((lowerType === 'booking' || lowerType === 'tour' || lowerType === 'visit') && user.notifyBooking === false) {
+        console.log(`Skipping booking notification for user ${userId} due to preference`);
+        return null;
+      }
+      if ((lowerType === 'marketplace' || lowerType === 'sale' || lowerType === 'product') && user.notifyMarketplace === false) {
+        console.log(`Skipping marketplace notification for user ${userId} due to preference`);
+        return null;
+      }
+    }
+
     // 1. Save to Database (In-app)
     const notification = await this.prisma.notification.create({
       data: { userId, title, message, type, link }

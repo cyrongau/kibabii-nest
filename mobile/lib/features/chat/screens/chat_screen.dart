@@ -62,6 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
             _messages.addAll(messagesData.map((m) => Map<String, dynamic>.from(m)).toList());
           }
         });
+        _socket.readMessages(widget.conversationId);
         _scrollToBottom();
       }
     } catch (e) {
@@ -72,6 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void _setupSocket() async {
     await _socket.connect();
     await _socket.joinConversation(widget.conversationId);
+    _socket.readMessages(widget.conversationId);
     
     _socket.onNewMessage((data) {
       if (mounted) {
@@ -82,6 +84,11 @@ class _ChatScreenState extends State<ChatScreen> {
             _messages.add(Map<String, dynamic>.from(data));
           }
         });
+        
+        if (data['senderId'] != _currentUserId) {
+          _socket.readMessages(widget.conversationId);
+        }
+        
         _scrollToBottom();
       }
     });
@@ -89,6 +96,18 @@ class _ChatScreenState extends State<ChatScreen> {
     _socket.onUserTyping((data) {
       if (mounted && data['userId'] != _currentUserId) {
         setState(() => _isTyping = data['isTyping']);
+      }
+    });
+
+    _socket.onMessagesRead((data) {
+      if (mounted && data['conversationId'] == widget.conversationId) {
+        setState(() {
+          for (var msg in _messages) {
+            if (msg['senderId'] == _currentUserId) {
+              msg['isRead'] = true;
+            }
+          }
+        });
       }
     });
   }
@@ -386,6 +405,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _socket.setTyping(widget.conversationId, false);
+    _socket.offMessagesRead();
     super.dispose();
   }
 }
@@ -400,6 +420,19 @@ class _ChatBubble extends StatelessWidget {
     required this.isMe,
     required this.isAdmin,
   });
+
+  String _formatTime(String? dateStr) {
+    if (dateStr == null) return '';
+    try {
+      final date = DateTime.parse(dateStr).toLocal();
+      final hour = date.hour > 12 ? date.hour - 12 : (date.hour == 0 ? 12 : date.hour);
+      final amPm = date.hour >= 12 ? 'PM' : 'AM';
+      final minute = date.minute.toString().padLeft(2, '0');
+      return '$hour:$minute $amPm';
+    } catch (e) {
+      return '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -460,7 +493,7 @@ class _ChatBubble extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.network(
-                          ImageUtils.formatUrl(imageUrl),
+                           ImageUtils.formatUrl(imageUrl),
                           fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
@@ -483,6 +516,29 @@ class _ChatBubble extends StatelessWidget {
                         fontWeight: isAdmin ? FontWeight.w600 : FontWeight.normal,
                       ),
                     ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _formatTime(message['createdAt']),
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: isMe || isAdmin ? Colors.white.withOpacity(0.6) : colorScheme.onSurface.withOpacity(0.4),
+                        ),
+                      ),
+                      if (isMe) ...[
+                        const SizedBox(width: 4),
+                        Icon(
+                          message['isRead'] == true ? LucideIcons.checkCheck : LucideIcons.check,
+                          size: 12,
+                          color: message['isRead'] == true 
+                              ? Colors.lightBlueAccent 
+                              : Colors.white.withOpacity(0.5),
+                        ),
+                      ],
+                    ],
+                  ),
                 ],
               ),
             ),

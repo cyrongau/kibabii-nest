@@ -12,6 +12,7 @@ import '../features/admin/screens/admin_home_screen.dart';
 import '../features/booking/screens/booking_review_screen.dart';
 import '../features/booking/screens/my_bookings_screen.dart';
 import '../features/auth/screens/auth_screen.dart';
+import '../features/auth/screens/forgot_password_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../features/profile/screens/document_scanner_screen.dart';
 import '../features/onboarding/screens/onboarding_screen.dart';
@@ -146,6 +147,10 @@ class AppRouter {
       GoRoute(
         path: '/auth',
         builder: (context, state) => const AuthScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       GoRoute(
         path: '/register',

@@ -28,6 +28,7 @@ class NavigationScreen extends ConsumerStatefulWidget {
 class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   mbx.MapboxMap? _mapboxMap;
   mbx.PolylineAnnotationManager? _polylineAnnotationManager;
+  mbx.PolylineAnnotationManager? _activeDottedAnnotationManager;
   mbx.PolylineAnnotationManager? _alternateSolidAnnotationManager;
   mbx.PolylineAnnotationManager? _alternateDottedAnnotationManager;
   mbx.CircleAnnotationManager? _circleAnnotationManager;
@@ -75,11 +76,14 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
     _polylineAnnotationManager = await mapboxMap.annotations
         .createPolylineAnnotationManager();
+    _activeDottedAnnotationManager = await mapboxMap.annotations
+        .createPolylineAnnotationManager();
     _alternateSolidAnnotationManager = await mapboxMap.annotations
         .createPolylineAnnotationManager();
     _alternateDottedAnnotationManager = await mapboxMap.annotations
         .createPolylineAnnotationManager();
 
+    await _activeDottedAnnotationManager?.setLineDasharray([3.0, 3.0]);
     await _alternateDottedAnnotationManager?.setLineDasharray([3.0, 3.0]);
 
     _circleAnnotationManager = await mapboxMap.annotations
@@ -90,11 +94,13 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   Future<void> _syncRouteToMap(TripStateModel tripState) async {
     if (!_isMapReady || 
         _polylineAnnotationManager == null || 
+        _activeDottedAnnotationManager == null ||
         _alternateSolidAnnotationManager == null ||
         _alternateDottedAnnotationManager == null ||
         _circleAnnotationManager == null) return;
 
     await _polylineAnnotationManager!.deleteAll();
+    await _activeDottedAnnotationManager!.deleteAll();
     await _alternateSolidAnnotationManager!.deleteAll();
     await _alternateDottedAnnotationManager!.deleteAll();
     await _circleAnnotationManager!.deleteAll();
@@ -158,14 +164,27 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
     if (activePositions.length >= 2) {
       final activeLineGeoJson = LineString(coordinates: activePositions).toJson();
-      _routePolyline = await _polylineAnnotationManager!.create(
-        mbx.PolylineAnnotationOptions(
-          geometry: activeLineGeoJson,
-          lineColor: Theme.of(context).colorScheme.primary.value,
-          lineWidth: 6.0,
-          lineJoin: mbx.LineJoin.ROUND,
-        ),
-      );
+      final isLongerThanOriginal = selectedIdx > 0 && activeRoute.distance > originalRoute.distance;
+      
+      if (isLongerThanOriginal) {
+        _routePolyline = await _activeDottedAnnotationManager!.create(
+          mbx.PolylineAnnotationOptions(
+            geometry: activeLineGeoJson,
+            lineColor: Theme.of(context).colorScheme.primary.value,
+            lineWidth: 6.0,
+            lineJoin: mbx.LineJoin.ROUND,
+          ),
+        );
+      } else {
+        _routePolyline = await _polylineAnnotationManager!.create(
+          mbx.PolylineAnnotationOptions(
+            geometry: activeLineGeoJson,
+            lineColor: Theme.of(context).colorScheme.primary.value,
+            lineWidth: 6.0,
+            lineJoin: mbx.LineJoin.ROUND,
+          ),
+        );
+      }
     }
 
     // 3. Render maneuvers for the active route

@@ -42,6 +42,8 @@ describe('AuthService', () => {
   const mockOtpService = {
     generateAndSendOtp: jest.fn(),
     verifyOtp: jest.fn(),
+    generateAndSendPasswordResetOtp: jest.fn(),
+    verifyPasswordResetOtp: jest.fn(),
   };
 
   const mockMailService = {
@@ -119,7 +121,7 @@ describe('AuthService', () => {
       const result = await service.login({
         email: 'test@example.com',
         password: 'password123',
-      });
+      }) as any;
 
       expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { email: 'test@example.com' } });
       expect(bcrypt.compare).toHaveBeenCalledWith('password123', 'hashedpassword');
@@ -202,6 +204,64 @@ describe('AuthService', () => {
 
       await expect(
         service.verifyTwoFactor('user-id-123', '000000'),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('forgotPassword', () => {
+    it('should call generateAndSendPasswordResetOtp', async () => {
+      mockOtpService.generateAndSendPasswordResetOtp.mockResolvedValue(true);
+      const result = await service.forgotPassword('test@example.com');
+      expect(otpService.generateAndSendPasswordResetOtp).toHaveBeenCalledWith('test@example.com');
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('should reset password successfully when OTP is valid', async () => {
+      mockOtpService.verifyPasswordResetOtp.mockReturnValue(true);
+      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+      mockPrismaService.user.update.mockResolvedValue(mockUser);
+      (bcrypt.hash as jest.Mock).mockResolvedValue('newhashedpassword');
+
+      const result = await service.resetPassword({
+        email: 'test@example.com',
+        code: '123456',
+        newPassword: 'newpassword123',
+      });
+
+      expect(otpService.verifyPasswordResetOtp).toHaveBeenCalledWith('test@example.com', '123456');
+      expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { email: 'test@example.com' } });
+      expect(bcrypt.hash).toHaveBeenCalledWith('newpassword123', 10);
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-id-123' },
+        data: { password: 'newhashedpassword' },
+      });
+      expect(result).toHaveProperty('message', 'Password has been reset successfully');
+    });
+
+    it('should throw UnauthorizedException if OTP is invalid', async () => {
+      mockOtpService.verifyPasswordResetOtp.mockReturnValue(false);
+
+      await expect(
+        service.resetPassword({
+          email: 'test@example.com',
+          code: 'invalid',
+          newPassword: 'newpassword123',
+        }),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('should throw UnauthorizedException if user not found', async () => {
+      mockOtpService.verifyPasswordResetOtp.mockReturnValue(true);
+      mockPrismaService.user.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.resetPassword({
+          email: 'test@example.com',
+          code: '123456',
+          newPassword: 'newpassword123',
+        }),
       ).rejects.toThrow(UnauthorizedException);
     });
   });

@@ -67,14 +67,14 @@ describe('NotificationsController', () => {
   });
 
   it('should get config', async () => {
-    const result = await controller.getConfig();
+    const result = await controller.getConfig() as any;
     expect(service.getConfig).toHaveBeenCalled();
     expect(result.id).toBe('default');
   });
 
   it('should update config', async () => {
     const req = { body: { twilioSid: 'new-sid' } };
-    const result = await controller.updateConfig(req);
+    const result = await controller.updateConfig(req) as any;
     expect(service.updateConfig).toHaveBeenCalledWith({ twilioSid: 'new-sid' });
     expect(result.updated).toBe(true);
   });

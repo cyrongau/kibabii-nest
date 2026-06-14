@@ -240,7 +240,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
-            onPressed: () {},
+            onPressed: () => context.push('/forgot-password'),
             child: Text(
               'Forgot password?',
               style: GoogleFonts.outfit(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),

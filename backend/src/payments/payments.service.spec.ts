@@ -3,6 +3,7 @@ import { PaymentsService } from './payments.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { S3Service } from '../uploads/s3.service';
+import { PdfService } from '../tenancy/pdf.service';
 import { PaymentRecordStatus } from '@prisma/client';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 
@@ -49,6 +50,10 @@ describe('PaymentsService', () => {
     getFileBase64: jest.fn(),
   };
 
+  const mockPdfService = {
+    generateReceiptPdf: jest.fn().mockResolvedValue(Buffer.from('pdf')),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -56,6 +61,7 @@ describe('PaymentsService', () => {
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: NotificationsService, useValue: mockNotificationsService },
         { provide: S3Service, useValue: mockS3Service },
+        { provide: PdfService, useValue: mockPdfService },
       ],
     }).compile();
 
@@ -209,7 +215,7 @@ describe('PaymentsService', () => {
       expect(prisma.payment.update).toHaveBeenCalled();
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: 'landlord-456' },
-        data: { balance: { increment: 5000 } },
+        data: { balance: { increment: 4750 } }, // 5000 - 5% commission
       });
       expect(notifications.sendNotification).toHaveBeenCalledWith(
         'student-123',
@@ -305,7 +311,7 @@ describe('PaymentsService', () => {
       });
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: 'landlord-1' },
-        data: { balance: { increment: 2900 } },
+        data: { balance: { increment: 2755 } }, // 2900 - 5% commission
       });
     });
 

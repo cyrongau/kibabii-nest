@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants.dart';
+import 'notification_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -145,6 +146,17 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('access_token', data['access_token']);
     await prefs.setString('user', jsonEncode(data['user']));
+    
+    // Explicitly store user_id to wire Firebase Push Notification topics
+    if (data['user'] != null && data['user']['id'] != null) {
+      await prefs.setString('user_id', data['user']['id'].toString());
+      // Subscribe to user push notification topic
+      try {
+        await NotificationService().subscribeToUserTopic();
+      } catch (e) {
+        debugPrint('FCM Subscribe Error: $e');
+      }
+    }
   }
 
   Future<Map<String, dynamic>?> getUser() async {
@@ -160,9 +172,48 @@ class AuthService {
   }
 
   Future<void> logout() async {
+    // Unsubscribe from user push notification topic before clearing prefs
+    try {
+      await NotificationService().unsubscribeFromUserTopic();
+    } catch (e) {
+      debugPrint('FCM Unsubscribe Error: $e');
+    }
+    
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     await _auth.signOut();
     await _googleSignIn.signOut();
+  }
+
+  Future<bool> forgotPassword(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/forgot-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email}),
+      );
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      debugPrint('Error in forgotPassword: $e');
+      return false;
+    }
+  }
+
+  Future<bool> resetPassword(String email, String token, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/reset-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'code': token,
+          'newPassword': password,
+        }),
+      );
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      debugPrint('Error in resetPassword: $e');
+      return false;
+    }
   }
 }

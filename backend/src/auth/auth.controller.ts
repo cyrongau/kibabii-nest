@@ -29,4 +29,16 @@ export class AuthController {
   async verify2FA(@Body() body: { userId: string; code: string }) {
     return this.authService.verifyTwoFactor(body.userId, body.code);
   }
+
+  @Throttle({ short: { limit: 3, ttl: 60000 } }) // strictly rate limit password reset attempts
+  @Post('forgot-password')
+  async forgotPassword(@Body() body: { email: string }) {
+    return this.authService.forgotPassword(body.email);
+  }
+
+  @Throttle({ short: { limit: 3, ttl: 60000 } })
+  @Post('reset-password')
+  async resetPassword(@Body() body: { email: string; code: string; newPassword: string }) {
+    return this.authService.resetPassword(body);
+  }
 }

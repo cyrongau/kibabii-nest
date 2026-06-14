@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN "notifySupport" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN "notifyPayment" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN "notifyBooking" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN "notifyMarketplace" BOOLEAN NOT NULL DEFAULT true;
