@@ -95,7 +95,12 @@ docker logs kibabii-backend-staging -f --tail 100
 
 ## 🔄 4. Updating Code & Database Migrations
 
-### Standard Handoff Update Loop:
+### Git-Triggered Automated Deployments (CI/CD)
+The project utilizes GitHub Actions to automate server deployments based on git events:
+* **Staging Server**: Any commit pushed or merged into the `main` branch automatically triggers deployment to the Staging server environment.
+* **Production Server**: Any version release tag pushed starting with `v` (e.g. `v1.0.0`) automatically triggers deployment to the Production server environment.
+
+### Manual Handoff Update Loop (Alternative):
 1. SSH into your host server.
 2. Navigate to the project root:
    ```bash
@@ -161,15 +166,25 @@ The websocket namespace is hosted at `ws://localhost:9000`. You can use a WebSoc
 3. **Listen for Sync Broadcast**: Subscribe to `messages_read` to receive real-time checkmark updates when the other user loads the conversation:
    * Event: `messages_read`
 
-### 3. Mobile (Flutter) Testing Setup
-To connect your mobile emulator/device to the running server:
-1. Locate `mobile/lib/services/api_service.dart`.
-2. Configure the server URL base path to reference the Staging or Production host IP:
+### 3. Accessing the Staging Environment
+Since the Staging containers run concurrently with Production, they use offset port mappings:
+* **Staging Frontend Web App**: `http://<your-server-ip>:3010`
+* **Staging Backend API**: `http://<your-server-ip>:9010`
+
+#### Subdomain Routing (Recommended):
+To set up clean URLs with SSL, point DNS subdomains to your server and configure an Nginx proxy:
+* `staging.kibabii.generexcom.com` -> Proxy to `http://localhost:3010`
+* `api-staging.kibabii.generexcom.com` -> Proxy to `http://localhost:9010`
+
+### 4. Mobile (Flutter) Testing Setup
+To connect your mobile emulator or physical test device to the Staging server environment:
+1. Open `mobile/lib/services/api_service.dart`.
+2. Configure the server URL base path to reference your staging API:
    ```dart
-   // For local machine debugging (Android emulator)
-   static const String baseUrl = 'http://10.0.2.2:9000';
+   // For local development
+   // static const String baseUrl = 'http://10.0.2.2:9000';
    
    // For Staging server remote testing
-   static const String baseUrl = 'https://api-staging.kibabii.generexcom.com';
+   static const String baseUrl = 'http://<your-server-ip>:9010'; // Or 'https://api-staging.kibabii.generexcom.com'
    ```
-3. Locate `mobile/lib/services/socket_service.dart` and align the Socket server target URL with the same scheme/ports.
+3. Open `mobile/lib/services/socket_service.dart` and point the WebSocket namespace base URI to the same host and port (e.g. `ws://<your-server-ip>:9010` or `wss://api-staging.kibabii.generexcom.com`).
